@@ -1,0 +1,23 @@
+name: "CodeQL Config"
+
+# Paths to ignore during analysis
+paths-ignore:
+  - '**/node_modules/**'
+  - '**/dist/**'
+  - '**/coverage/**'
+  - '**/*.test.ts'
+  - '**/*.spec.ts'
+  - '**/jest.config.ts'
+  - '**/vitest.config.ts'
+
+# Additional queries to run
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+# Query filters
+query-filters:
+  - exclude:
+      id: js/unused-local-variable
+  - exclude:
+      id: js/debugger-statement
