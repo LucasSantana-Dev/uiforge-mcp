@@ -1,0 +1,21 @@
+dist/
+node_modules/
+.env
+.env.local
+.env.*.local
+plan.MD
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.windsurf/
