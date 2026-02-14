@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { buildPrototype } from '../lib/prototype-builder.js';
 import { designContextStore } from '../lib/design-context.js';
 import type { IScreenElement, ITransition } from '../lib/types.js';
@@ -158,6 +157,142 @@ describe('generate_prototype', () => {
     expect(html).toContain('proto-card');
     expect(html).toContain('id="card-text"');
     expect(html).toContain('id="card-btn"');
+  });
+
+  it('renders image element with label', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          { id: 'img-1', type: 'image' as const, label: 'Hero image' },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('id="img-1"');
+    expect(html).toContain('Hero image');
+  });
+
+  it('renders image element with default placeholder', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          { id: 'img-2', type: 'image' as const },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('id="img-2"');
+    expect(html).toContain('Image placeholder');
+  });
+
+  it('renders nav element with children', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          {
+            id: 'nav-1',
+            type: 'nav' as const,
+            children: [
+              { id: 'link-1', type: 'text' as const, label: 'Home' },
+              { id: 'link-2', type: 'text' as const, label: 'About' },
+            ],
+          },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('<nav id="nav-1"');
+    expect(html).toContain('proto-nav');
+    expect(html).toContain('id="link-1"');
+    expect(html).toContain('Home');
+  });
+
+  it('renders list element with children', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          {
+            id: 'list-1',
+            type: 'list' as const,
+            children: [
+              { id: 'li-1', type: 'text' as const, label: 'Item A' },
+              { id: 'li-2', type: 'text' as const, label: 'Item B' },
+            ],
+          },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('<ul id="list-1"');
+    expect(html).toContain('<li id="li-1"');
+    expect(html).toContain('Item A');
+  });
+
+  it('renders container element with children', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          {
+            id: 'container-1',
+            type: 'container' as const,
+            children: [
+              { id: 'inner-1', type: 'text' as const, label: 'Inside' },
+            ],
+          },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('id="container-1"');
+    expect(html).toContain('id="inner-1"');
+    expect(html).toContain('Inside');
+  });
+
+  it('renders icon element', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          { id: 'icon-1', type: 'icon' as const, label: '★' },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('<span id="icon-1"');
+    expect(html).toContain('★');
+  });
+
+  it('renders unknown element type as div (default case)', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          { id: 'custom-1', type: 'unknown' as unknown as 'text', label: 'Fallback' },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('id="custom-1"');
+    expect(html).toContain('Fallback');
+  });
+
+  it('applies inline styles via camelCase-to-kebab conversion', () => {
+    const screens = [
+      {
+        name: 'Test',
+        elements: [
+          { id: 'styled-1', type: 'text' as const, label: 'Styled', styles: { backgroundColor: 'red', fontSize: '20px' } },
+        ] satisfies IScreenElement[],
+      },
+    ];
+    const html = buildPrototype({ screens, navigationFlow: [] });
+    expect(html).toContain('background-color: red');
+    expect(html).toContain('font-size: 20px');
   });
 
   it('includes animation keyframes', () => {

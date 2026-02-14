@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import {
   FONT_PAIRINGS,
   DEFAULT_FONT_PAIRING,
@@ -294,8 +293,8 @@ describe('presets', () => {
     const hexRe = /^#[0-9a-f]{6}$/i;
     for (const name of listPresets()) {
       const ctx = getPreset(name);
-      for (const [key, val] of Object.entries(ctx.colorPalette)) {
-        expect(val, `${name}.colorPalette.${key}`).toMatch(hexRe);
+      for (const [_key, val] of Object.entries(ctx.colorPalette)) {
+        expect(val).toMatch(hexRe);
       }
     }
   });

@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { generateReactProject } from '../lib/templates/react.js';
 import { generateNextjsProject } from '../lib/templates/nextjs.js';
 import { generateVueProject } from '../lib/templates/vue.js';
