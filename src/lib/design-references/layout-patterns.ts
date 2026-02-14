@@ -22,7 +22,8 @@ export const LAYOUT_PATTERNS: readonly ILayoutPattern[] = [
     description: 'Admin dashboard with sidebar navigation, header, stats cards, charts, and data table',
     components: ['sidebar-nav', 'header', 'stats-cards', 'chart-area', 'data-table'],
     useCase: ['admin panels', 'analytics', 'internal tools'],
-    responsiveBehavior: 'Sidebar collapses to hamburger on mobile. Stats cards stack vertically. Table scrolls horizontally.',
+    responsiveBehavior:
+      'Sidebar collapses to hamburger on mobile. Stats cards stack vertically. Table scrolls horizontally.',
     tailwindClasses: {
       wrapper: 'flex min-h-screen',
       sidebar: 'w-64 border-r bg-card hidden md:flex flex-col',
@@ -39,7 +40,8 @@ export const LAYOUT_PATTERNS: readonly ILayoutPattern[] = [
     description: 'E-commerce product detail page with image gallery, product info, reviews, and related items',
     components: ['image-gallery', 'product-info', 'add-to-cart', 'reviews', 'related-products'],
     useCase: ['product pages', 'e-commerce', 'marketplace'],
-    responsiveBehavior: 'Image gallery and product info side-by-side on desktop, stacked on mobile. Related products in horizontal scroll on mobile.',
+    responsiveBehavior:
+      'Image gallery and product info side-by-side on desktop, stacked on mobile. Related products in horizontal scroll on mobile.',
     tailwindClasses: {
       wrapper: 'max-w-7xl mx-auto px-4 py-8',
       productGrid: 'grid grid-cols-1 md:grid-cols-2 gap-8',
@@ -69,7 +71,8 @@ export const LAYOUT_PATTERNS: readonly ILayoutPattern[] = [
     description: 'Authentication pages with split layout (illustration + form) or centered card',
     components: ['illustration-panel', 'auth-form', 'social-login', 'footer-links'],
     useCase: ['login', 'signup', 'forgot password', 'onboarding'],
-    responsiveBehavior: 'Split layout on desktop, form-only centered card on mobile. Illustration panel hidden on mobile.',
+    responsiveBehavior:
+      'Split layout on desktop, form-only centered card on mobile. Illustration panel hidden on mobile.',
     tailwindClasses: {
       wrapper: 'min-h-screen flex',
       illustration: 'hidden lg:flex lg:w-1/2 bg-muted items-center justify-center p-12',
@@ -98,7 +101,8 @@ export const LAYOUT_PATTERNS: readonly ILayoutPattern[] = [
     description: 'Multi-step onboarding flow with stepper, card content, and navigation',
     components: ['stepper', 'step-content', 'progress-bar', 'navigation-buttons'],
     useCase: ['multi-step flows', 'wizards', 'setup guides'],
-    responsiveBehavior: 'Stepper becomes compact on mobile. Full-width card content. Navigation buttons always visible.',
+    responsiveBehavior:
+      'Stepper becomes compact on mobile. Full-width card content. Navigation buttons always visible.',
     tailwindClasses: {
       wrapper: 'min-h-screen flex items-center justify-center p-4',
       card: 'w-full max-w-2xl rounded-xl border bg-card shadow-lg',

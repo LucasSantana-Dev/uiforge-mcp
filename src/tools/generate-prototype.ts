@@ -22,22 +22,26 @@ const transitionSchema = z.object({
   targetElement: z.string().optional(),
 });
 
-const designContextSchema = z.object({
-  typography: z.any().optional(),
-  colorPalette: z.any().optional(),
-  spacing: z.any().optional(),
-  borderRadius: z.any().optional(),
-  shadows: z.any().optional(),
-}).optional();
+const designContextSchema = z
+  .object({
+    typography: z.any().optional(),
+    colorPalette: z.any().optional(),
+    spacing: z.any().optional(),
+    borderRadius: z.any().optional(),
+    shadows: z.any().optional(),
+  })
+  .optional();
 
 const inputSchema = {
-  screens: z.array(
-    z.object({
-      name: z.string(),
-      description: z.string().optional(),
-      elements: z.array(screenElementSchema),
-    })
-  ).describe('Array of screens with their elements'),
+  screens: z
+    .array(
+      z.object({
+        name: z.string(),
+        description: z.string().optional(),
+        elements: z.array(screenElementSchema),
+      })
+    )
+    .describe('Array of screens with their elements'),
   navigation_flow: z.array(transitionSchema).describe('Navigation flow between screens'),
   design_context: designContextSchema.describe('Optional design context override'),
   output_format: z.enum(['html', 'html_bundle']).default('html').describe('Output format'),
@@ -50,7 +54,7 @@ export function registerGeneratePrototype(server: McpServer): void {
     inputSchema,
     async ({ screens, navigation_flow, design_context, output_format: _output_format }) => {
       const ctx: IDesignContext | undefined = design_context
-        ? { ...designContextStore.get(), ...design_context } as IDesignContext
+        ? ({ ...designContextStore.get(), ...design_context } as IDesignContext)
         : undefined;
 
       const html = buildPrototype({

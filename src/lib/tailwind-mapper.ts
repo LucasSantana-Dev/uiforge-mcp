@@ -3,23 +3,55 @@ import type { FigmaNode, FigmaFill } from './figma-client.js';
 
 // Tailwind default spacing scale: class suffix → px value
 const SPACING_SCALE: [string, number][] = [
-  ['0', 0], ['px', 1], ['0.5', 2], ['1', 4], ['1.5', 6], ['2', 8],
-  ['2.5', 10], ['3', 12], ['3.5', 14], ['4', 16], ['5', 20], ['6', 24],
-  ['7', 28], ['8', 32], ['9', 36], ['10', 40], ['11', 44], ['12', 48],
-  ['14', 56], ['16', 64], ['20', 80], ['24', 96],
+  ['0', 0],
+  ['px', 1],
+  ['0.5', 2],
+  ['1', 4],
+  ['1.5', 6],
+  ['2', 8],
+  ['2.5', 10],
+  ['3', 12],
+  ['3.5', 14],
+  ['4', 16],
+  ['5', 20],
+  ['6', 24],
+  ['7', 28],
+  ['8', 32],
+  ['9', 36],
+  ['10', 40],
+  ['11', 44],
+  ['12', 48],
+  ['14', 56],
+  ['16', 64],
+  ['20', 80],
+  ['24', 96],
 ];
 
 // Tailwind default font-size scale: class suffix → rem value
 const FONT_SIZE_SCALE: [string, string][] = [
-  ['xs', '0.75rem'], ['sm', '0.875rem'], ['base', '1rem'], ['lg', '1.125rem'],
-  ['xl', '1.25rem'], ['2xl', '1.5rem'], ['3xl', '1.875rem'], ['4xl', '2.25rem'],
-  ['5xl', '3rem'], ['6xl', '3.75rem'], ['7xl', '4.5rem'], ['8xl', '6rem'], ['9xl', '8rem'],
+  ['xs', '0.75rem'],
+  ['sm', '0.875rem'],
+  ['base', '1rem'],
+  ['lg', '1.125rem'],
+  ['xl', '1.25rem'],
+  ['2xl', '1.5rem'],
+  ['3xl', '1.875rem'],
+  ['4xl', '2.25rem'],
+  ['5xl', '3rem'],
+  ['6xl', '3.75rem'],
+  ['7xl', '4.5rem'],
+  ['8xl', '6rem'],
+  ['9xl', '8rem'],
 ];
 
 // Tailwind default line-height scale
 const LINE_HEIGHT_SCALE: [string, string][] = [
-  ['none', '1'], ['tight', '1.25'], ['snug', '1.375'], ['normal', '1.5'],
-  ['relaxed', '1.625'], ['loose', '2'],
+  ['none', '1'],
+  ['tight', '1.25'],
+  ['snug', '1.375'],
+  ['normal', '1.5'],
+  ['relaxed', '1.625'],
+  ['loose', '2'],
 ];
 
 function closestSpacing(px: number): string {
@@ -27,7 +59,10 @@ function closestSpacing(px: number): string {
   let bestDiff = Math.abs(px - best[1]);
   for (const entry of SPACING_SCALE) {
     const diff = Math.abs(px - entry[1]);
-    if (diff < bestDiff) { best = entry; bestDiff = diff; }
+    if (diff < bestDiff) {
+      best = entry;
+      bestDiff = diff;
+    }
   }
   // Use arbitrary value if the closest match is too far off (>2px)
   return bestDiff <= 2 ? best[0] : `[${px}px]`;
@@ -40,7 +75,10 @@ function closestFontSize(val: string): string {
   let bestDiff = Math.abs(numericRem - parseFloat(best[1]));
   for (const entry of FONT_SIZE_SCALE) {
     const diff = Math.abs(numericRem - parseFloat(entry[1]));
-    if (diff < bestDiff) { best = entry; bestDiff = diff; }
+    if (diff < bestDiff) {
+      best = entry;
+      bestDiff = diff;
+    }
   }
   return bestDiff <= 0.0625 ? best[0] : `[${val}]`;
 }
@@ -52,7 +90,10 @@ function closestLineHeight(val: string): string {
   let bestDiff = Math.abs(num - parseFloat(best[1]));
   for (const entry of LINE_HEIGHT_SCALE) {
     const diff = Math.abs(num - parseFloat(entry[1]));
-    if (diff < bestDiff) { best = entry; bestDiff = diff; }
+    if (diff < bestDiff) {
+      best = entry;
+      bestDiff = diff;
+    }
   }
   return bestDiff <= 0.0625 ? best[0] : `[${val}]`;
 }
@@ -121,9 +162,15 @@ export function mapTokensToTailwind(tokens: IFigmaDesignToken[]): ITailwindMappi
           });
         } else if (token.name.toLowerCase().includes('weight')) {
           const weightMap: Record<string, string> = {
-            '100': 'font-thin', '200': 'font-extralight', '300': 'font-light',
-            '400': 'font-normal', '500': 'font-medium', '600': 'font-semibold',
-            '700': 'font-bold', '800': 'font-extrabold', '900': 'font-black',
+            '100': 'font-thin',
+            '200': 'font-extralight',
+            '300': 'font-light',
+            '400': 'font-normal',
+            '500': 'font-medium',
+            '600': 'font-semibold',
+            '700': 'font-bold',
+            '800': 'font-extrabold',
+            '900': 'font-black',
           };
           mappings.push({
             className: weightMap[val] ?? `font-[${val}]`,
@@ -150,9 +197,14 @@ export function mapTokensToTailwind(tokens: IFigmaDesignToken[]): ITailwindMappi
       case 'borderRadius': {
         const radVal = String(token.value);
         const radiusMap: Record<string, string> = {
-          '0': 'rounded-none', '2': 'rounded-sm', '4': 'rounded',
-          '6': 'rounded-md', '8': 'rounded-lg', '12': 'rounded-xl',
-          '16': 'rounded-2xl', '24': 'rounded-3xl',
+          '0': 'rounded-none',
+          '2': 'rounded-sm',
+          '4': 'rounded',
+          '6': 'rounded-md',
+          '8': 'rounded-lg',
+          '12': 'rounded-xl',
+          '16': 'rounded-2xl',
+          '24': 'rounded-3xl',
         };
         mappings.push({
           className: radiusMap[radVal] ?? `rounded-[${radVal}px]`,
@@ -296,8 +348,13 @@ export function tokensToDesignContext(tokens: IFigmaDesignToken[]): Partial<IDes
     context.typography = {
       fontFamily: `${primaryFont}, system-ui, sans-serif`,
       fontSize: {
-        xs: '0.75rem', sm: '0.875rem', base: '1rem', lg: '1.125rem',
-        xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem',
+        xs: '0.75rem',
+        sm: '0.875rem',
+        base: '1rem',
+        lg: '1.125rem',
+        xl: '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
       },
       fontWeight: { normal: '400', medium: '500', semibold: '600', bold: '700' },
       lineHeight: { tight: '1.25', normal: '1.5', relaxed: '1.75' },

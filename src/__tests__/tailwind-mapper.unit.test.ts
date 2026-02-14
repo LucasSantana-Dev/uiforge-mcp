@@ -1,17 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import {
-  mapTokensToTailwind,
-  extractTokensFromFigmaNode,
-  tokensToDesignContext,
-} from '../lib/tailwind-mapper.js';
+import { mapTokensToTailwind, extractTokensFromFigmaNode, tokensToDesignContext } from '../lib/tailwind-mapper.js';
 import type { IFigmaDesignToken } from '../lib/types.js';
 import type { FigmaNode } from '../lib/figma-client.js';
 
 describe('mapTokensToTailwind', () => {
   it('should map color tokens to text and bg classes', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'primary', type: 'color', value: '#2563eb', category: 'color' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'primary', type: 'color', value: '#2563eb', category: 'color' }];
     const result = mapTokensToTailwind(tokens);
     expect(result.length).toBeGreaterThanOrEqual(2);
     expect(result.some((m) => m.className.includes('text-'))).toBe(true);
@@ -19,9 +13,7 @@ describe('mapTokensToTailwind', () => {
   });
 
   it('should map spacing tokens to padding, margin, and gap classes', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'space-md', type: 'number', value: 16, category: 'spacing' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'space-md', type: 'number', value: 16, category: 'spacing' }];
     const result = mapTokensToTailwind(tokens);
     expect(result.length).toBeGreaterThanOrEqual(3);
     expect(result.some((m) => m.className.includes('p-'))).toBe(true);
@@ -48,9 +40,7 @@ describe('mapTokensToTailwind', () => {
   });
 
   it('should map borderRadius tokens', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'radius-md', type: 'number', value: '6', category: 'borderRadius' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'radius-md', type: 'number', value: '6', category: 'borderRadius' }];
     const result = mapTokensToTailwind(tokens);
     expect(result.length).toBe(1);
     expect(result[0].className).toBe('rounded-md');

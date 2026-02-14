@@ -125,11 +125,7 @@ async function loadFontsForContext(ctx?: IDesignContext): Promise<FontEntry[]> {
   return fonts;
 }
 
-function buildWireframeJsx(
-  description: string,
-  width: number,
-  height: number
-): React.ReactNode {
+function buildWireframeJsx(description: string, width: number, height: number): React.ReactNode {
   return {
     type: 'div',
     props: {
@@ -196,12 +192,7 @@ function buildWireframeJsx(
   } as unknown as React.ReactNode;
 }
 
-function buildMockupJsx(
-  description: string,
-  width: number,
-  height: number,
-  ctx?: IDesignContext
-): React.ReactNode {
+function buildMockupJsx(description: string, width: number, height: number, ctx?: IDesignContext): React.ReactNode {
   const primary = ctx?.colorPalette?.primary ?? '#2563eb';
   const bg = ctx?.colorPalette?.background ?? '#ffffff';
   const fg = ctx?.colorPalette?.foreground ?? '#0f172a';

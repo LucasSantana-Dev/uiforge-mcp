@@ -11,7 +11,10 @@ const inputSchema = {
   framework: z.enum(['react', 'nextjs', 'vue', 'angular']).describe('Frontend framework to scaffold'),
   styling: z.enum(['tailwindcss']).default('tailwindcss').describe('Styling framework'),
   architecture: z.enum(['flat', 'feature-based', 'atomic']).default('flat').describe('Project architecture pattern'),
-  state_management: z.enum(['useState', 'zustand', 'pinia', 'signals', 'none']).default('none').describe('State management solution'),
+  state_management: z
+    .enum(['useState', 'zustand', 'pinia', 'signals', 'none'])
+    .default('none')
+    .describe('State management solution'),
   project_name: z.string().min(1).max(100).describe('Project name (used for directory and package.json)'),
 };
 

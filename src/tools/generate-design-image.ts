@@ -9,13 +9,16 @@ const inputSchema = {
   type: z.enum(['wireframe', 'mockup', 'component_preview']).describe('Type of image to generate'),
   width: z.number().int().min(100).max(4096).default(1200).describe('Image width in pixels'),
   height: z.number().int().min(100).max(4096).default(800).describe('Image height in pixels'),
-  design_context: z.object({
-    typography: z.any().optional(),
-    colorPalette: z.any().optional(),
-    spacing: z.any().optional(),
-    borderRadius: z.any().optional(),
-    shadows: z.any().optional(),
-  }).optional().describe('Optional design context override'),
+  design_context: z
+    .object({
+      typography: z.any().optional(),
+      colorPalette: z.any().optional(),
+      spacing: z.any().optional(),
+      borderRadius: z.any().optional(),
+      shadows: z.any().optional(),
+    })
+    .optional()
+    .describe('Optional design context override'),
   output_format: z.enum(['svg', 'png']).default('svg').describe('Output image format'),
 };
 

@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { designContextStore, DEFAULT_CONTEXT } from '../lib/design-context.js';
-import { resolveColorSystemHsl, generateCssVariableBlock, generateFontImportHtml } from '../lib/templates/css-variables.js';
+import {
+  resolveColorSystemHsl,
+  generateCssVariableBlock,
+  generateFontImportHtml,
+} from '../lib/templates/css-variables.js';
 import { mapTokensToTailwind } from '../lib/tailwind-mapper.js';
 import { getPreset } from '../lib/design-references/index.js';
 import type { IFigmaDesignToken } from '../lib/types.js';
@@ -135,36 +139,28 @@ describe('css-variables', () => {
 // ── Semantic Tailwind Mapper ────────────────────────────────
 describe('semantic tailwind-mapper', () => {
   it('maps spacing 16px to p-4 (not p-[16px])', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'space', type: 'number', value: 16, category: 'spacing' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'space', type: 'number', value: 16, category: 'spacing' }];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-4');
   });
 
   it('maps spacing 8px to p-2', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'space', type: 'number', value: 8, category: 'spacing' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'space', type: 'number', value: 8, category: 'spacing' }];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-2');
   });
 
   it('maps spacing 24px to p-6', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'space', type: 'number', value: 24, category: 'spacing' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'space', type: 'number', value: 24, category: 'spacing' }];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-6');
   });
 
   it('falls back to arbitrary value for non-standard spacing', () => {
-    const tokens: IFigmaDesignToken[] = [
-      { name: 'space', type: 'number', value: 100, category: 'spacing' },
-    ];
+    const tokens: IFigmaDesignToken[] = [{ name: 'space', type: 'number', value: 100, category: 'spacing' }];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-[100px]');

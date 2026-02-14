@@ -1,5 +1,11 @@
 import type { IDesignContext } from '../types.js';
-import { FONT_PAIRINGS, DEFAULT_FONT_PAIRING, getFontPairing, getFontPairingsByMood, TYPE_SCALE } from './font-pairings.js';
+import {
+  FONT_PAIRINGS,
+  DEFAULT_FONT_PAIRING,
+  getFontPairing,
+  getFontPairingsByMood,
+  TYPE_SCALE,
+} from './font-pairings.js';
 import { COLOR_SYSTEMS, DEFAULT_COLOR_SYSTEM, getColorSystem, getColorSystemsByMood } from './color-systems.js';
 import { SPACING_SYSTEM } from './spacing-layout.js';
 import { ICON_LIBRARIES, getDefaultIconLibrary } from './icon-references.js';

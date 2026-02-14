@@ -174,12 +174,7 @@ function buildNavigationScript(flows: ITransition[]): string {
       const fromId = toScreenId(flow.from);
       const toId = toScreenId(flow.to);
       const animation = flow.animation ?? 'fade';
-      const animClass =
-        animation === 'none'
-          ? ''
-          : animation === 'fade'
-            ? 'fade-in'
-            : animation;
+      const animClass = animation === 'none' ? '' : animation === 'fade' ? 'fade-in' : animation;
 
       return `
       { from: '${fromId}', to: '${toId}', trigger: '${flow.trigger}', targetElement: ${flow.targetElement ? `'${flow.targetElement}'` : 'null'}, animClass: '${animClass}' }`;
@@ -226,7 +221,11 @@ function buildNavigationScript(flows: ITransition[]): string {
 
 function renderElement(el: IScreenElement, flows: ITransition[]): string {
   const navAttrs = buildNavAttrs(el, flows);
-  const styleStr = el.styles ? ` style="${Object.entries(el.styles).map(([k, v]) => `${camelToKebab(k)}: ${v}`).join('; ')}"` : '';
+  const styleStr = el.styles
+    ? ` style="${Object.entries(el.styles)
+        .map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+        .join('; ')}"`
+    : '';
 
   switch (el.type) {
     case 'heading':
@@ -253,21 +252,21 @@ function renderElement(el: IScreenElement, flows: ITransition[]): string {
     }
 
     case 'nav': {
-      const links = el.children
-        ?.map((c) => {
-          const cNavAttrs = buildNavAttrs(c, flows);
-          return `<a id="${c.id}"${cNavAttrs}>${escapeHtml(c.label ?? '')}</a>`;
-        })
-        .join('\n          ') ?? '';
+      const links =
+        el.children
+          ?.map((c) => {
+            const cNavAttrs = buildNavAttrs(c, flows);
+            return `<a id="${c.id}"${cNavAttrs}>${escapeHtml(c.label ?? '')}</a>`;
+          })
+          .join('\n          ') ?? '';
       return `<nav id="${el.id}" class="proto-nav"${styleStr}>
           ${links}
         </nav>`;
     }
 
     case 'list': {
-      const items = el.children
-        ?.map((c) => `<li id="${c.id}">${escapeHtml(c.label ?? '')}</li>`)
-        .join('\n          ') ?? '';
+      const items =
+        el.children?.map((c) => `<li id="${c.id}">${escapeHtml(c.label ?? '')}</li>`).join('\n          ') ?? '';
       return `<ul id="${el.id}" style="list-style: disc; padding-left: 20px;"${styleStr}${navAttrs}>
           ${items}
         </ul>`;
@@ -292,9 +291,7 @@ function renderElement(el: IScreenElement, flows: ITransition[]): string {
 }
 
 function buildNavAttrs(el: IScreenElement, flows: ITransition[]): string {
-  const flow = flows.find(
-    (f) => f.targetElement === el.id || (f.from && el.action === f.to)
-  );
+  const flow = flows.find((f) => f.targetElement === el.id || (f.from && el.action === f.to));
   if (!flow) return '';
   const toId = toScreenId(flow.to);
   const anim = flow.animation ?? 'fade';
@@ -303,15 +300,14 @@ function buildNavAttrs(el: IScreenElement, flows: ITransition[]): string {
 }
 
 function toScreenId(name: string): string {
-  return `screen-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+  return `screen-${name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')}`;
 }
 
 function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function camelToKebab(str: string): string {

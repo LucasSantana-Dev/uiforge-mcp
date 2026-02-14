@@ -21,11 +21,7 @@ function hexToHsl(hex: string): string {
 
   const d = max - min;
   const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  const h = max === r
-    ? ((g - b) / d + (g < b ? 6 : 0)) / 6
-    : max === g
-      ? ((b - r) / d + 2) / 6
-      : ((r - g) / d + 4) / 6;
+  const h = max === r ? ((g - b) / d + (g < b ? 6 : 0)) / 6 : max === g ? ((b - r) / d + 2) / 6 : ((r - g) / d + 4) / 6;
 
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
@@ -95,9 +91,7 @@ export function generateFontImportHtml(ctx?: IDesignContext): string {
     families.push(headingFont);
   }
 
-  const params = families
-    .map((f) => `family=${f.replace(/\s/g, '+')}:wght@400;500;600;700`)
-    .join('&');
+  const params = families.map((f) => `family=${f.replace(/\s/g, '+')}:wght@400;500;600;700`).join('&');
 
   return `<link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

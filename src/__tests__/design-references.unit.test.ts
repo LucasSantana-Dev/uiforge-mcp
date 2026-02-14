@@ -200,7 +200,9 @@ describe('layout-patterns', () => {
   });
 
   it('getLayoutPatternsByUseCase filters correctly', () => {
-    const useCases = [...new Set(LAYOUT_PATTERNS.flatMap((lp) => Array.isArray(lp.useCase) ? lp.useCase : [lp.useCase]))];
+    const useCases = [
+      ...new Set(LAYOUT_PATTERNS.flatMap((lp) => (Array.isArray(lp.useCase) ? lp.useCase : [lp.useCase]))),
+    ];
     for (const uc of useCases) {
       const filtered = getLayoutPatternsByUseCase(uc);
       expect(filtered.length).toBeGreaterThan(0);

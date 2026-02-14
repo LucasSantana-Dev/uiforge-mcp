@@ -183,8 +183,9 @@ export default {
   });
 
   // src/main.ts
-  const mainImports = stateManagement === 'pinia'
-    ? `import { createApp } from 'vue'
+  const mainImports =
+    stateManagement === 'pinia'
+      ? `import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import './style.css'
@@ -193,7 +194,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.mount('#app')
 `
-    : `import { createApp } from 'vue'
+      : `import { createApp } from 'vue'
 import App from './App.vue'
 import './style.css'
 

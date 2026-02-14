@@ -6,7 +6,11 @@ import { extractDesignFromUrl } from '../lib/design-extractor.js';
 import type { IGeneratedFile, IDesignContext } from '../lib/types.js';
 
 const inputSchema = {
-  component_type: z.string().describe('Type of component to generate (e.g., "button", "card", "form", "navbar", "sidebar", "modal", "table", "hero")'),
+  component_type: z
+    .string()
+    .describe(
+      'Type of component to generate (e.g., "button", "card", "form", "navbar", "sidebar", "modal", "table", "hero")'
+    ),
   framework: z.enum(['react', 'nextjs', 'vue', 'angular']).describe('Target framework'),
   props: z.record(z.string()).optional().describe('Component props as key-value pairs'),
   design_reference_url: z.string().url().optional().describe('URL to extract design inspiration from'),
@@ -19,7 +23,14 @@ export function registerGenerateUiComponent(server: McpServer): void {
     'generate_ui_component',
     'Create or iterate UI components with style audit and design context awareness. Supports React, Next.js, Vue, and Angular.',
     inputSchema,
-    async ({ component_type, framework, props, design_reference_url, existing_tailwind_config, existing_css_variables }) => {
+    async ({
+      component_type,
+      framework,
+      props,
+      design_reference_url,
+      existing_tailwind_config,
+      existing_css_variables,
+    }) => {
       const warnings: string[] = [];
 
       // Style audit
@@ -105,9 +116,7 @@ function generateReactComponent(
   propsInterface: string,
   props?: Record<string, string>
 ): IGeneratedFile[] {
-  const propsType = propsInterface
-    ? `\ninterface ${name}Props {\n${propsInterface}\n}\n`
-    : '';
+  const propsType = propsInterface ? `\ninterface ${name}Props {\n${propsInterface}\n}\n` : '';
   const propsArg = propsInterface ? `{ ${Object.keys(props ?? {}).join(', ')} }: ${name}Props` : '';
   const body = getComponentBody(type, ctx, 'react');
 
@@ -317,9 +326,13 @@ function kebabCase(str: string): string {
 
 function vueType(tsType: string): string {
   switch (tsType.toLowerCase()) {
-    case 'string': return 'String';
-    case 'number': return 'Number';
-    case 'boolean': return 'Boolean';
-    default: return 'Object';
+    case 'string':
+      return 'String';
+    case 'number':
+      return 'Number';
+    case 'boolean':
+      return 'Boolean';
+    default:
+      return 'Object';
   }
 }

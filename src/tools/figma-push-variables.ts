@@ -5,14 +5,16 @@ import type { IFigmaVariable } from '../lib/types.js';
 
 const inputSchema = {
   file_key: z.string().describe('Figma file key to push variables to'),
-  variables: z.array(
-    z.object({
-      name: z.string().describe('Variable name (e.g., "colors/primary", "spacing/md")'),
-      type: z.enum(['COLOR', 'FLOAT', 'STRING']).describe('Variable type'),
-      value: z.union([z.string(), z.number()]).describe('Variable value (hex color string, number, or string)'),
-      collection: z.string().optional().describe('Variable collection name'),
-    })
-  ).describe('Array of variables to create or update'),
+  variables: z
+    .array(
+      z.object({
+        name: z.string().describe('Variable name (e.g., "colors/primary", "spacing/md")'),
+        type: z.enum(['COLOR', 'FLOAT', 'STRING']).describe('Variable type'),
+        value: z.union([z.string(), z.number()]).describe('Variable value (hex color string, number, or string)'),
+        collection: z.string().optional().describe('Variable collection name'),
+      })
+    )
+    .describe('Array of variables to create or update'),
 };
 
 export function registerFigmaPushVariables(server: McpServer): void {
@@ -24,11 +26,7 @@ export function registerFigmaPushVariables(server: McpServer): void {
       try {
         const collectionName = variables[0]?.collection ?? 'UIForge Tokens';
 
-        const result = await postVariables(
-          file_key,
-          variables as IFigmaVariable[],
-          collectionName
-        );
+        const result = await postVariables(file_key, variables as IFigmaVariable[], collectionName);
 
         const summary = [
           `Pushed ${variables.length} variable(s) to Figma file: ${file_key}`,

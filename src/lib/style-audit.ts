@@ -34,7 +34,8 @@ export function parseTailwindConfig(configString: string): StyleAuditResult {
           mutedForeground: colorPalette['mutedForeground'] ?? colorPalette['muted-foreground'] ?? '#64748b',
           border: colorPalette['border'] ?? '#e2e8f0',
           destructive: colorPalette['destructive'] ?? '#ef4444',
-          destructiveForeground: colorPalette['destructiveForeground'] ?? colorPalette['destructive-foreground'] ?? '#ffffff',
+          destructiveForeground:
+            colorPalette['destructiveForeground'] ?? colorPalette['destructive-foreground'] ?? '#ffffff',
         };
       }
     }
@@ -44,8 +45,13 @@ export function parseTailwindConfig(configString: string): StyleAuditResult {
       tokens.typography = {
         fontFamily: fontFamilyMatch[1],
         fontSize: {
-          xs: '0.75rem', sm: '0.875rem', base: '1rem', lg: '1.125rem',
-          xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem',
+          xs: '0.75rem',
+          sm: '0.875rem',
+          base: '1rem',
+          lg: '1.125rem',
+          xl: '1.25rem',
+          '2xl': '1.5rem',
+          '3xl': '1.875rem',
         },
         fontWeight: { normal: '400', medium: '500', semibold: '600', bold: '700' },
         lineHeight: { tight: '1.25', normal: '1.5', relaxed: '1.75' },
@@ -86,7 +92,18 @@ export function parseCssVariables(cssString: string): StyleAuditResult {
       const name = match[1].trim();
       const value = match[2].trim();
 
-      if (name.includes('color') || name.includes('bg') || name.includes('foreground') || name.includes('primary') || name.includes('secondary') || name.includes('accent') || name.includes('muted') || name.includes('destructive') || name.includes('border') || name.includes('background')) {
+      if (
+        name.includes('color') ||
+        name.includes('bg') ||
+        name.includes('foreground') ||
+        name.includes('primary') ||
+        name.includes('secondary') ||
+        name.includes('accent') ||
+        name.includes('muted') ||
+        name.includes('destructive') ||
+        name.includes('border') ||
+        name.includes('background')
+      ) {
         const camelName = name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
         colorPalette[camelName] = value;
       }
@@ -142,7 +159,7 @@ export function auditStyles(
     const css = parseCssVariables(cssVariables);
     // Deep-merge colorPalette: CSS values override TW values, but missing CSS values keep TW values
     if (css.tokens.colorPalette) {
-      const base = merged.colorPalette ?? {} as Partial<IDesignContext['colorPalette']>;
+      const base = merged.colorPalette ?? ({} as Partial<IDesignContext['colorPalette']>);
       css.tokens.colorPalette = { ...base, ...css.tokens.colorPalette } as IDesignContext['colorPalette'];
     }
     merged = { ...merged, ...css.tokens };

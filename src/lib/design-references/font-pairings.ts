@@ -5,7 +5,10 @@ function googleFontsUrl(family: string, weights: number[]): string {
   return `https://fonts.googleapis.com/css2?family=${encoded}:wght@${weights.join(';')}&display=swap`;
 }
 
-function cssImport(heading: { family: string; weights: number[] }, body: { family: string; weights: number[] }): string {
+function cssImport(
+  heading: { family: string; weights: number[] },
+  body: { family: string; weights: number[] }
+): string {
   const families = [heading, body]
     .filter((f, i, arr) => arr.findIndex((a) => a.family === f.family) === i)
     .map((f) => `family=${f.family.replace(/ /g, '+')}:wght@${f.weights.join(';')}`)
@@ -21,7 +24,10 @@ const interInter: IFontPairing = {
   body: { family: 'Inter', weights: [400, 500], googleFontsUrl: googleFontsUrl('Inter', [400, 500]) },
   mood: ['clean', 'neutral', 'professional'],
   bestFor: ['dashboards', 'SaaS', 'dev tools', 'admin panels'],
-  cssImport: cssImport({ family: 'Inter', weights: [400, 500, 600, 700, 800] }, { family: 'Inter', weights: [400, 500] }),
+  cssImport: cssImport(
+    { family: 'Inter', weights: [400, 500, 600, 700, 800] },
+    { family: 'Inter', weights: [400, 500] }
+  ),
 };
 
 const manropeInter: IFontPairing = {
@@ -64,16 +70,27 @@ const outfitZillaSlab: IFontPairing = {
 
 const playfairAlbertSans: IFontPairing = {
   name: 'playfair-albertsans',
-  heading: { family: 'Playfair Display', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Playfair Display', [500, 600, 700]) },
+  heading: {
+    family: 'Playfair Display',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Playfair Display', [500, 600, 700]),
+  },
   body: { family: 'Albert Sans', weights: [400, 500], googleFontsUrl: googleFontsUrl('Albert Sans', [400, 500]) },
   mood: ['classic', 'elegant', 'editorial'],
   bestFor: ['luxury brands', 'editorial', 'magazines'],
-  cssImport: cssImport({ family: 'Playfair Display', weights: [500, 600, 700] }, { family: 'Albert Sans', weights: [400, 500] }),
+  cssImport: cssImport(
+    { family: 'Playfair Display', weights: [500, 600, 700] },
+    { family: 'Albert Sans', weights: [400, 500] }
+  ),
 };
 
 const frauncesPoppins: IFontPairing = {
   name: 'fraunces-poppins',
-  heading: { family: 'Fraunces', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Fraunces', [500, 600, 700]) },
+  heading: {
+    family: 'Fraunces',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Fraunces', [500, 600, 700]),
+  },
   body: { family: 'Poppins', weights: [400, 500], googleFontsUrl: googleFontsUrl('Poppins', [400, 500]) },
   mood: ['playful', 'trustworthy', 'warm'],
   bestFor: ['friendly brands', 'blogs', 'lifestyle'],
@@ -82,7 +99,11 @@ const frauncesPoppins: IFontPairing = {
 
 const bodoniRaleway: IFontPairing = {
   name: 'bodoni-raleway',
-  heading: { family: 'Bodoni Moda', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Bodoni Moda', [500, 600, 700]) },
+  heading: {
+    family: 'Bodoni Moda',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Bodoni Moda', [500, 600, 700]),
+  },
   body: { family: 'Raleway', weights: [400, 500], googleFontsUrl: googleFontsUrl('Raleway', [400, 500]) },
   mood: ['sophisticated', 'high-end', 'fashion'],
   bestFor: ['fashion', 'magazines', 'luxury e-commerce'],
@@ -100,22 +121,36 @@ const prataManrope: IFontPairing = {
 
 const piazzollaRedHat: IFontPairing = {
   name: 'piazzolla-redhat',
-  heading: { family: 'Piazzolla', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Piazzolla', [500, 600, 700]) },
+  heading: {
+    family: 'Piazzolla',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Piazzolla', [500, 600, 700]),
+  },
   body: { family: 'Red Hat Text', weights: [400, 500], googleFontsUrl: googleFontsUrl('Red Hat Text', [400, 500]) },
   mood: ['distinctive', 'personality', 'editorial'],
   bestFor: ['blogs', 'editorial content', 'cultural sites'],
-  cssImport: cssImport({ family: 'Piazzolla', weights: [500, 600, 700] }, { family: 'Red Hat Text', weights: [400, 500] }),
+  cssImport: cssImport(
+    { family: 'Piazzolla', weights: [500, 600, 700] },
+    { family: 'Red Hat Text', weights: [400, 500] }
+  ),
 };
 
 // --- Friendly / Approachable / Startup ---
 
 const montserratSourceSans: IFontPairing = {
   name: 'montserrat-sourcesans',
-  heading: { family: 'Montserrat', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Montserrat', [500, 600, 700]) },
+  heading: {
+    family: 'Montserrat',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Montserrat', [500, 600, 700]),
+  },
   body: { family: 'Source Sans 3', weights: [400, 500], googleFontsUrl: googleFontsUrl('Source Sans 3', [400, 500]) },
   mood: ['timeless', 'modern', 'versatile'],
   bestFor: ['general purpose', 'marketing', 'landing pages'],
-  cssImport: cssImport({ family: 'Montserrat', weights: [500, 600, 700] }, { family: 'Source Sans 3', weights: [400, 500] }),
+  cssImport: cssImport(
+    { family: 'Montserrat', weights: [500, 600, 700] },
+    { family: 'Source Sans 3', weights: [400, 500] }
+  ),
 };
 
 const lexendPublicSans: IFontPairing = {
@@ -129,7 +164,11 @@ const lexendPublicSans: IFontPairing = {
 
 const albertSansBarlow: IFontPairing = {
   name: 'albertsans-barlow',
-  heading: { family: 'Albert Sans', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Albert Sans', [500, 600, 700]) },
+  heading: {
+    family: 'Albert Sans',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Albert Sans', [500, 600, 700]),
+  },
   body: { family: 'Barlow', weights: [400, 500], googleFontsUrl: googleFontsUrl('Barlow', [400, 500]) },
   mood: ['informal', 'geometric', 'startup'],
   bestFor: ['startups', 'landing pages', 'product sites'],
@@ -138,7 +177,11 @@ const albertSansBarlow: IFontPairing = {
 
 const epilogueMulish: IFontPairing = {
   name: 'epilogue-mulish',
-  heading: { family: 'Epilogue', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Epilogue', [500, 600, 700]) },
+  heading: {
+    family: 'Epilogue',
+    weights: [500, 600, 700],
+    googleFontsUrl: googleFontsUrl('Epilogue', [500, 600, 700]),
+  },
   body: { family: 'Mulish', weights: [400, 500], googleFontsUrl: googleFontsUrl('Mulish', [400, 500]) },
   mood: ['minimalist', 'clean', 'contemporary'],
   bestFor: ['fashion', 'tech', 'minimalist sites'],
@@ -159,19 +202,33 @@ const bebasNeueHeebo: IFontPairing = {
 const jostAtkinson: IFontPairing = {
   name: 'jost-atkinson',
   heading: { family: 'Jost', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Jost', [500, 600, 700]) },
-  body: { family: 'Atkinson Hyperlegible', weights: [400, 700], googleFontsUrl: googleFontsUrl('Atkinson Hyperlegible', [400, 700]) },
+  body: {
+    family: 'Atkinson Hyperlegible',
+    weights: [400, 700],
+    googleFontsUrl: googleFontsUrl('Atkinson Hyperlegible', [400, 700]),
+  },
   mood: ['classic', 'clear', 'accessible'],
   bestFor: ['news', 'accessibility-first', 'government'],
-  cssImport: cssImport({ family: 'Jost', weights: [500, 600, 700] }, { family: 'Atkinson Hyperlegible', weights: [400, 700] }),
+  cssImport: cssImport(
+    { family: 'Jost', weights: [500, 600, 700] },
+    { family: 'Atkinson Hyperlegible', weights: [400, 700] }
+  ),
 };
 
 const lexendAtkinson: IFontPairing = {
   name: 'lexend-atkinson',
   heading: { family: 'Lexend', weights: [500, 600, 700], googleFontsUrl: googleFontsUrl('Lexend', [500, 600, 700]) },
-  body: { family: 'Atkinson Hyperlegible', weights: [400, 700], googleFontsUrl: googleFontsUrl('Atkinson Hyperlegible', [400, 700]) },
+  body: {
+    family: 'Atkinson Hyperlegible',
+    weights: [400, 700],
+    googleFontsUrl: googleFontsUrl('Atkinson Hyperlegible', [400, 700]),
+  },
   mood: ['maximum-readability', 'inclusive', 'clear'],
   bestFor: ['government', 'education', 'healthcare'],
-  cssImport: cssImport({ family: 'Lexend', weights: [500, 600, 700] }, { family: 'Atkinson Hyperlegible', weights: [400, 700] }),
+  cssImport: cssImport(
+    { family: 'Lexend', weights: [500, 600, 700] },
+    { family: 'Atkinson Hyperlegible', weights: [400, 700] }
+  ),
 };
 
 export const FONT_PAIRINGS: readonly IFontPairing[] = [

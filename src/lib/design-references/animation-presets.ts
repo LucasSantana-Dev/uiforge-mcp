@@ -56,7 +56,8 @@ export const ANIMATION_PRESETS: readonly IAnimationPreset[] = [
     name: 'focus-ring',
     category: 'micro-interaction',
     css: '.focus-ring:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }',
-    tailwindClass: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+    tailwindClass:
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     duration: '0s',
   },
 
