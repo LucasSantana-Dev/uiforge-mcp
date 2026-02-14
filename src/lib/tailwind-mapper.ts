@@ -247,18 +247,19 @@ export function extractTokensFromFigmaNode(node: FigmaNode): IFigmaDesignToken[]
   if (node.style) {
     const style = node.style as Record<string, unknown>;
     if (style['fontSize']) {
+      const fontSizePx = style['fontSize'] as number;
       tokens.push({
         name: `${node.name}/fontSize`,
-        type: 'number',
-        value: style['fontSize'] as number,
+        type: 'string',
+        value: `${(fontSizePx / 16).toFixed(3)}rem`,
         category: 'typography',
       });
     }
     if (style['fontWeight']) {
       tokens.push({
         name: `${node.name}/fontWeight`,
-        type: 'number',
-        value: style['fontWeight'] as number,
+        type: 'string',
+        value: String(style['fontWeight']),
         category: 'typography',
       });
     }
@@ -271,10 +272,12 @@ export function extractTokensFromFigmaNode(node: FigmaNode): IFigmaDesignToken[]
       });
     }
     if (style['lineHeightPx']) {
+      const lineHeightPx = style['lineHeightPx'] as number;
+      const fontSizePx = Math.max((style['fontSize'] as number) ?? 16, 1);
       tokens.push({
         name: `${node.name}/lineHeight`,
-        type: 'number',
-        value: style['lineHeightPx'] as number,
+        type: 'string',
+        value: (lineHeightPx / fontSizePx).toFixed(3),
         category: 'typography',
       });
     }

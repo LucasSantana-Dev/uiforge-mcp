@@ -1,5 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { loadConfig } from './lib/config.js';
 import { registerCurrentStylesResource } from './resources/current-styles.js';
 import { registerScaffoldFullApplication } from './tools/scaffold-full-application.js';
 import { registerGenerateUiComponent } from './tools/generate-ui-component.js';
@@ -9,6 +10,20 @@ import { registerFetchDesignInspiration } from './tools/fetch-design-inspiration
 import { registerFigmaContextParser } from './tools/figma-context-parser.js';
 import { registerFigmaPushVariables } from './tools/figma-push-variables.js';
 import { registerAnalyzeDesignReferences } from './tools/analyze-design-references.js';
+
+// Load and validate configuration BEFORE importing logger
+let config;
+try {
+  config = loadConfig();
+} catch (error) {
+  console.error('Failed to load configuration:', error instanceof Error ? error.message : error);
+  process.exit(1);
+}
+
+// Import logger AFTER config is loaded
+import { logger } from './lib/logger.js';
+
+logger.info({ config: { NODE_ENV: config.NODE_ENV, LOG_LEVEL: config.LOG_LEVEL } }, 'Configuration loaded');
 
 const server = new McpServer({
   name: 'uiforge',
@@ -28,24 +43,38 @@ registerFigmaContextParser(server);
 registerFigmaPushVariables(server);
 registerAnalyzeDesignReferences(server);
 
+logger.info('All tools and resources registered');
+
 // Connect via stdio transport
 const transport = new StdioServerTransport();
 
 try {
   await server.connect(transport);
+  logger.info('UIForge MCP server started successfully');
 } catch (error) {
-  console.error('Failed to start UIForge MCP server:', error);
+  logger.error({ error }, 'Failed to start UIForge MCP server');
   process.exit(1);
 }
 
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received, shutting down gracefully');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT received, shutting down gracefully');
+  process.exit(0);
+});
+
 // Handle unhandled rejections
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  logger.error({ reason, promise }, 'Unhandled Rejection');
   process.exit(1);
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+  logger.error({ error }, 'Uncaught Exception');
   process.exit(1);
 });

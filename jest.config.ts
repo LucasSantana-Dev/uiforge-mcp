@@ -26,6 +26,9 @@ const config: Config = {
   coverageProvider: 'v8',
   collectCoverageFrom: [
     'src/lib/**/*.ts',
+    'src/tools/**/*.ts',
+    'src/resources/**/*.ts',
+    'src/index.ts',
     '!src/lib/types.ts',
     '!src/lib/figma-client.ts',
     '!src/lib/design-extractor.ts',
@@ -35,10 +38,10 @@ const config: Config = {
   ],
   coverageThreshold: {
     global: {
-      branches: 70,
+      branches: 73,
       functions: 85,
-      lines: 85,
-      statements: 85,
+      lines: 84,
+      statements: 84,
     },
   },
 };

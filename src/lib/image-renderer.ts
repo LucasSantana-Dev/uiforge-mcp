@@ -82,48 +82,66 @@ async function loadFontsForContext(ctx?: IDesignContext): Promise<FontEntry[]> {
 
   const fonts: FontEntry[] = [];
 
-  // Load body font (regular + bold)
+  // Try to load body font (regular + bold)
   const bodyRegKey = `${bodyFamily}-400`;
   const bodyBoldKey = `${bodyFamily}-700`;
 
+  let bodyFontLoaded = false;
   try {
     fonts.push({ name: bodyFamily, data: await loadFont(bodyRegKey), weight: 400, style: 'normal' });
+    bodyFontLoaded = true;
   } catch {
-    // Fallback to Inter if requested font not bundled
-    if (bodyFamily !== 'Inter') {
-      try {
-        fonts.push({ name: bodyFamily, data: await loadFont('Inter-400'), weight: 400, style: 'normal' });
-      } catch {
-        // Inter also failed - will be caught by the fonts.length === 0 check below
-      }
-    }
+    // Body font failed, will try Inter fallback
   }
 
-  try {
-    fonts.push({ name: bodyFamily, data: await loadFont(bodyBoldKey), weight: 700, style: 'normal' });
-  } catch {
-    // Bold is optional — skip silently
+  if (bodyFontLoaded) {
+    try {
+      fonts.push({ name: bodyFamily, data: await loadFont(bodyBoldKey), weight: 700, style: 'normal' });
+    } catch {
+      // Bold is optional — skip silently
+    }
   }
 
   // Load heading font if different from body
   if (headingFamily !== bodyFamily) {
-    const headRegKey = `${headingFamily}-400`;
     const headBoldKey = `${headingFamily}-700`;
+    const headRegKey = `${headingFamily}-400`;
 
+    let headingFontLoaded = false;
     try {
       fonts.push({ name: headingFamily, data: await loadFont(headBoldKey), weight: 700, style: 'normal' });
+      headingFontLoaded = true;
     } catch {
-      try {
-        fonts.push({ name: headingFamily, data: await loadFont(headRegKey), weight: 400, style: 'normal' });
-      } catch {
-        // Heading font not available — satori will use body font
-      }
+      // Heading font not found — will use primary font family
+    }
+    try {
+      fonts.push({ name: headingFamily, data: await loadFont(headRegKey), weight: 400, style: 'normal' });
+      headingFontLoaded = true;
+    } catch {
+      // Heading font not found — will use primary font family
+    }
+
+    // If heading font failed but body succeeded, use body font for headings
+    if (!headingFontLoaded && bodyFontLoaded) {
+      // Already loaded body fonts, they'll be used for headings
     }
   }
 
-  // Ensure at least one font is loaded
+  // Fallback to Inter if no fonts loaded
   if (fonts.length === 0) {
-    fonts.push({ name: 'Inter', data: await loadFont('Inter-400'), weight: 400, style: 'normal' });
+    try {
+      fonts.push({ name: 'Inter', data: await loadFont('Inter-400'), weight: 400, style: 'normal' });
+      try {
+        fonts.push({ name: 'Inter', data: await loadFont('Inter-700'), weight: 700, style: 'normal' });
+      } catch {
+        // Inter bold optional
+      }
+    } catch (error) {
+      throw new Error(
+        'Failed to load any fonts. Ensure bundled fonts exist in src/assets/fonts/ or internet connection is available for Google Fonts CDN.',
+        { cause: error }
+      );
+    }
   }
 
   return fonts;

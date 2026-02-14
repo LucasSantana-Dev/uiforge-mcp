@@ -1,6 +1,10 @@
 import type { IFigmaVariable } from './types.js';
+import { createLogger } from './logger.js';
+
+const logger = createLogger('figma-client');
 
 const FIGMA_API_BASE = 'https://api.figma.com/v1';
+const FIGMA_API_TIMEOUT_MS = 30_000;
 
 function getToken(): string {
   const token = process.env['FIGMA_ACCESS_TOKEN'];
@@ -11,20 +15,24 @@ function getToken(): string {
 }
 
 async function figmaFetch(path: string, options: RequestInit = {}): Promise<unknown> {
-  const token = getToken();
-  const response = await fetch(`${FIGMA_API_BASE}${path}`, {
+  const url = `${FIGMA_API_BASE}${path}`;
+  const method = options.method ?? 'GET';
+
+  const response = await fetch(url, {
     ...options,
     headers: {
-      'X-Figma-Token': token,
+      'X-Figma-Token': getToken(),
       'Content-Type': 'application/json',
       ...options.headers,
     },
-    signal: AbortSignal.timeout(30_000),
+    signal: AbortSignal.timeout(FIGMA_API_TIMEOUT_MS),
   });
 
   if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Figma API ${response.status}: ${body}`);
+    const text = await response.text();
+    throw new Error(
+      `Figma API error [${method} ${path}]: ${response.status} ${response.statusText}\n${text}`
+    );
   }
 
   return response.json();
@@ -128,6 +136,11 @@ export interface PostVariablesPayload {
     value: unknown;
   }>;
 }
+
+const RETRY_BASE_DELAY_MS = 500;
+const MAX_RETRY_DELAY_MS = 5000;
+const MAX_RETRIES = 3;
+const OVERALL_RETRY_TIMEOUT_MS = 60_000;
 
 export async function postVariables(
   fileKey: string,
@@ -240,22 +253,66 @@ export async function postVariables(
 
   // If we created a new collection and have variables needing values, make a second POST
   if (isNewCollection && variablesNeedingValues.length > 0) {
-    // Fetch the newly created collection to get its mode ID
-    const updatedVars = await getVariables(fileKey);
-    const collections = updatedVars.meta?.variableCollections ?? {};
-
+    // Wait for Figma API to propagate the new collection (retry with exponential backoff)
     let newModeId: string | undefined;
-    for (const [, col] of Object.entries(collections)) {
-      if ((col as Record<string, unknown>)['name'] === collectionName) {
-        const modes = (col as Record<string, unknown>)['modes'] as Array<{ modeId: string }> | undefined;
-        if (modes?.[0]) {
-          newModeId = modes[0].modeId;
-        }
-        break;
+    let updatedVars: FigmaVariablesResponse | undefined;
+    let attempt = 0;
+    const startTime = Date.now();
+
+    while (attempt < MAX_RETRIES && !newModeId) {
+      // Check overall timeout before starting
+      if (Date.now() - startTime > OVERALL_RETRY_TIMEOUT_MS) {
+        throw new Error(
+          `Timeout: Failed to retrieve mode ID for collection "${collectionName}" after ${OVERALL_RETRY_TIMEOUT_MS}ms. ` +
+          `The collection was created but variable values could not be set.`
+        );
       }
+
+      if (attempt > 0) {
+        // Exponential backoff with cap: 500ms, 1000ms, 2000ms (capped at 5000ms)
+        const delay = Math.min(RETRY_BASE_DELAY_MS * Math.pow(2, attempt - 1), MAX_RETRY_DELAY_MS);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+
+      try {
+        // Fetch the newly created collection to get its mode ID
+        updatedVars = await getVariables(fileKey);
+
+        // Check timeout after API call as well
+        if (Date.now() - startTime > OVERALL_RETRY_TIMEOUT_MS) {
+          throw new Error(
+            `Timeout: Failed to retrieve mode ID for collection "${collectionName}" after ${OVERALL_RETRY_TIMEOUT_MS}ms. ` +
+            `The collection was created but variable values could not be set.`
+          );
+        }
+
+        const collections = updatedVars.meta?.variableCollections ?? {};
+
+        for (const [, col] of Object.entries(collections)) {
+          if ((col as Record<string, unknown>)['name'] === collectionName) {
+            const modes = (col as Record<string, unknown>)['modes'] as Array<{ modeId: string }> | undefined;
+            if (modes?.[0]) {
+              newModeId = modes[0].modeId;
+            }
+            break;
+          }
+        }
+      } catch (error) {
+        // If fetch fails, retry
+        logger.warn({ error, attempt: attempt + 1, maxRetries: MAX_RETRIES }, 'Retry failed to fetch variables');
+      }
+
+      attempt++;
     }
 
-    if (newModeId) {
+    if (!newModeId) {
+      throw new Error(
+        `Failed to retrieve mode ID for collection "${collectionName}" after ${MAX_RETRIES} retries. ` +
+        `The collection was created but variable values could not be set. Please try again or check Figma file manually.`
+      );
+    }
+
+    if (newModeId && updatedVars) {
       // Get the real variable IDs from the response
       const newVariables = updatedVars.meta?.variables ?? {};
       const nameToIdMap = new Map<string, string>();
@@ -300,10 +357,26 @@ export async function postVariables(
 }
 
 function hexToFigmaColor(hex: string): { r: number; g: number; b: number; a: number } {
-  const clean = hex.replace('#', '');
+  let clean = hex.replace('#', '');
+
+  // Validate hex format (3, 4, 6, or 8 characters ONLY)
+  if (!/^([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(clean)) {
+    throw new Error(`Invalid hex color format: ${hex}. Expected format: #RGB, #RGBA, #RRGGBB, or #RRGGBBAA`);
+  }
+
+  // Normalize 3/4 digit shorthand to 6/8 digit format
+  if (clean.length === 3) {
+    // #RGB -> #RRGGBB
+    clean = clean[0] + clean[0] + clean[1] + clean[1] + clean[2] + clean[2];
+  } else if (clean.length === 4) {
+    // #RGBA -> #RRGGBBAA
+    clean = clean[0] + clean[0] + clean[1] + clean[1] + clean[2] + clean[2] + clean[3] + clean[3];
+  }
+
   const r = parseInt(clean.substring(0, 2), 16) / 255;
   const g = parseInt(clean.substring(2, 4), 16) / 255;
   const b = parseInt(clean.substring(4, 6), 16) / 255;
   const a = clean.length === 8 ? parseInt(clean.substring(6, 8), 16) / 255 : 1;
+
   return { r, g, b, a };
 }

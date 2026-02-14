@@ -1,15 +1,39 @@
 import { chromium, type Browser, type Page } from 'playwright';
 import type { IScrapedPage } from './types.js';
+import { createLogger } from './logger.js';
+
+const logger = createLogger('browser-scraper');
 
 let browserInstance: Browser | null = null;
+let launchingPromise: Promise<Browser> | null = null;
 
 async function getBrowser(): Promise<Browser> {
   if (browserInstance?.isConnected()) return browserInstance;
-  browserInstance = await chromium.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-  });
-  return browserInstance;
+
+  // If already launching, wait for that promise
+  if (launchingPromise) return launchingPromise;
+
+  // Start launching and store the promise
+  launchingPromise = (async () => {
+    try {
+      const browser = await chromium.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      });
+      browserInstance = browser;
+      return browser;
+    } catch (error) {
+      logger.error({ err: error }, 'Failed to launch Chromium');
+      browserInstance = null;
+      throw error;
+    } finally {
+      // Clear launchingPromise during promise settlement (before downstream .then() handlers execute)
+      // to release the stored promise reference so future launches can start and the promise can be GC'd
+      launchingPromise = null;
+    }
+  })();
+
+  return launchingPromise;
 }
 
 export async function closeBrowser(): Promise<void> {
@@ -33,41 +57,53 @@ export async function scrapePage(url: string, options: ScrapeOptions = {}): Prom
   const { viewport = DEFAULT_VIEWPORT, waitMs = 2000, takeScreenshot = true, timeout = DEFAULT_TIMEOUT } = options;
 
   const browser = await getBrowser();
-  const context = await browser.newContext({
-    viewport,
-    userAgent: 'UIForge-MCP/0.1.0 (design-analyzer)',
-  });
-  const page = await context.newPage();
+  let context;
 
   try {
-    await page.goto(url, { waitUntil: 'networkidle', timeout });
-    await page.waitForTimeout(waitMs);
+    context = await browser.newContext({
+      viewport,
+      userAgent: 'UIForge-MCP/0.1.0 (design-analyzer)',
+    });
+    const page = await context.newPage();
 
-    const title = await page.title();
+    try {
+      await page.goto(url, { waitUntil: 'networkidle', timeout });
+      await page.waitForTimeout(waitMs);
 
-    const extracted = await extractPageStyles(page);
+      const title = await page.title();
 
-    let screenshot: Buffer | undefined;
-    if (takeScreenshot) {
-      screenshot = await page.screenshot({ fullPage: true, type: 'png' });
+      const extracted = await extractPageStyles(page);
+
+      let screenshot: Buffer | undefined;
+      if (takeScreenshot) {
+        screenshot = await page.screenshot({ fullPage: true, type: 'png' });
+      }
+
+      const meta = await extractMeta(page);
+
+      return {
+        url,
+        title,
+        screenshot,
+        colors: extracted.colors,
+        fonts: extracted.fonts,
+        fontSizes: extracted.fontSizes,
+        spacing: extracted.spacing,
+        layoutPatterns: extracted.layoutPatterns,
+        componentTypes: extracted.componentTypes,
+        meta,
+      };
+    } finally {
+      await page.close().catch((err) => {
+        logger.warn({ err }, 'Page close error (non-critical)');
+      });
     }
-
-    const meta = await extractMeta(page);
-
-    return {
-      url,
-      title,
-      screenshot,
-      colors: extracted.colors,
-      fonts: extracted.fonts,
-      fontSizes: extracted.fontSizes,
-      spacing: extracted.spacing,
-      layoutPatterns: extracted.layoutPatterns,
-      componentTypes: extracted.componentTypes,
-      meta,
-    };
   } finally {
-    await context.close();
+    if (context) {
+      await context.close().catch((err) => {
+        logger.warn({ err }, 'Context close error (non-critical)');
+      });
+    }
   }
 }
 

@@ -1,0 +1,233 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+# CodeRabbit Configuration for UIForge MCP
+# This configuration enables AI code reviews on GitHub PRs, IDE, and CLI
+
+language: "en-US"
+early_access: false
+enable_free_tier: true
+
+reviews:
+  # Review profile: "chill" for lighter feedback, "assertive" for more thorough reviews
+  profile: "assertive"
+
+  # Workflow settings
+  request_changes_workflow: false
+  commit_status: true
+  fail_commit_status: false
+
+  # Summary and documentation
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  high_level_summary_in_walkthrough: true
+  high_level_summary_instructions: |
+    Generate concise release notes as a bullet-point list highlighting:
+    - New features and tools added
+    - Bug fixes and improvements
+    - Breaking changes (if any)
+    - Performance optimizations
+    Include a brief summary of test coverage changes if applicable.
+
+  # Auto-generate PR titles
+  auto_title_placeholder: "@coderabbitai"
+  auto_title_instructions: |
+    Generate a clear, conventional commit style title:
+    - Use prefixes: feat:, fix:, docs:, refactor:, test:, chore:, perf:
+    - Keep it under 72 characters
+    - Be specific about what changed
+
+  # Review content options
+  review_status: true
+  review_details: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  estimate_code_review_effort: true
+
+  # Issue and PR tracking
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+
+  # Labels and reviewers
+  suggested_labels: true
+  auto_apply_labels: false
+  labeling_instructions:
+    - label: "enhancement"
+      instructions: "Apply when adding new features, tools, or capabilities to the MCP server"
+    - label: "bug"
+      instructions: "Apply when fixing bugs, errors, or unexpected behavior"
+    - label: "documentation"
+      instructions: "Apply when updating README, TESTING.md, CONTRIBUTING.md, or inline docs"
+    - label: "dependencies"
+      instructions: "Apply when updating npm packages or adding new dependencies"
+    - label: "performance"
+      instructions: "Apply when optimizing code, improving build times, or reducing bundle size"
+    - label: "testing"
+      instructions: "Apply when adding or modifying tests, improving test coverage"
+    - label: "docker"
+      instructions: "Apply when modifying Dockerfile or Docker-related configuration"
+    - label: "ci/cd"
+      instructions: "Apply when updating GitHub Actions workflows or CI/CD pipeline"
+    - label: "breaking-change"
+      instructions: "Apply when introducing breaking changes to the API or tool interfaces"
+
+  suggested_reviewers: true
+  auto_assign_reviewers: false
+
+  # Fun elements
+  in_progress_fortune: true
+  poem: true
+
+  # AI agent prompts
+  enable_prompt_for_ai_agents: true
+
+  # Path filters - exclude generated files and dependencies
+  path_filters:
+    - "!node_modules/**"
+    - "!dist/**"
+    - "!coverage/**"
+    - "!*.tsbuildinfo"
+    - "!package-lock.json"
+    - "!.windsurf/**"
+    - "src/**"
+    - "*.md"
+    - "*.yml"
+    - "*.yaml"
+    - "Dockerfile"
+    - "*.json"
+
+  # Path-specific review instructions
+  path_instructions:
+    - path: "src/tools/**/*.ts"
+      instructions: |
+        MCP Tool Implementation Review:
+        - Verify tool follows MCP SDK patterns and conventions
+        - Check input schema validation with Zod
+        - Ensure proper error handling and logging
+        - Verify tool is registered in src/index.ts
+        - Check for comprehensive JSDoc documentation
+        - Ensure tool updates design context appropriately
+        - Verify integration with existing design context store
+
+    - path: "src/lib/**/*.ts"
+      instructions: |
+        Library Module Review:
+        - Check for proper TypeScript types and interfaces
+        - Verify error handling and edge cases
+        - Ensure functions are pure and testable
+        - Check for proper logging with Pino
+        - Verify no side effects in utility functions
+        - Ensure proper async/await usage
+
+    - path: "src/__tests__/**/*.test.ts"
+      instructions: |
+        Test File Review:
+        - Verify tests follow AAA pattern (Arrange, Act, Assert)
+        - Check test coverage for edge cases and error conditions
+        - Ensure tests are independent and can run in any order
+        - Verify proper use of mocks and test doubles
+        - Check for descriptive test names
+        - Ensure tests maintain or improve coverage thresholds
+
+    - path: "Dockerfile"
+      instructions: |
+        Docker Configuration Review:
+        - Verify multi-stage build optimization
+        - Check for security best practices (non-root user, minimal base image)
+        - Ensure proper layer caching
+        - Verify health checks are configured
+        - Check for proper handling of secrets and environment variables
+
+    - path: ".github/workflows/**/*.yml"
+      instructions: |
+        CI/CD Workflow Review:
+        - Verify proper caching strategies
+        - Check for security best practices (pinned action versions)
+        - Ensure proper error handling and notifications
+        - Verify parallel job execution where appropriate
+        - Check for proper secrets management
+
+    - path: "**/*.md"
+      instructions: |
+        Documentation Review:
+        - Check for clarity and completeness
+        - Verify code examples are accurate and up-to-date
+        - Ensure proper markdown formatting
+        - Check for broken links
+        - Verify consistency with actual implementation
+
+    - path: "package.json"
+      instructions: |
+        Package Configuration Review:
+        - Verify semantic versioning
+        - Check for security vulnerabilities in dependencies
+        - Ensure scripts are properly defined
+        - Verify peer dependencies are correct
+        - Check for unused dependencies
+
+  # Auto-review settings
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+      - develop
+
+  # Abort settings
+  abort_on_close: true
+
+  # Tools to check
+  tools:
+    shellcheck:
+      enabled: true
+    ruff:
+      enabled: false
+    markdownlint:
+      enabled: true
+    github-checks:
+      enabled: true
+      timeout_ms: 90000
+    languagetool:
+      enabled: true
+      enabled_only: false
+      level: "default"
+    biome:
+      enabled: false
+    hadolint:
+      enabled: true
+    swiftlint:
+      enabled: false
+    phpstan:
+      enabled: false
+    golangci-lint:
+      enabled: false
+    yamllint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    trufflehog:
+      enabled: true
+    checkov:
+      enabled: false
+    detekt:
+      enabled: false
+    eslint:
+      enabled: true
+    buf:
+      enabled: false
+    regal:
+      enabled: false
+    actionlint:
+      enabled: true
+    pmd:
+      enabled: false
+    cppcheck:
+      enabled: false
+    semgrep:
+      enabled: false
+    rubocop:
+      enabled: false
+
+chat:
+  auto_reply: true

@@ -1,3 +1,5 @@
+const FETCH_TIMEOUT_MS = 10_000;
+
 export interface DesignExtractionResult {
   colors: string[];
   typography: {
@@ -5,6 +7,67 @@ export interface DesignExtractionResult {
     sizes: string[];
   };
   layoutHints: string[];
+}
+
+function isPrivateOrLocalUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    const hostname = parsed.hostname.toLowerCase();
+
+    // Block localhost and loopback
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
+      return true;
+    }
+
+    // Block private IPv4 ranges
+    const ipv4Match = hostname.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+    if (ipv4Match) {
+      const [, a, b] = ipv4Match.map(Number);
+      // 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16 (link-local)
+      if (a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 169 && b === 254)) {
+        return true;
+      }
+    }
+
+    // Block private IPv6 ranges
+    const ipv6Lower = hostname.toLowerCase();
+    if (ipv6Lower.includes(':')) {
+      // fc00::/7 - Unique Local Addresses (ULA)
+      if (/^fc[0-9a-f]{2}:/i.test(ipv6Lower) || /^fd[0-9a-f]{2}:/i.test(ipv6Lower)) {
+        return true;
+      }
+      // fe80::/10 - Link-Local
+      if (/^fe[89ab][0-9a-f]:/i.test(ipv6Lower)) {
+        return true;
+      }
+      // ::ffff:0:0/96 - IPv4-mapped IPv6 addresses
+      // Extract and validate the IPv4 portion
+      if (/^::ffff:/i.test(ipv6Lower)) {
+        const ipv4Part = hostname.substring(7); // Remove "::ffff:"
+        const ipv4Match = ipv4Part.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+        if (!ipv4Match) {
+          // Invalid format after ::ffff: - block it
+          return true;
+        }
+        const [, a, b] = ipv4Match.map(Number);
+        // Block if the IPv4 part is private
+        if (a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 169 && b === 254)) {
+          return true;
+        }
+        // Public IPv4 in IPv6 format is allowed
+        return false;
+      }
+    }
+
+    // Block non-HTTP(S) protocols
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return true; // Block invalid URLs
+  }
 }
 
 export async function extractDesignFromUrl(
@@ -18,13 +81,18 @@ export async function extractDesignFromUrl(
     layoutHints: [],
   };
 
+  // Validate URL to prevent SSRF
+  if (isPrivateOrLocalUrl(url)) {
+    throw new Error('Access to private or local URLs is not allowed');
+  }
+
   try {
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'UIForge-MCP/0.1.0 (design-extractor)',
         Accept: 'text/html',
       },
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!response.ok) {

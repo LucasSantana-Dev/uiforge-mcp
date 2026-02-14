@@ -23,6 +23,19 @@ export function registerFigmaPushVariables(server: McpServer): void {
     'Write design tokens back to Figma as Variables via the Figma REST API. Creates or updates variable collections.',
     inputSchema,
     async ({ file_key, variables }) => {
+      // Early return if no variables provided
+      if (!variables || variables.length === 0) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: 'No variables provided. Please provide at least one variable to push to Figma.',
+            },
+          ],
+          isError: true,
+        };
+      }
+
       try {
         const collectionName = variables[0]?.collection ?? 'UIForge Tokens';
 

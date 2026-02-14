@@ -8,9 +8,71 @@ export interface PrototypeBuildOptions {
   useTailwindCdn?: boolean;
 }
 
+function containsDangerousContent(str: string): boolean {
+  const dangerous = [
+    /<script/gi,
+    /<\/script>/gi,
+    /javascript:/gi,
+    /data:(?!image\/)/gi, // Block data: URIs except safe image types
+    /vbscript:/gi,
+    /on\w+\s*=/gi, // Event handlers: onclick, onload, onerror, etc.
+    /<iframe/gi,
+    /<object/gi,
+    /<embed/gi,
+  ];
+  return dangerous.some((pattern) => pattern.test(str));
+}
+
+function validateElements(elements: IScreenElement[]): void {
+  for (const el of elements) {
+    if (el.id && containsDangerousContent(el.id)) {
+      throw new Error(
+        `Security error: Element ID "${el.id}" contains potentially dangerous content (XSS attempt detected)`
+      );
+    }
+    if (el.label && containsDangerousContent(el.label)) {
+      throw new Error(
+        `Security error: Element label "${el.label}" contains potentially dangerous content (XSS attempt detected)`
+      );
+    }
+    if (el.placeholder && containsDangerousContent(el.placeholder)) {
+      throw new Error(
+        `Security error: Element placeholder "${el.placeholder}" contains potentially dangerous content (XSS attempt detected)`
+      );
+    }
+    if (el.styles) {
+      for (const [key, value] of Object.entries(el.styles)) {
+        if (containsDangerousContent(value)) {
+          throw new Error(
+            `Security error: Element style "${key}" contains potentially dangerous content (XSS attempt detected)`
+          );
+        }
+      }
+    }
+    if (el.children) {
+      validateElements(el.children);
+    }
+  }
+}
+
 export function buildPrototype(options: PrototypeBuildOptions): string {
   const { screens, navigationFlow, useTailwindCdn = true } = options;
   const ctx = options.designContext ?? designContextStore.get();
+
+  // Validate screen names, descriptions, and all element fields for dangerous content
+  for (const screen of screens) {
+    if (containsDangerousContent(screen.name)) {
+      throw new Error(
+        `Security error: Screen name "${screen.name}" contains potentially dangerous content (XSS attempt detected)`
+      );
+    }
+    if (screen.description && containsDangerousContent(screen.description)) {
+      throw new Error(
+        `Security error: Screen description contains potentially dangerous content (XSS attempt detected)`
+      );
+    }
+    validateElements(screen.elements);
+  }
 
   const screenSections = screens
     .map((screen, i) => {
@@ -175,7 +237,9 @@ function escapeJsString(str: string): string {
     .replace(/"/g, '\\"')
     .replace(/\n/g, '\\n')
     .replace(/\r/g, '\\r')
-    .replace(/\t/g, '\\t');
+    .replace(/\t/g, '\\t')
+    .replace(/<\/script>/gi, '<\\/script>') // Prevent script tag breaking
+    .replace(/<!--/g, '<\\!--'); // Prevent HTML comment injection
 }
 
 function buildNavigationScript(flows: ITransition[]): string {
@@ -235,8 +299,8 @@ function renderElement(el: IScreenElement, flows: ITransition[]): string {
   const navAttrs = buildNavAttrs(el, flows);
   const styleStr = el.styles
     ? ` style="${Object.entries(el.styles)
-        .map(([k, v]) => `${camelToKebab(k)}: ${v}`)
-        .join('; ')}"`
+      .map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+      .join('; ')}"`
     : '';
 
   switch (el.type) {
