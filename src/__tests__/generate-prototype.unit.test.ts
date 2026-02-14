@@ -163,9 +163,7 @@ describe('generate_prototype', () => {
     const screens = [
       {
         name: 'Test',
-        elements: [
-          { id: 'img-1', type: 'image' as const, label: 'Hero image' },
-        ] satisfies IScreenElement[],
+        elements: [{ id: 'img-1', type: 'image' as const, label: 'Hero image' }] satisfies IScreenElement[],
       },
     ];
     const html = buildPrototype({ screens, navigationFlow: [] });
@@ -177,9 +175,7 @@ describe('generate_prototype', () => {
     const screens = [
       {
         name: 'Test',
-        elements: [
-          { id: 'img-2', type: 'image' as const },
-        ] satisfies IScreenElement[],
+        elements: [{ id: 'img-2', type: 'image' as const }] satisfies IScreenElement[],
       },
     ];
     const html = buildPrototype({ screens, navigationFlow: [] });
@@ -240,9 +236,7 @@ describe('generate_prototype', () => {
           {
             id: 'container-1',
             type: 'container' as const,
-            children: [
-              { id: 'inner-1', type: 'text' as const, label: 'Inside' },
-            ],
+            children: [{ id: 'inner-1', type: 'text' as const, label: 'Inside' }],
           },
         ] satisfies IScreenElement[],
       },
@@ -257,9 +251,7 @@ describe('generate_prototype', () => {
     const screens = [
       {
         name: 'Test',
-        elements: [
-          { id: 'icon-1', type: 'icon' as const, label: '★' },
-        ] satisfies IScreenElement[],
+        elements: [{ id: 'icon-1', type: 'icon' as const, label: '★' }] satisfies IScreenElement[],
       },
     ];
     const html = buildPrototype({ screens, navigationFlow: [] });
@@ -286,7 +278,12 @@ describe('generate_prototype', () => {
       {
         name: 'Test',
         elements: [
-          { id: 'styled-1', type: 'text' as const, label: 'Styled', styles: { backgroundColor: 'red', fontSize: '20px' } },
+          {
+            id: 'styled-1',
+            type: 'text' as const,
+            label: 'Styled',
+            styles: { backgroundColor: 'red', fontSize: '20px' },
+          },
         ] satisfies IScreenElement[],
       },
     ];
