@@ -1,6 +1,5 @@
 dist/
 node_modules/
-.windsurf/
 .env
 .env.local
 .env.*.local
