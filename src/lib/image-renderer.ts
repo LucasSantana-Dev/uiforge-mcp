@@ -1,5 +1,6 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
+import { readFile } from 'node:fs/promises';
 import type { IDesignContext, ImageType } from './types.js';
 
 interface RenderOptions {
@@ -10,26 +11,118 @@ interface RenderOptions {
   designContext?: IDesignContext;
 }
 
-let cachedFont: ArrayBuffer | null = null;
+interface FontEntry {
+  name: string;
+  data: ArrayBuffer;
+  weight: 400 | 700;
+  style: 'normal';
+}
 
-async function loadDefaultFont(): Promise<ArrayBuffer> {
-  if (cachedFont) return cachedFont;
+const fontCache = new Map<string, ArrayBuffer>();
 
-  try {
-    const response = await fetch(
-      'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2',
-      { signal: AbortSignal.timeout(10_000) }
-    );
-    cachedFont = await response.arrayBuffer();
-  } catch {
-    // Fallback: create a minimal font-like buffer (satori requires at least one font)
-    // In production, bundle a .ttf file instead
-    throw new Error(
-      'Failed to fetch default font. Provide a font or ensure internet access.'
-    );
+const BUNDLED_FONTS: Record<string, { local: string; family: string; weight: number }> = {
+  'Inter-400': { local: 'Inter-Regular.ttf', family: 'Inter', weight: 400 },
+  'Inter-700': { local: 'Inter-Bold.ttf', family: 'Inter', weight: 700 },
+  'Manrope-400': { local: 'Manrope-Regular.ttf', family: 'Manrope', weight: 400 },
+  'Manrope-700': { local: 'Manrope-Bold.ttf', family: 'Manrope', weight: 700 },
+};
+
+async function fetchTtfFromGoogleFonts(family: string, weight: number): Promise<ArrayBuffer> {
+  // Request CSS from Google Fonts with a user-agent that triggers TTF delivery
+  const cssUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@${weight}&display=swap`;
+  const cssRes = await fetch(cssUrl, {
+    signal: AbortSignal.timeout(10_000),
+    headers: {
+      // Old Safari UA triggers TTF/OTF format instead of woff2
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.59.8',
+    },
+  });
+  const css = await cssRes.text();
+  // Extract the font URL from the CSS @font-face src
+  const urlMatch = css.match(/src:\s*url\(([^)]+)\)/);
+  if (!urlMatch) throw new Error(`No font URL found in Google Fonts CSS for ${family}:${weight}`);
+  const fontUrl = urlMatch[1];
+  const fontRes = await fetch(fontUrl, { signal: AbortSignal.timeout(15_000) });
+  return fontRes.arrayBuffer();
+}
+
+async function loadFont(key: string): Promise<ArrayBuffer> {
+  const cached = fontCache.get(key);
+  if (cached) return cached;
+
+  const entry = BUNDLED_FONTS[key];
+  if (entry) {
+    // Local-first: try bundled font file (TTF)
+    try {
+      const localPath = new URL(`../../assets/fonts/${entry.local}`, import.meta.url);
+      const buffer = await readFile(localPath);
+      const ab = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+      fontCache.set(key, ab);
+      return ab;
+    } catch {
+      // Fall through to CDN
+    }
+
+    // CDN fallback: fetch TTF from Google Fonts
+    try {
+      const ab = await fetchTtfFromGoogleFonts(entry.family, entry.weight);
+      fontCache.set(key, ab);
+      return ab;
+    } catch {
+      // Fall through to error
+    }
   }
 
-  return cachedFont;
+  throw new Error(`Failed to load font "${key}". Ensure bundled fonts exist or internet is available.`);
+}
+
+async function loadFontsForContext(ctx?: IDesignContext): Promise<FontEntry[]> {
+  const bodyFamily = ctx?.typography?.fontFamily?.split(',')[0]?.trim() ?? 'Inter';
+  const headingFamily = ctx?.typography?.headingFont ?? bodyFamily;
+
+  const fonts: FontEntry[] = [];
+
+  // Load body font (regular + bold)
+  const bodyRegKey = `${bodyFamily}-400`;
+  const bodyBoldKey = `${bodyFamily}-700`;
+
+  try {
+    fonts.push({ name: bodyFamily, data: await loadFont(bodyRegKey), weight: 400, style: 'normal' });
+  } catch {
+    // Fallback to Inter if requested font not bundled
+    if (bodyFamily !== 'Inter') {
+      fonts.push({ name: bodyFamily, data: await loadFont('Inter-400'), weight: 400, style: 'normal' });
+    }
+  }
+
+  try {
+    fonts.push({ name: bodyFamily, data: await loadFont(bodyBoldKey), weight: 700, style: 'normal' });
+  } catch {
+    // Bold is optional — skip silently
+  }
+
+  // Load heading font if different from body
+  if (headingFamily !== bodyFamily) {
+    const headRegKey = `${headingFamily}-400`;
+    const headBoldKey = `${headingFamily}-700`;
+
+    try {
+      fonts.push({ name: headingFamily, data: await loadFont(headBoldKey), weight: 700, style: 'normal' });
+    } catch {
+      try {
+        fonts.push({ name: headingFamily, data: await loadFont(headRegKey), weight: 400, style: 'normal' });
+      } catch {
+        // Heading font not available — satori will use body font
+      }
+    }
+  }
+
+  // Ensure at least one font is loaded
+  if (fonts.length === 0) {
+    fonts.push({ name: 'Inter', data: await loadFont('Inter-400'), weight: 400, style: 'normal' });
+  }
+
+  return fonts;
 }
 
 function buildWireframeJsx(
@@ -314,7 +407,7 @@ function buildComponentPreviewJsx(
 
 export async function renderSvg(options: RenderOptions): Promise<string> {
   const { description, type, width, height, designContext } = options;
-  const fontData = await loadDefaultFont();
+  const fonts = await loadFontsForContext(designContext);
 
   let jsx: React.ReactNode;
   switch (type) {
@@ -332,14 +425,7 @@ export async function renderSvg(options: RenderOptions): Promise<string> {
   const svg = await satori(jsx, {
     width,
     height,
-    fonts: [
-      {
-        name: 'Inter',
-        data: fontData,
-        weight: 400,
-        style: 'normal',
-      },
-    ],
+    fonts,
   });
 
   return svg;

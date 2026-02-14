@@ -1,4 +1,4 @@
-import type { IDesignContext, IPrototypeScreen, IScreenElement, ITransition } from './types.js';
+import type { IDesignContext, IScreenElement, ITransition } from './types.js';
 import { designContextStore } from './design-context.js';
 
 export interface PrototypeBuildOptions {

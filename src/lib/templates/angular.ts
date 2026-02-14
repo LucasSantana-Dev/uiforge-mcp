@@ -1,9 +1,11 @@
-import type { IGeneratedFile, Architecture, StateManagement } from '../types.js';
+import type { IGeneratedFile, IDesignContext, Architecture, StateManagement } from '../types.js';
+import { generateCssVariableBlock, generateFontImportHtml } from './css-variables.js';
 
 export function generateAngularProject(
   projectName: string,
   _architecture: Architecture,
-  _stateManagement: StateManagement
+  _stateManagement: StateManagement,
+  designContext?: IDesignContext
 ): IGeneratedFile[] {
   const files: IGeneratedFile[] = [];
 
@@ -42,6 +44,12 @@ export function generateAngularProject(
           tailwindcss: '^3.4.17',
           autoprefixer: '^10.4.20',
           postcss: '^8.4.49',
+          eslint: '^9.17.0',
+          prettier: '^3.4.0',
+          karma: '~6.4.0',
+          'karma-chrome-launcher': '~3.2.0',
+          'karma-jasmine': '~5.1.0',
+          jasmine: '~5.4.0',
         },
       },
       null,
@@ -122,9 +130,34 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#2563eb',
-        secondary: '#64748b',
-        accent: '#f59e0b',
+        border: 'hsl(var(--border))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
     },
   },
@@ -136,13 +169,11 @@ module.exports = {
   // src/styles.css
   files.push({
     path: `${projectName}/src/styles.css`,
-    content: `@tailwind base;
-@tailwind components;
-@tailwind utilities;
-`,
+    content: generateCssVariableBlock(designContext),
   });
 
   // src/index.html
+  const fontLinks = generateFontImportHtml(designContext);
   files.push({
     path: `${projectName}/src/index.html`,
     content: `<!DOCTYPE html>
@@ -150,10 +181,19 @@ module.exports = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="${projectName} — Modern web application" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:title" content="${projectName}" />
+    <meta property="og:description" content="${projectName} — Modern web application" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    ${fontLinks}
     <title>${projectName}</title>
   </head>
   <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground">Skip to main content</a>
     <app-root></app-root>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
   </body>
 </html>
 `,
@@ -172,32 +212,73 @@ bootstrapApplication(AppComponent).catch((err) => console.error(err));
   // src/app/app.component.ts
   files.push({
     path: `${projectName}/src/app/app.component.ts`,
-    content: `import { Component, signal } from '@angular/core';
+    content: `import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   template: \`
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-      <div class="text-center space-y-6">
-        <h1 class="text-4xl font-bold tracking-tight text-gray-900">
-          ${projectName}
-        </h1>
-        <p class="text-gray-500 text-lg">
-          Built with Angular, Tailwind CSS, and Standalone Components
-        </p>
-        <button
-          class="px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          (click)="count.set(count() + 1)"
-        >
-          Count: {{ count() }}
-        </button>
-      </div>
+    <div class="min-h-screen flex flex-col">
+      <header role="banner" class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
+        <nav aria-label="Main navigation" class="container mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <span class="text-lg font-semibold">${projectName}</span>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">About</button>
+            <button class="px-3 py-1.5 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">Features</button>
+            <button class="px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">Get Started</button>
+          </div>
+        </nav>
+      </header>
+
+      <main id="main-content" role="main" class="flex-1">
+        <section aria-labelledby="hero-heading" class="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8">
+          <div class="container mx-auto max-w-4xl text-center space-y-6">
+            <h1 id="hero-heading" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+              ${projectName}
+            </h1>
+            <p class="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
+              A modern, responsive web application built with Angular, Tailwind CSS, and Standalone Components.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button class="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                Get Started
+              </button>
+              <button class="inline-flex items-center px-6 py-3 border border-input bg-background rounded-lg font-semibold hover:bg-accent hover:text-accent-foreground transition-colors">
+                View Source
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="features-heading" class="py-16 px-4 sm:px-6 lg:px-8 bg-muted/50">
+          <div class="container mx-auto max-w-6xl">
+            <h2 id="features-heading" class="text-2xl sm:text-3xl font-bold text-center mb-10">Features</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              @for (feature of features; track feature.title) {
+                <article class="rounded-lg border bg-card p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 class="text-lg font-semibold mb-2">{{ feature.title }}</h3>
+                  <p class="text-sm text-muted-foreground">{{ feature.desc }}</p>
+                </article>
+              }
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer role="contentinfo" class="border-t py-8 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto text-center text-sm text-muted-foreground">
+          <p>&copy; ${projectName}. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   \`,
 })
 export class AppComponent {
-  count = signal(0);
+  features = [
+    { title: 'Responsive Design', desc: 'Looks great on every screen size, from mobile to desktop.' },
+    { title: 'Accessible', desc: 'Built with ARIA landmarks, keyboard navigation, and semantic HTML.' },
+    { title: 'Performant', desc: 'Optimized with signals, OnPush change detection, and lazy loading.' },
+  ];
 }
 `,
   });

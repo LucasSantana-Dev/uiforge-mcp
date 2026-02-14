@@ -1,9 +1,11 @@
-import type { IGeneratedFile, Architecture, StateManagement } from '../types.js';
+import type { IGeneratedFile, IDesignContext, Architecture, StateManagement } from '../types.js';
+import { generateCssVariableBlock, generateFontImportHtml } from './css-variables.js';
 
 export function generateReactProject(
   projectName: string,
   architecture: Architecture,
-  stateManagement: StateManagement
+  stateManagement: StateManagement,
+  designContext?: IDesignContext
 ): IGeneratedFile[] {
   const files: IGeneratedFile[] = [];
 
@@ -28,7 +30,12 @@ export function generateReactProject(
           'class-variance-authority': '^0.7.1',
           clsx: '^2.1.1',
           'tailwind-merge': '^3.0.0',
-          'lucide-react': '^0.469.0',
+          '@phosphor-icons/react': '^2.1.0',
+          'react-hook-form': '^7.54.0',
+          '@hookform/resolvers': '^4.1.0',
+          zod: '^3.24.0',
+          '@tanstack/react-query': '^5.62.0',
+          'react-router-dom': '^7.1.0',
           ...(stateManagement === 'zustand' ? { zustand: '^5.0.0' } : {}),
         },
         devDependencies: {
@@ -40,6 +47,12 @@ export function generateReactProject(
           tailwindcss: '^3.4.17',
           typescript: '^5.7.0',
           vite: '^6.0.0',
+          eslint: '^9.17.0',
+          prettier: '^3.4.0',
+          vitest: '^3.0.0',
+          '@testing-library/react': '^16.1.0',
+          '@testing-library/jest-dom': '^6.6.0',
+          jsdom: '^25.0.0',
         },
       },
       null,
@@ -148,6 +161,7 @@ export default {
   });
 
   // index.html
+  const fontLinks = generateFontImportHtml(designContext);
   files.push({
     path: `${projectName}/index.html`,
     content: `<!DOCTYPE html>
@@ -155,10 +169,19 @@ export default {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="${projectName} — Modern web application" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:title" content="${projectName}" />
+    <meta property="og:description" content="${projectName} — Modern web application" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    ${fontLinks}
     <title>${projectName}</title>
   </head>
   <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground">Skip to main content</a>
     <div id="root"></div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
@@ -170,12 +193,24 @@ export default {
     path: `${projectName}/src/main.tsx`,
     content: `import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
 import './index.css'
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </StrictMode>,
 )
 `,
@@ -184,57 +219,76 @@ createRoot(document.getElementById('root')!).render(
   // src/index.css
   files.push({
     path: `${projectName}/src/index.css`,
-    content: `@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --radius: 0.5rem;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-`,
+    content: generateCssVariableBlock(designContext),
   });
 
   // src/App.tsx
   files.push({
     path: `${projectName}/src/App.tsx`,
     content: `import { Button } from '@/components/ui/button'
+import { RocketLaunch, GithubLogo, Lightning } from '@phosphor-icons/react'
 
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-6">
-        <h1 className="text-4xl font-bold tracking-tight">
-          ${projectName}
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          Built with React, Tailwind CSS, and Shadcn/ui
-        </p>
-        <Button size="lg">Get Started</Button>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <header role="banner" className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <nav aria-label="Main navigation" className="container mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <span className="text-lg font-semibold">${projectName}</span>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm">About</Button>
+            <Button variant="ghost" size="sm">Features</Button>
+            <Button size="sm">Get Started</Button>
+          </div>
+        </nav>
+      </header>
+
+      <main id="main-content" role="main" className="flex-1">
+        <section aria-labelledby="hero-heading" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8">
+          <div className="container mx-auto max-w-4xl text-center space-y-6">
+            <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+              ${projectName}
+            </h1>
+            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
+              A modern, responsive web application built with React, Tailwind CSS, and shadcn/ui components.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button size="lg">
+                <RocketLaunch className="mr-2 h-4 w-4" aria-hidden="true" />
+                Get Started
+              </Button>
+              <Button variant="outline" size="lg">
+                <GithubLogo className="mr-2 h-4 w-4" aria-hidden="true" />
+                View Source
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="features-heading" className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/50">
+          <div className="container mx-auto max-w-6xl">
+            <h2 id="features-heading" className="text-2xl sm:text-3xl font-bold text-center mb-10">Features</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { title: 'Responsive Design', desc: 'Looks great on every screen size, from mobile to desktop.' },
+                { title: 'Accessible', desc: 'Built with ARIA landmarks, keyboard navigation, and semantic HTML.' },
+                { title: 'Performant', desc: 'Optimized with lazy loading, memoization, and efficient state management.' },
+              ].map((feature) => (
+                <article key={feature.title} className="rounded-lg border bg-card p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <Lightning className="h-8 w-8 text-primary mb-3" aria-hidden="true" />
+                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer role="contentinfo" className="border-t py-8 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto text-center text-sm text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} ${projectName}. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   )
 }

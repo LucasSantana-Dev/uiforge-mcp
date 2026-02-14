@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { IGeneratedFile } from '../lib/types.js';
+import { designContextStore } from '../lib/design-context.js';
 import { generateReactProject } from '../lib/templates/react.js';
 import { generateNextjsProject } from '../lib/templates/nextjs.js';
 import { generateVueProject } from '../lib/templates/vue.js';
@@ -20,20 +21,21 @@ export function registerScaffoldFullApplication(server: McpServer): void {
     'Generate full project boilerplate for React, Next.js, Vue, or Angular with Tailwind CSS and optional state management',
     inputSchema,
     async ({ framework, styling: _styling, architecture, state_management, project_name }) => {
+      const ctx = designContextStore.get();
       let files: IGeneratedFile[];
 
       switch (framework) {
         case 'react':
-          files = generateReactProject(project_name, architecture, state_management);
+          files = generateReactProject(project_name, architecture, state_management, ctx);
           break;
         case 'nextjs':
-          files = generateNextjsProject(project_name, architecture, state_management);
+          files = generateNextjsProject(project_name, architecture, state_management, ctx);
           break;
         case 'vue':
-          files = generateVueProject(project_name, architecture, state_management);
+          files = generateVueProject(project_name, architecture, state_management, ctx);
           break;
         case 'angular':
-          files = generateAngularProject(project_name, architecture, state_management);
+          files = generateAngularProject(project_name, architecture, state_management, ctx);
           break;
       }
 

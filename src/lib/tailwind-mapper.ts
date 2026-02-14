@@ -1,6 +1,76 @@
 import type { IFigmaDesignToken, ITailwindMapping, IDesignContext } from './types.js';
 import type { FigmaNode, FigmaFill } from './figma-client.js';
 
+// Tailwind default spacing scale: class suffix → px value
+const SPACING_SCALE: [string, number][] = [
+  ['0', 0], ['px', 1], ['0.5', 2], ['1', 4], ['1.5', 6], ['2', 8],
+  ['2.5', 10], ['3', 12], ['3.5', 14], ['4', 16], ['5', 20], ['6', 24],
+  ['7', 28], ['8', 32], ['9', 36], ['10', 40], ['11', 44], ['12', 48],
+  ['14', 56], ['16', 64], ['20', 80], ['24', 96],
+];
+
+// Tailwind default font-size scale: class suffix → rem value
+const FONT_SIZE_SCALE: [string, string][] = [
+  ['xs', '0.75rem'], ['sm', '0.875rem'], ['base', '1rem'], ['lg', '1.125rem'],
+  ['xl', '1.25rem'], ['2xl', '1.5rem'], ['3xl', '1.875rem'], ['4xl', '2.25rem'],
+  ['5xl', '3rem'], ['6xl', '3.75rem'], ['7xl', '4.5rem'], ['8xl', '6rem'], ['9xl', '8rem'],
+];
+
+// Tailwind default line-height scale
+const LINE_HEIGHT_SCALE: [string, string][] = [
+  ['none', '1'], ['tight', '1.25'], ['snug', '1.375'], ['normal', '1.5'],
+  ['relaxed', '1.625'], ['loose', '2'],
+];
+
+function closestSpacing(px: number): string {
+  let best = SPACING_SCALE[0];
+  let bestDiff = Math.abs(px - best[1]);
+  for (const entry of SPACING_SCALE) {
+    const diff = Math.abs(px - entry[1]);
+    if (diff < bestDiff) { best = entry; bestDiff = diff; }
+  }
+  // Use arbitrary value if the closest match is too far off (>2px)
+  return bestDiff <= 2 ? best[0] : `[${px}px]`;
+}
+
+function closestFontSize(val: string): string {
+  const numericRem = parseFloat(val);
+  if (isNaN(numericRem)) return `[${val}]`;
+  let best = FONT_SIZE_SCALE[0];
+  let bestDiff = Math.abs(numericRem - parseFloat(best[1]));
+  for (const entry of FONT_SIZE_SCALE) {
+    const diff = Math.abs(numericRem - parseFloat(entry[1]));
+    if (diff < bestDiff) { best = entry; bestDiff = diff; }
+  }
+  return bestDiff <= 0.0625 ? best[0] : `[${val}]`;
+}
+
+function closestLineHeight(val: string): string {
+  const num = parseFloat(val);
+  if (isNaN(num)) return `[${val}]`;
+  let best = LINE_HEIGHT_SCALE[0];
+  let bestDiff = Math.abs(num - parseFloat(best[1]));
+  for (const entry of LINE_HEIGHT_SCALE) {
+    const diff = Math.abs(num - parseFloat(entry[1]));
+    if (diff < bestDiff) { best = entry; bestDiff = diff; }
+  }
+  return bestDiff <= 0.0625 ? best[0] : `[${val}]`;
+}
+
+function classifyShadow(val: string): string {
+  const lower = val.toLowerCase();
+  if (lower === 'none' || lower === '0') return 'shadow-none';
+  // Heuristic: classify by vertical offset size
+  const match = val.match(/\d+\s+(\d+)/);
+  const yOffset = match ? parseInt(match[1], 10) : 0;
+  if (yOffset <= 1) return 'shadow-sm';
+  if (yOffset <= 3) return 'shadow';
+  if (yOffset <= 6) return 'shadow-md';
+  if (yOffset <= 10) return 'shadow-lg';
+  if (yOffset <= 20) return 'shadow-xl';
+  return 'shadow-2xl';
+}
+
 export function mapTokensToTailwind(tokens: IFigmaDesignToken[]): ITailwindMapping[] {
   const mappings: ITailwindMapping[] = [];
 
@@ -19,29 +89,33 @@ export function mapTokensToTailwind(tokens: IFigmaDesignToken[]): ITailwindMappi
         });
         break;
 
-      case 'spacing':
+      case 'spacing': {
+        const px = typeof token.value === 'number' ? token.value : parseFloat(String(token.value));
+        const cls = closestSpacing(px);
         mappings.push({
-          className: `p-[${token.value}px]`,
+          className: `p-${cls}`,
           cssProperty: 'padding',
-          value: `${token.value}px`,
+          value: `${px}px`,
         });
         mappings.push({
-          className: `m-[${token.value}px]`,
+          className: `m-${cls}`,
           cssProperty: 'margin',
-          value: `${token.value}px`,
+          value: `${px}px`,
         });
         mappings.push({
-          className: `gap-[${token.value}px]`,
+          className: `gap-${cls}`,
           cssProperty: 'gap',
-          value: `${token.value}px`,
+          value: `${px}px`,
         });
         break;
+      }
 
       case 'typography': {
         const val = String(token.value);
         if (token.name.toLowerCase().includes('size')) {
+          const cls = closestFontSize(val);
           mappings.push({
-            className: `text-[${val}]`,
+            className: `text-${cls}`,
             cssProperty: 'font-size',
             value: val,
           });
@@ -63,8 +137,9 @@ export function mapTokensToTailwind(tokens: IFigmaDesignToken[]): ITailwindMappi
             value: val,
           });
         } else if (token.name.toLowerCase().includes('line') || token.name.toLowerCase().includes('height')) {
+          const cls = closestLineHeight(val);
           mappings.push({
-            className: `leading-[${val}]`,
+            className: `leading-${cls}`,
             cssProperty: 'line-height',
             value: val,
           });
@@ -89,7 +164,7 @@ export function mapTokensToTailwind(tokens: IFigmaDesignToken[]): ITailwindMappi
 
       case 'shadow':
         mappings.push({
-          className: `shadow-[${String(token.value)}]`,
+          className: classifyShadow(String(token.value)),
           cssProperty: 'box-shadow',
           value: String(token.value),
         });

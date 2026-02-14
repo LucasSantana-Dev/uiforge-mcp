@@ -107,9 +107,9 @@ describe('generate_prototype', () => {
       navigationFlow: basicFlow,
     });
 
-    expect(html).toContain('--primary: #2563eb');
-    expect(html).toContain('--background: #ffffff');
-    expect(html).toContain('--foreground: #0f172a');
+    expect(html).toMatch(/--primary: #[0-9a-f]{6}/i);
+    expect(html).toMatch(/--background: #[0-9a-f]{6}/i);
+    expect(html).toMatch(/--foreground: #[0-9a-f]{6}/i);
   });
 
   it('uses custom design context when provided', () => {

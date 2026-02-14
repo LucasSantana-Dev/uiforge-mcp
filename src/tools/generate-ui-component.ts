@@ -186,79 +186,118 @@ ${inputDecls}
   ];
 }
 
-function getComponentBody(type: string, ctx: IDesignContext, _fw: string): string {
-  const primary = ctx.colorPalette.primary;
-  const radius = ctx.borderRadius.md;
-
+function getComponentBody(type: string, _ctx: IDesignContext, _fw: string): string {
   switch (type.toLowerCase()) {
     case 'button':
       return `    <button
-      className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
-      style={{ backgroundColor: '${primary}', borderRadius: '${radius}' }}
+      type="button"
+      className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+      aria-label="Action button"
     >
       Click me
     </button>`;
 
     case 'card':
-      return `    <div className="rounded-lg border bg-white p-6 shadow-sm" style={{ borderRadius: '${ctx.borderRadius.lg}' }}>
-      <h3 className="text-lg font-semibold" style={{ color: '${ctx.colorPalette.foreground}' }}>Card Title</h3>
-      <p className="mt-2 text-sm" style={{ color: '${ctx.colorPalette.mutedForeground}' }}>Card description goes here.</p>
-    </div>`;
+      return `    <article className="rounded-lg border bg-card p-4 sm:p-6 text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+      <h3 className="text-base sm:text-lg font-semibold text-foreground">Card Title</h3>
+      <p className="mt-2 text-sm text-muted-foreground leading-relaxed">Card description goes here.</p>
+    </article>`;
 
     case 'form':
-      return `    <form className="space-y-4 rounded-lg border p-6" style={{ borderRadius: '${ctx.borderRadius.lg}' }}>
+      return `    <form className="space-y-4 rounded-lg border bg-card p-4 sm:p-6" aria-label="Login form" noValidate>
       <div>
-        <label className="block text-sm font-medium mb-1">Email</label>
-        <input type="email" className="w-full rounded-md border px-3 py-2 text-sm" placeholder="Enter your email" style={{ borderRadius: '${radius}' }} />
+        <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">Email</label>
+        <input id="email" name="email" type="email" autoComplete="email" required aria-required="true" className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter your email" />
       </div>
       <div>
-        <label className="block text-sm font-medium mb-1">Password</label>
-        <input type="password" className="w-full rounded-md border px-3 py-2 text-sm" placeholder="Enter your password" style={{ borderRadius: '${radius}' }} />
+        <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">Password</label>
+        <input id="password" name="password" type="password" autoComplete="current-password" required aria-required="true" className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter your password" />
       </div>
-      <button type="submit" className="w-full rounded-md px-4 py-2 text-sm font-medium text-white" style={{ backgroundColor: '${primary}', borderRadius: '${radius}' }}>
+      <button type="submit" className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
         Submit
       </button>
     </form>`;
 
     case 'navbar':
     case 'nav':
-      return `    <nav className="flex items-center justify-between px-6 py-4" style={{ backgroundColor: '${primary}' }}>
-      <div className="text-lg font-bold text-white">Logo</div>
-      <div className="flex gap-6">
-        <a href="#" className="text-sm text-white/80 hover:text-white">Home</a>
-        <a href="#" className="text-sm text-white/80 hover:text-white">About</a>
-        <a href="#" className="text-sm text-white/80 hover:text-white">Contact</a>
+      return `    <nav aria-label="Main navigation" className="sticky top-0 z-40 flex items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+      <a href="/" className="text-lg font-bold text-foreground">Logo</a>
+      <div className="hidden sm:flex gap-4 md:gap-6" role="menubar">
+        <a href="#" role="menuitem" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">Home</a>
+        <a href="#" role="menuitem" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">About</a>
+        <a href="#" role="menuitem" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">Contact</a>
       </div>
+      <button type="button" className="sm:hidden p-2 rounded-md hover:bg-accent" aria-label="Toggle menu" aria-expanded="false">
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+      </button>
     </nav>`;
 
     case 'hero':
-      return `    <section className="flex min-h-[60vh] flex-col items-center justify-center text-center px-4">
-      <h1 className="text-4xl font-bold tracking-tight" style={{ color: '${ctx.colorPalette.foreground}' }}>
+      return `    <section aria-labelledby="hero-heading" className="flex min-h-[60vh] flex-col items-center justify-center bg-background text-center px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
         Welcome to Your App
       </h1>
-      <p className="mt-4 max-w-xl text-lg" style={{ color: '${ctx.colorPalette.mutedForeground}' }}>
+      <p className="mt-4 max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
         Build something amazing with modern tools and best practices.
       </p>
-      <button className="mt-8 rounded-md px-8 py-3 text-sm font-medium text-white" style={{ backgroundColor: '${primary}', borderRadius: '${radius}' }}>
-        Get Started
-      </button>
+      <div className="mt-8 flex flex-col sm:flex-row gap-3">
+        <button type="button" className="rounded-md bg-primary px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          Get Started
+        </button>
+        <button type="button" className="rounded-md border border-input bg-background px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          Learn More
+        </button>
+      </div>
     </section>`;
 
     case 'modal':
-      return `    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg" style={{ borderRadius: '${ctx.borderRadius.lg}' }}>
-        <h2 className="text-lg font-semibold" style={{ color: '${ctx.colorPalette.foreground}' }}>Modal Title</h2>
-        <p className="mt-2 text-sm" style={{ color: '${ctx.colorPalette.mutedForeground}' }}>Modal content goes here.</p>
-        <div className="mt-4 flex justify-end gap-2">
-          <button className="rounded-md border px-4 py-2 text-sm">Cancel</button>
-          <button className="rounded-md px-4 py-2 text-sm text-white" style={{ backgroundColor: '${primary}' }}>Confirm</button>
+      return `    <div role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc" className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-sm sm:max-w-md rounded-lg bg-background p-4 sm:p-6 shadow-lg">
+        <h2 id="modal-title" className="text-lg font-semibold text-foreground">Modal Title</h2>
+        <p id="modal-desc" className="mt-2 text-sm text-muted-foreground leading-relaxed">Modal content goes here.</p>
+        <div className="mt-4 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+          <button type="button" className="rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">Cancel</button>
+          <button type="button" className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">Confirm</button>
         </div>
       </div>
     </div>`;
 
+    case 'table':
+      return `    <div className="w-full overflow-x-auto rounded-lg border">
+      <table className="w-full caption-bottom text-sm" role="table">
+        <caption className="mt-4 text-sm text-muted-foreground">A list of items.</caption>
+        <thead className="border-b bg-muted/50">
+          <tr>
+            <th scope="col" className="h-10 px-3 sm:px-4 text-left align-middle font-medium text-muted-foreground">Name</th>
+            <th scope="col" className="h-10 px-3 sm:px-4 text-left align-middle font-medium text-muted-foreground hidden sm:table-cell">Status</th>
+            <th scope="col" className="h-10 px-3 sm:px-4 text-right align-middle font-medium text-muted-foreground">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="border-b transition-colors hover:bg-muted/50">
+            <td className="p-3 sm:p-4 align-middle font-medium">Item 1</td>
+            <td className="p-3 sm:p-4 align-middle hidden sm:table-cell"><span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Active</span></td>
+            <td className="p-3 sm:p-4 align-middle text-right"><button type="button" className="text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
+
+    case 'sidebar':
+      return `    <aside aria-label="Sidebar navigation" className="flex h-full w-56 sm:w-64 flex-col border-r bg-background">
+      <div className="p-4 sm:p-6 border-b">
+        <span className="text-lg font-semibold text-foreground">App Name</span>
+      </div>
+      <nav aria-label="Sidebar links" className="flex-1 space-y-1 p-2 sm:p-4">
+        <a href="#" className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium bg-accent text-accent-foreground">Dashboard</a>
+        <a href="#" className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">Settings</a>
+        <a href="#" className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">Profile</a>
+      </nav>
+    </aside>`;
+
     default:
-      return `    <div className="rounded-lg border p-4" style={{ borderRadius: '${ctx.borderRadius.lg}' }}>
-      <p style={{ color: '${ctx.colorPalette.foreground}' }}>${type} component</p>
+      return `    <div className="rounded-lg border bg-card p-4 sm:p-6 text-card-foreground shadow-sm">
+      <p className="text-foreground">${type} component</p>
     </div>`;
   }
 }

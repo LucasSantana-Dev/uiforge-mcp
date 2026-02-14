@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.gitignore
+.env*
+*.md
+.windsurf
+.vscode
+.idea
+coverage
+*.log
+.DS_Store
+Thumbs.db

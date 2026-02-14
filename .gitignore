@@ -2,6 +2,22 @@ dist/
 node_modules/
 .windsurf/
 .env
+.env.local
+.env.*.local
 package-lock.json
 plan.MD
 *.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.windsurf/

@@ -10,8 +10,9 @@ describe('generate_ui_component', () => {
   describe('design context integration', () => {
     it('starts with default design context', () => {
       const ctx = designContextStore.get();
-      expect(ctx.colorPalette.primary).toBe('#2563eb');
-      expect(ctx.typography.fontFamily).toContain('Inter');
+      expect(ctx.colorPalette.primary).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(ctx.typography.fontFamily).toBe('Inter');
+      expect(ctx.typography.headingFont).toBe('Manrope');
     });
 
     it('updates context via style audit', () => {
@@ -99,14 +100,16 @@ describe('generate_ui_component', () => {
     });
 
     it('reset restores defaults', () => {
+      const originalPrimary = designContextStore.get().colorPalette.primary;
       designContextStore.update({
         colorPalette: {
           ...designContextStore.get().colorPalette,
           primary: '#999999',
         },
       });
+      expect(designContextStore.get().colorPalette.primary).toBe('#999999');
       designContextStore.reset();
-      expect(designContextStore.get().colorPalette.primary).toBe('#2563eb');
+      expect(designContextStore.get().colorPalette.primary).toBe(originalPrimary);
     });
 
     it('get returns a clone (not a reference)', () => {

@@ -123,3 +123,77 @@ export type StateManagement = 'useState' | 'zustand' | 'pinia' | 'signals' | 'no
 export type ImageOutputFormat = 'svg' | 'png';
 export type ImageType = 'wireframe' | 'mockup' | 'component_preview';
 export type PrototypeOutputFormat = 'html' | 'html_bundle';
+
+// --- Design References ---
+
+export interface IFontPairing {
+  name: string;
+  heading: { family: string; weights: number[]; googleFontsUrl: string };
+  body: { family: string; weights: number[]; googleFontsUrl: string };
+  accent?: { family: string; weights: number[]; googleFontsUrl: string };
+  mood: string[];
+  bestFor: string[];
+  cssImport: string;
+}
+
+export interface IColorSystem {
+  name: string;
+  description: string;
+  mood: string[];
+  light: Record<string, string>;
+  dark: Record<string, string>;
+  tailwindExtend: Record<string, Record<string, string>>;
+}
+
+export interface ISpacingSystem {
+  baseUnit: number;
+  scale: Record<string, string>;
+  breakpoints: Record<string, string>;
+  containers: Record<string, string>;
+  borderRadius: Record<string, string>;
+  shadows: Record<string, string>;
+}
+
+export interface IIconLibrary {
+  name: string;
+  style: string;
+  count: string;
+  importPackage: Record<string, string>;
+  cdnUrl?: string;
+  recommended: string[];
+}
+
+export interface IAnimationPreset {
+  name: string;
+  category: 'transition' | 'micro-interaction' | 'loading' | 'scroll';
+  css: string;
+  tailwindClass?: string;
+  duration: string;
+}
+
+export interface ILayoutPattern {
+  name: string;
+  description: string;
+  components: string[];
+  useCase: string[];
+  responsiveBehavior: string;
+  tailwindClasses: Record<string, string>;
+}
+
+export interface IComponentLibrary {
+  name: string;
+  description: string;
+  frameworks: string[];
+  installPackage: Record<string, string>;
+  docsUrl: string;
+  features: string[];
+  recommended: boolean;
+}
+
+export interface IInspirationSource {
+  name: string;
+  url: string;
+  category: 'gallery' | 'design-system' | 'typography' | 'color' | 'icons';
+  description: string;
+  priority: number;
+}
