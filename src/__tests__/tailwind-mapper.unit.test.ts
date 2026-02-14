@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { mapTokensToTailwind, extractTokensFromFigmaNode, tokensToDesignContext } from '../lib/tailwind-mapper.js';
 import type { IFigmaDesignToken } from '../lib/types.js';
 import type { FigmaNode } from '../lib/figma-client.js';

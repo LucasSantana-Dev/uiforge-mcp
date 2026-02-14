@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { designContextStore } from '../lib/design-context.js';
 import { auditStyles } from '../lib/style-audit.js';
 

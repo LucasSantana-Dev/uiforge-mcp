@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { auditStyles, parseTailwindConfig, parseCssVariables } from '../lib/style-audit.js';
 
 describe('parseTailwindConfig', () => {

@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { designContextStore, DEFAULT_CONTEXT } from '../lib/design-context.js';
 import {
   resolveColorSystemHsl,

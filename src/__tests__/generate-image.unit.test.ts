@@ -1,27 +1,32 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { jest } from '@jest/globals';
 import { designContextStore } from '../lib/design-context.js';
+import type { renderSvg as RenderSvgType, renderPng as RenderPngType } from '../lib/image-renderer.js';
 
-const MOCK_SVG =
-  '<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="600" fill="#f8f9fa"/></svg>';
 const MOCK_PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
 
-vi.mock('satori', () => ({
-  default: vi
-    .fn()
+jest.unstable_mockModule('satori', () => ({
+  default: jest
+    .fn<(jsx: unknown, opts: { width: number; height: number }) => Promise<string>>()
     .mockImplementation(
-      async (_jsx: unknown, opts: { width: number; height: number }) =>
+      async (_jsx, opts) =>
         `<svg width="${opts.width}" height="${opts.height}" xmlns="http://www.w3.org/2000/svg"><rect width="${opts.width}" height="${opts.height}" fill="#f8f9fa"/></svg>`
     ),
 }));
 
-vi.mock('@resvg/resvg-js', () => ({
-  Resvg: vi.fn().mockImplementation(() => ({
+jest.unstable_mockModule('@resvg/resvg-js', () => ({
+  Resvg: jest.fn().mockImplementation(() => ({
     render: () => ({ asPng: () => new Uint8Array(MOCK_PNG) }),
   })),
 }));
 
-// Import after mocks are set up
-const { renderSvg, renderPng } = await import('../lib/image-renderer.js');
+let renderSvg: typeof RenderSvgType;
+let renderPng: typeof RenderPngType;
+
+beforeAll(async () => {
+  const mod = await import('../lib/image-renderer.js');
+  renderSvg = mod.renderSvg;
+  renderPng = mod.renderPng;
+});
 
 describe('generate_design_image', () => {
   beforeEach(() => {
