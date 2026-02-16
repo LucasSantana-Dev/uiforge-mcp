@@ -77,20 +77,25 @@ async function enhanceWithModel(
     .filter(Boolean)
     .join('\n');
 
-  const result = await infer(inferPrompt, { maxTokens: 256, temperature: 0.5 });
+  try {
+    const result = await infer(inferPrompt, { maxTokens: 256, temperature: 0.5 });
 
-  if (result.source === 'model' && result.text.trim().length > prompt.length * 0.5) {
-    return {
-      enhanced: result.text.trim(),
-      original: prompt,
-      source: 'model',
-      additions: ['model-enhanced'],
-      latencyMs: Date.now() - start,
-    };
+    if (result.source === 'model' && result.text.trim().length > prompt.length * 0.5) {
+      return {
+        enhanced: result.text.trim(),
+        original: prompt,
+        source: 'model',
+        additions: ['model-enhanced'],
+        latencyMs: Date.now() - start,
+      };
+    }
+
+    // Model returned but result was too short - fallback to rules
+    return enhanceWithRules(prompt, context, start);
+  } catch (err) {
+    logger.warn({ err, prompt }, 'Model enhancement failed, falling back to rules');
+    return enhanceWithRules(prompt, context, start);
   }
-
-  // Fallback
-  return enhanceWithRules(prompt, context, start);
 }
 
 /**

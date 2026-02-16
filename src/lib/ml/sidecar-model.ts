@@ -138,12 +138,16 @@ export async function unloadSidecar(): Promise<void> {
   if (state.context) {
     try {
       await state.context.dispose?.();
-    } catch { /* ignore */ }
+    } catch (err) {
+      logger.warn({ err }, 'Failed to dispose context');
+    }
   }
   if (state.model) {
     try {
       await state.model.dispose?.();
-    } catch { /* ignore */ }
+    } catch (err) {
+      logger.warn({ err }, 'Failed to dispose model');
+    }
   }
 
   state.loaded = false;
@@ -185,7 +189,8 @@ export async function infer(
 
     return {
       text: response,
-      source: 'model',
+    c 'stdel',= instnceofr ? erge : Strin(rr);
+    logger.warn({ error
       latencyMs: Date.now() - start,
     };
   } catch (err) {

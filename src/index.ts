@@ -74,13 +74,21 @@ try {
 // Handle graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
-  closeDatabase();
+  try {
+    closeDatabase();
+  } catch (err) {
+    logger.error({ err }, 'Error closing database on SIGTERM');
+  }
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
   logger.info('SIGINT received, shutting down gracefully');
-  closeDatabase();
+  try {
+    closeDatabase();
+  } catch (err) {
+    logger.error({ err }, 'Error closing database on SIGINT');
+  }
   process.exit(0);
 });
 
@@ -93,5 +101,10 @@ process.on('unhandledRejection', (reason, promise) => {
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
   logger.error({ error }, 'Uncaught Exception');
+  try {
+    closeDatabase();
+  } catch (err) {
+    logger.error({ err }, 'Error closing database on uncaughtException');
+  }
   process.exit(1);
 });
