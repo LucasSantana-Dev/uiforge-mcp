@@ -2,6 +2,8 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { designContextStore } from '../lib/design-context.js';
 import type { IDesignContext, IGeneratedFile, PageTemplateType } from '../lib/types.js';
+import { initializeRegistry } from '../lib/design-references/component-registry/init.js';
+import { getRegistrySize } from '../lib/design-references/component-registry/index.js';
 
 const inputSchema = {
   template: z
@@ -25,6 +27,9 @@ const inputSchema = {
     .describe('Component library to use'),
   dark_mode: z.boolean().default(false).describe('Include dark mode variant classes'),
   project_name: z.string().optional().describe('Project/app name to use in the template (defaults to "MyApp")'),
+  mood: z.enum(['bold', 'calm', 'playful', 'professional', 'premium', 'energetic', 'minimal', 'editorial', 'futuristic', 'warm', 'corporate', 'creative']).optional().describe('Design mood/personality'),
+  industry: z.enum(['saas', 'fintech', 'ecommerce', 'healthcare', 'education', 'startup', 'agency', 'media', 'devtools', 'general']).optional().describe('Target industry for tailored design'),
+  visual_style: z.enum(['glassmorphism', 'neubrutalism', 'soft-depth', 'bento-grid', 'gradient-mesh', 'dark-premium', 'minimal-editorial', 'linear-modern', 'retro-playful', 'corporate-trust']).optional().describe('Visual style layer to apply'),
 };
 
 /**
@@ -55,17 +60,30 @@ export function registerGeneratePageTemplate(server: McpServer): void {
     'generate_page_template',
     'Generate pre-built page templates for common UI patterns: landing pages, dashboards, auth flows, pricing, settings, CRUD tables, blog listings, onboarding wizards, and error pages. Supports all frameworks and component libraries.',
     inputSchema,
-    ({ template, framework, component_library, dark_mode, project_name }) => {
+    ({ template, framework, component_library, dark_mode, project_name, mood, industry, visual_style }) => {
       try {
+        // Initialize the component registry on first use
+        initializeRegistry();
+
         const ctx = designContextStore.get();
         const appName = project_name ?? 'MyApp';
         const files = generateTemplate(template, framework, component_library, dark_mode, appName, ctx);
+
+        // RAG metadata for the response
+        const registrySize = getRegistrySize();
+        const ragInfo = registrySize > 0
+          ? `\n📚 RAG Registry: ${registrySize} snippets loaded` +
+          (mood ? ` | Mood: ${mood}` : '') +
+          (industry ? ` | Industry: ${industry}` : '') +
+          (visual_style ? ` | Style: ${visual_style}` : '')
+          : '';
 
         const summary = [
           `📄 Generated "${template}" page template for ${framework}`,
           `Component library: ${component_library === 'none' ? 'Tailwind CSS (raw)' : component_library}`,
           `Dark mode: ${dark_mode ? 'enabled' : 'disabled'}`,
           `Files: ${files.length}`,
+          ragInfo,
           '',
           'Files:',
           ...files.map((f) => `  ${f.path}`),

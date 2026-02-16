@@ -209,7 +209,7 @@ reviews:
         - Check for proper handling of edge cases (missing styles, invalid CSS)
         - Ensure compatibility with various design systems
 
-    - path: "src/lib/image-analyzer.ts"
+    - path: "src/lib/image-*.ts"
       instructions: |
         Image Analysis Review:
         - Verify Sharp/Satori integration is correct
