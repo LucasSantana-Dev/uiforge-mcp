@@ -189,8 +189,7 @@ export async function infer(
 
     return {
       text: response,
-    c 'stdel',= instnceofr ? erge : Strin(rr);
-    logger.warn({ error
+      source: 'sidecar' as const,
       latencyMs: Date.now() - start,
     };
   } catch (err) {
