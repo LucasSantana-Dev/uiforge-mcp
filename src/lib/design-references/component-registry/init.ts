@@ -58,5 +58,5 @@ export function isRegistryInitialized(): boolean {
  */
 export function resetInitialization(): void {
   initialized = false;
-  // Note: Registry will be cleared and re-populated on next initializeRegistry() call
+  clearRegistry();
 }

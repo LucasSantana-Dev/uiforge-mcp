@@ -6,6 +6,12 @@
 import { createHash } from 'node:crypto';
 import type { ICodePattern } from './types.js';
 
+// Void elements that self-close (all HTML self-closing tags)
+const VOID_TAGS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'param', 'source', 'track', 'wbr'
+]);
+
 /**
  * Extract a structural skeleton from JSX/HTML code.
  *

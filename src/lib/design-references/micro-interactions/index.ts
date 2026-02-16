@@ -27,6 +27,11 @@ export function getInteractionsByCategory(category: AnimationCategory): IMicroIn
   return interactions.filter((i) => i.category === category);
 }
 
+/**
+ * Get all registered micro-interactions as a frozen shallow copy.
+ * Note: This is a shallow freeze - nested objects within interactions are not frozen.
+ * For deep immutability, consider using a deep freeze utility or immutable data structures.
+ */
 export function getAllInteractions(): readonly IMicroInteraction[] {
   return Object.freeze([...interactions]);
 }
@@ -309,7 +314,10 @@ const transitionAnimations: IMicroInteraction[] = [
 
 // --- Register all built-in animations ---
 
+let initialized = false;
+
 export function initializeInteractions(): void {
+  if (initialized) return;
   registerInteractions([
     ...entranceAnimations,
     ...hoverAnimations,
@@ -318,6 +326,7 @@ export function initializeInteractions(): void {
     ...textAnimations,
     ...transitionAnimations,
   ]);
+  initialized = true;
 }
 
 // Re-export types

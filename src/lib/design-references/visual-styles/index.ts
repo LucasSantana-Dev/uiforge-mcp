@@ -25,6 +25,14 @@ export function getAllVisualStyles(): IVisualStyle[] {
   return [...styles];
 }
 
+/**
+ * Reset all registered visual styles (for testing).
+ */
+export function resetStyles(): void {
+  styles.length = 0;
+  initialized = false;
+}
+
 export function getVisualStylesByMood(mood: string): IVisualStyle[] {
   return styles.filter((s) => s.mood.includes(mood as IVisualStyle['mood'][number]));
 }
@@ -43,14 +51,17 @@ export function applyVisualStyle(
   for (const [role, modifier] of Object.entries(style.classModifiers)) {
     if (newClasses[role]) {
       newClasses[role] = `${newClasses[role]} ${modifier}`.trim();
-    } else {
-      // Try to apply to root element (first key)
+    } else if (role === 'root') {
+      // Apply 'root' modifier to the first key (typically the wrapper/container)
       const rootKey = Object.keys(newClasses)[0];
-      if (rootKey && role === 'root') {
+      if (rootKey) {
         newClasses[rootKey] = `${newClasses[rootKey]} ${modifier}`.trim();
       } else {
         droppedModifiers.push(role);
       }
+    } else {
+      // Role doesn't exist in snippet - log as dropped
+      droppedModifiers.push(role);
     }
   }
 

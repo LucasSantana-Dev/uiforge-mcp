@@ -125,7 +125,9 @@ export function generateJsonLd(schema: IJsonLdSchema): string {
     ...schema.properties,
   };
 
-  return `<script type="application/ld+json">\n${JSON.stringify(jsonLd, null, 2)}\n</script>`;
+  // Escape closing script tags to prevent XSS injection
+  const jsonString = JSON.stringify(jsonLd, null, 2).replace(/<\/script>/gi, '<\\/script>');
+  return `<script type="application/ld+json">\n${jsonString}\n</script>`;
 }
 
 export function generateNextJsonLd(schema: IJsonLdSchema): string {
