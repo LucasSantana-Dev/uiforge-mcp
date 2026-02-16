@@ -41,7 +41,7 @@ const moodAffinities: Record<MoodTag, MoodTag[]> = {
  */
 export function registerSnippet(snippet: IComponentSnippet): void {
   // Validate snippet
-  if (!snippet || !snippet.id || typeof snippet.id !== 'string') {
+  if (!snippet?.id || typeof snippet.id !== 'string') {
     logger.warn({ snippet }, 'Invalid snippet: missing or invalid id');
     return;
   }
@@ -298,7 +298,7 @@ export function injectAnimations(
     newTailwindClasses.root = additionalClasses.join(' ').trim();
   } else {
     // Prefer explicit 'root' or 'container' keys, otherwise use first key
-    let rootKey = 'root' in newTailwindClasses ? 'root' :
+    const rootKey = 'root' in newTailwindClasses ? 'root' :
       'container' in newTailwindClasses ? 'container' :
         keys[0];
     if (rootKey !== 'root' && rootKey !== 'container') {

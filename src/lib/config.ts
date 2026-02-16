@@ -34,12 +34,15 @@ export function getConfig(): Config {
 }
 
 /**
- * Safely parse JSON with typed fallback on error.
- * Used for parsing JSON fields from database to avoid crashes on malformed data.
+ * Safely parse JSON with fallback.
  * @param jsonString - JSON string to parse
- * @param defaultValue - Fallback value if parsing fails (defaults to empty object)
+ * @param defaultValue - Fallback value if parsing fails
  */
-export function safeJSONParse<T = any>(jsonString: string | null | undefined, defaultValue?: T): T {
+export function safeJSONParse<T>(jsonString: string | null | undefined, defaultValue: T): T;
+export function safeJSONParse<T extends Record<string, unknown>>(
+  jsonString: string | null | undefined
+): T;
+export function safeJSONParse<T>(jsonString: string | null | undefined, defaultValue?: T): T {
   const fallback = (defaultValue !== undefined ? defaultValue : {}) as T;
   if (!jsonString) return fallback;
   try {

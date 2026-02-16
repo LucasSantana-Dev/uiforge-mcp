@@ -16,6 +16,7 @@ import { safeJSONParse } from '../../config.js';
 const logger = pino({ name: 'design-references-db' });
 import type {
   IComponentSnippet,
+  IComponentSeo,
   IComponentQuery,
   ISearchResult,
   ComponentCategory,
@@ -47,7 +48,7 @@ export function getDatabase(customPath?: string): Database.Database {
   db.pragma('foreign_keys = ON');
   db.exec(CREATE_TABLES);
   db.pragma('synchronous = NORMAL');
-  db.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run('schema_version', SCHEMA_VERSION);
+  db.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run('schema_version', String(SCHEMA_VERSION));
 
   logger.info({ dbPath: resolvedPath }, 'Database opened/created');
   dbPath = resolvedPath;
@@ -297,7 +298,8 @@ export function getComponentsByCategory(
   const rows = d.prepare('SELECT id FROM components WHERE category = ?').all(category) as Array<{
     id: string;
   }>;
-  return rows.map((r) => hydrateSnippet(r.id, d));
+  const ids = rows.map((r) => r.id);
+  return hydrateSnippetsBatch(ids, d);
 }
 
 /**
@@ -329,7 +331,8 @@ export function getRelatedComponents(
   `;
 
   const rows = d.prepare(sql).all(componentId, componentId, componentId) as Array<{ id: string }>;
-  return rows.map((r) => hydrateSnippet(r.id, d));
+  const ids = rows.map((r) => r.id);
+  return hydrateSnippetsBatch(ids, d);
 }
 
 /**
@@ -468,82 +471,19 @@ function hydrateSnippetsBatch(ids: string[], d: Database.Database): IComponentSn
         focusVisible: false,
         reducedMotion: false,
       }),
-      seo: row.seo_json ? safeJSONParse(row.seo_json) : undefined,
-      responsive: safeJSONParse(row.responsive_json, { breakpoints: [], fluidTypography: false }),
-      quality: safeJSONParse(row.quality_json, { score: 0, issues: [] }),
+      seo: row.seo_json ? safeJSONParse<IComponentSeo>(row.seo_json, { semanticElement: 'div' }) : undefined,
+      responsive: safeJSONParse(row.responsive_json, { strategy: 'mobile-first', breakpoints: [] }),
+      quality: safeJSONParse(row.quality_json, { antiGeneric: [], inspirationSource: '', craftDetails: [] }),
     };
   });
 }
 
 function hydrateSnippet(id: string, d: Database.Database): IComponentSnippet {
-  const row = d
-    .prepare(
-      'SELECT id, name, category, type, variant, jsx, css, a11y_json, seo_json, responsive_json, quality_json FROM components WHERE id = ?'
-    )
-    .get(id) as {
-      id: string;
-      name: string;
-      category: ComponentCategory;
-      type: string;
-      variant: string;
-      jsx: string;
-      css: string | null;
-      a11y_json: string;
-      seo_json: string | null;
-      responsive_json: string;
-      quality_json: string;
-    };
-
-  const tags = (
-    d.prepare('SELECT tag_name FROM component_tags WHERE component_id = ?').all(id) as Array<{
-      tag_name: string;
-    }>
-  ).map((r) => r.tag_name);
-
-  const moods = (
-    d.prepare('SELECT mood_name FROM component_moods WHERE component_id = ?').all(id) as Array<{
-      mood_name: MoodTag;
-    }>
-  ).map((r) => r.mood_name);
-
-  const industries = (
-    d
-      .prepare('SELECT industry_name FROM component_industries WHERE component_id = ?')
-      .all(id) as Array<{ industry_name: IndustryTag }>
-  ).map((r) => r.industry_name);
-
-  const visualStyles = (
-    d
-      .prepare('SELECT style_name FROM component_visual_styles WHERE component_id = ?')
-      .all(id) as Array<{ style_name: VisualStyleId }>
-  ).map((r) => r.style_name);
-
-  const tailwindRows = d
-    .prepare('SELECT role, classes FROM component_tailwind WHERE component_id = ?')
-    .all(id) as Array<{ role: string; classes: string }>;
-  const tailwindClasses: Record<string, string> = {};
-  for (const tr of tailwindRows) {
-    tailwindClasses[tr.role] = tr.classes;
+  const results = hydrateSnippetsBatch([id], d);
+  if (results.length === 0) {
+    throw new Error(`Component with id ${id} not found`);
   }
-
-  return {
-    id: row.id,
-    name: row.name,
-    category: row.category,
-    type: row.type,
-    variant: row.variant,
-    tags,
-    mood: moods,
-    industry: industries,
-    visualStyles,
-    jsx: row.jsx,
-    tailwindClasses,
-    css: row.css ?? undefined,
-    a11y: safeJSONParse(row.a11y_json),
-    seo: row.seo_json ? safeJSONParse(row.seo_json) : undefined,
-    responsive: safeJSONParse(row.responsive_json),
-    quality: safeJSONParse(row.quality_json),
-  };
+  return results[0]!;
 }
 
 // --- Utility ---

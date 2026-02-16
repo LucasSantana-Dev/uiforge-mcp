@@ -137,12 +137,14 @@ export function generateNextJsonLd(schema: IJsonLdSchema): string {
     ...schema.properties,
   };
 
+  const serialized = JSON.stringify(jsonLd, null, 2);
+
   const lines: string[] = [];
   lines.push(`export default function JsonLd() {`);
   lines.push(`  return (`);
   lines.push(`    <script`);
   lines.push(`      type="application/ld+json"`);
-  lines.push(`      dangerouslySetInnerHTML={{ __html: JSON.stringify(${JSON.stringify(jsonLd, null, 6)}) }}`);
+  lines.push(`      dangerouslySetInnerHTML={{ __html: ${JSON.stringify(serialized)} }}`);
   lines.push(`    />`);
   lines.push(`  );`);
   lines.push(`}`);

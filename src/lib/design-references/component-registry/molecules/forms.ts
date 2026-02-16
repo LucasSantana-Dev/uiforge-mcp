@@ -117,7 +117,8 @@ export const formSnippets: IComponentSnippet[] = [
     },
     a11y: {
       roles: ['form'],
-      ariaAttributes: ['aria-label', 'aria-required', 'autoComplete'],
+      ariaAttributes: ['aria-label', 'aria-required'],
+      htmlAttributes: ['autoComplete', 'noValidate'],
       keyboardNav: 'Tab through fields, Enter to submit',
       contrastRatio: '4.5:1',
       focusVisible: true,
