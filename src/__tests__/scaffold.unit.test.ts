@@ -2,6 +2,7 @@ import { generateReactProject } from '../lib/templates/react.js';
 import { generateNextjsProject } from '../lib/templates/nextjs.js';
 import { generateVueProject } from '../lib/templates/vue.js';
 import { generateAngularProject } from '../lib/templates/angular.js';
+import { generateSvelteProject } from '../lib/templates/svelte.js';
 
 describe('scaffold_full_application', () => {
   describe('React project', () => {
@@ -142,6 +143,81 @@ describe('scaffold_full_application', () => {
       const main = files.find((f) => f.path.includes('src/main.ts'));
       expect(main).toBeDefined();
       expect(main!.content).toContain('bootstrapApplication');
+    });
+  });
+
+  describe('Svelte project', () => {
+    const files = generateSvelteProject('svelte-app', 'flat', 'none');
+
+    it('generates expected number of files', () => {
+      expect(files.length).toBeGreaterThanOrEqual(12);
+    });
+
+    it('includes package.json with svelte dependency', () => {
+      const pkg = files.find((f) => f.path === 'svelte-app/package.json');
+      expect(pkg).toBeDefined();
+      const parsed = JSON.parse(pkg!.content);
+      expect(parsed.dependencies.svelte).toBeDefined();
+      expect(parsed.dependencies['@sveltejs/kit']).toBeDefined();
+    });
+
+    it('includes svelte.config.js', () => {
+      expect(files.find((f) => f.path === 'svelte-app/svelte.config.js')).toBeDefined();
+    });
+
+    it('includes vite.config.ts with SvelteKit plugin', () => {
+      const vite = files.find((f) => f.path === 'svelte-app/vite.config.ts');
+      expect(vite).toBeDefined();
+      expect(vite!.content).toContain('sveltekit');
+    });
+
+    it('includes tailwind.config.js with Svelte content paths', () => {
+      const tw = files.find((f) => f.path === 'svelte-app/tailwind.config.js');
+      expect(tw).toBeDefined();
+      expect(tw!.content).toContain('./src/**/*.{html,js,svelte,ts}');
+    });
+
+    it('includes src/routes/+layout.svelte', () => {
+      expect(files.find((f) => f.path.includes('src/routes/+layout.svelte'))).toBeDefined();
+    });
+
+    it('includes src/routes/+page.svelte', () => {
+      expect(files.find((f) => f.path.includes('src/routes/+page.svelte'))).toBeDefined();
+    });
+
+    it('includes app.html shell', () => {
+      expect(files.find((f) => f.path.includes('src/app.html'))).toBeDefined();
+    });
+
+    it('includes Shadcn-style button component', () => {
+      const btn = files.find((f) => f.path.includes('components/ui/button.svelte'));
+      expect(btn).toBeDefined();
+      expect(btn!.content).toContain('variant');
+    });
+
+    it('includes cn utility', () => {
+      const utils = files.find((f) => f.path.includes('lib/utils.ts'));
+      expect(utils).toBeDefined();
+      expect(utils!.content).toContain('twMerge');
+    });
+
+    it('includes Svelte stores when state_management is not none', () => {
+      const withStores = generateSvelteProject('svelte-app', 'flat', 'signals');
+      const store = withStores.find((f) => f.path.includes('stores/app.ts'));
+      expect(store).toBeDefined();
+      expect(store!.content).toContain('writable');
+    });
+
+    it('does not include stores when state_management is none', () => {
+      const store = files.find((f) => f.path.includes('stores/'));
+      expect(store).toBeUndefined();
+    });
+
+    it('includes CSS variables matching design context', () => {
+      const css = files.find((f) => f.path.includes('app.css'));
+      expect(css).toBeDefined();
+      expect(css!.content).toContain('--background');
+      expect(css!.content).toContain('--foreground');
     });
   });
 });
