@@ -14,6 +14,9 @@ import type { AdapterType } from './types.js';
 
 const logger = pino({ name: 'model-manager' });
 
+/** Valid adapter types for validation */
+export const ADAPTER_TYPES = ['quality-scorer', 'prompt-enhancer', 'style-recommender'] as const;
+
 /** Default base directory for UIForge ML artifacts. */
 const DEFAULT_BASE_DIR = join(homedir(), '.uiforge');
 
@@ -170,6 +173,7 @@ export function listModels(): Array<{
 
 /**
  * Get total disk usage of all ML artifacts.
+ * Recursively calculates directory sizes.
  */
 export function getDiskUsage(): { totalBytes: number; breakdown: Record<string, number> } {
   const paths = getModelPaths();
@@ -178,24 +182,39 @@ export function getDiskUsage(): { totalBytes: number; breakdown: Record<string, 
 
   for (const [key, dir] of Object.entries(paths)) {
     if (key === 'base') continue;
-    let size = 0;
-    if (existsSync(dir)) {
-      try {
-        const files = readdirSync(dir);
-        for (const f of files) {
-          try {
-            size += statSync(join(dir, f)).size;
-          } catch {
-            // Skip unreadable files
-          }
-        }
-      } catch {
-        // Skip unreadable dirs
-      }
-    }
+    const size = getDirectorySize(dir);
     breakdown[key] = size;
     totalBytes += size;
   }
 
   return { totalBytes, breakdown };
+}
+
+/**
+ * Recursively calculate directory size.
+ */
+function getDirectorySize(dirPath: string): number {
+  let size = 0;
+  if (!existsSync(dirPath)) return 0;
+
+  try {
+    const items = readdirSync(dirPath);
+    for (const item of items) {
+      try {
+        const itemPath = join(dirPath, item);
+        const stats = statSync(itemPath);
+        if (stats.isDirectory()) {
+          size += getDirectorySize(itemPath);
+        } else {
+          size += stats.size;
+        }
+      } catch {
+        // Skip unreadable items
+      }
+    }
+  } catch {
+    // Skip unreadable directory
+  }
+
+  return size;
 }

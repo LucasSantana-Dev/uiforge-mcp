@@ -6,6 +6,7 @@
  */
 
 import type Database from 'better-sqlite3';
+import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 import type { IComponentSnippet } from '../design-references/component-registry/types.js';
 import type { IDesignAnalysis } from './image-design-analyzer.js';
@@ -40,12 +41,16 @@ export function storeDesignLearning(
 
   // 1. Convert to component snippets (if quality is high enough)
   if (analysis.qualityScore >= 0.6) {
-    const snippets = convertToComponentSnippets(analysis, generatedCode, componentName, framework);
-    for (const snippet of snippets) {
-      registerSnippet(snippet);
-      result.snippetsCreated++;
+    try {
+      const snippets = convertToComponentSnippets(analysis, generatedCode, componentName, framework);
+      for (const snippet of snippets) {
+        registerSnippet(snippet);
+        result.snippetsCreated++;
+      }
+      logger.info({ count: snippets.length, qualityScore: analysis.qualityScore }, 'Component snippets created from design analysis');
+    } catch (err) {
+      logger.error({ err }, 'Failed to convert design to component snippets');
     }
-    logger.info({ count: snippets.length, qualityScore: analysis.qualityScore }, 'Component snippets created from design analysis');
   }
 
   // 2. Generate feedback entries for ML training
@@ -78,7 +83,7 @@ function convertToComponentSnippets(
   for (let i = 0; i < analysis.components.length; i++) {
     const component = analysis.components[i];
     const snippet: IComponentSnippet = {
-      id: `learned-${componentName.toLowerCase()}-${component.type}-${Date.now()}-${i}`,
+      id: `learned-${componentName.toLowerCase()}-${component.type}-${randomUUID()}`,
       name: `${componentName} ${component.type}`,
       category: inferCategory(component.type),
       type: component.type,
@@ -92,10 +97,10 @@ function convertToComponentSnippets(
       css: undefined,
       a11y: {
         roles: [inferA11yRole(component.type)],
-        ariaAttributes: [],
-        keyboardNav: 'Standard keyboard navigation',
-        contrastRatio: '4.5:1',
-        focusVisible: true,
+        ariaAttributes: inferAriaAttributes(component.type),
+        keyboardNav: inferKeyboardNav(component.type),
+        contrastRatio: analysis.qualityScore >= 0.8 ? '7:1' : '4.5:1',
+        focusVisible: component.type !== 'text' && component.type !== 'image',
         reducedMotion: true,
       },
       seo: {
@@ -310,12 +315,39 @@ function inferA11yRole(componentType: string): string {
   const roleMap: Record<string, string> = {
     button: 'button',
     navigation: 'navigation',
+    header: 'banner',
+    footer: 'contentinfo',
     form: 'form',
-    modal: 'dialog',
-    table: 'table',
+    dialog: 'dialog',
+    card: 'article',
   };
-
   return roleMap[componentType] || 'region';
+}
+
+function inferAriaAttributes(componentType: string): string[] {
+  const attrMap: Record<string, string[]> = {
+    button: ['aria-label', 'aria-pressed', 'aria-expanded'],
+    navigation: ['aria-label', 'aria-current'],
+    dialog: ['aria-modal', 'aria-labelledby', 'aria-describedby'],
+    form: ['aria-label', 'aria-invalid', 'aria-required'],
+    input: ['aria-label', 'aria-invalid', 'aria-required', 'aria-describedby'],
+    tab: ['aria-selected', 'aria-controls'],
+    accordion: ['aria-expanded', 'aria-controls'],
+  };
+  return attrMap[componentType] || ['aria-label'];
+}
+
+function inferKeyboardNav(componentType: string): string {
+  const navMap: Record<string, string> = {
+    button: 'Enter or Space to activate',
+    navigation: 'Tab through links, Enter to navigate',
+    dialog: 'Escape to close, Tab to cycle focus',
+    form: 'Tab to navigate fields, Enter to submit',
+    tab: 'Arrow keys to switch tabs, Enter to activate',
+    accordion: 'Enter or Space to toggle, Arrow keys to navigate',
+    dropdown: 'Arrow keys to navigate, Enter to select, Escape to close',
+  };
+  return navMap[componentType] || 'Standard keyboard navigation';
 }
 
 function inferSemanticElement(componentType: string): string {

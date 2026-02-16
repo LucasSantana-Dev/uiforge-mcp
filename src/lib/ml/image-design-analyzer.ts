@@ -7,6 +7,16 @@
 
 import type { MoodTag, IndustryTag, VisualStyleId } from '../design-references/component-registry/types.js';
 
+// Quality scoring thresholds
+const MIN_QUALITY_SCORE = 0.0;
+const HIGH_QUALITY_THRESHOLD = 0.6;
+const EXCELLENT_QUALITY_THRESHOLD = 0.8;
+
+// Spacing validation
+const MIN_SPACING_PX = 0;
+const MAX_SPACING_PX = 128;
+const COMMON_SPACING_BASES = [4, 8, 16] as const;
+
 export interface IDesignAnalysis {
   /** Detected color palette */
   colors: {
@@ -158,10 +168,10 @@ function extractSpacing(code: string): IDesignAnalysis['spacing'] {
   // Infer spacing system base
   const spacingValues = [...paddingClasses, ...marginClasses, ...gapClasses]
     .map(c => parseInt(c.match(/\d+/)?.[0] || '0'))
-    .filter(v => v > 0);
+    .filter(v => v > MIN_SPACING_PX && v <= MAX_SPACING_PX);
 
-  const minSpacing = Math.min(...spacingValues, 4);
-  const system = minSpacing <= 2 ? '4px base' : '8px base';
+  const minSpacing = spacingValues.length > 0 ? Math.min(...spacingValues) : COMMON_SPACING_BASES[0];
+  const system = minSpacing <= 2 ? '4px base' : minSpacing <= 4 ? '4px base' : '8px base';
 
   return {
     system,

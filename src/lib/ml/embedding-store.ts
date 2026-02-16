@@ -109,6 +109,9 @@ export function getEmbedding(
 /**
  * Semantic search: find the most similar embeddings to a query vector.
  * Loads all candidates of the given type, computes cosine similarity in-memory.
+ *
+ * For large datasets, consider using streaming via semanticSearchStream() to avoid
+ * loading all embeddings into memory at once.
  */
 export function semanticSearch(
   queryVector: Float32Array,
