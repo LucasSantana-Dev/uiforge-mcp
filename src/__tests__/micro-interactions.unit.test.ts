@@ -27,6 +27,9 @@ function makeInteraction(overrides: Partial<IMicroInteraction> = {}): IMicroInte
 
 // ── Micro-Interaction Registry ─────────────────────────────
 
+// Minimum expected pre-registered interactions (entrance + hover + loading + feedback + text + transition categories)
+const MIN_PREREGISTERED_INTERACTIONS = 20;
+
 describe('micro-interactions registry', () => {
   beforeEach(() => {
     clearAllMicroInteractions();
@@ -35,7 +38,7 @@ describe('micro-interactions registry', () => {
 
   it('has pre-registered interactions', () => {
     const all = getAllInteractions();
-    expect(all.length).toBeGreaterThanOrEqual(20);
+    expect(all.length).toBeGreaterThanOrEqual(MIN_PREREGISTERED_INTERACTIONS);
   });
 
   it('every interaction has required fields', () => {

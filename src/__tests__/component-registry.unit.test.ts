@@ -129,9 +129,8 @@ describe('component-registry search', () => {
     const partialResult = results.find((r) => r.snippet.id === 'partial-hero-card');
 
     expect(exactResult).toBeDefined();
-    if (exactResult && partialResult) {
-      expect(exactResult.score).toBeGreaterThan(partialResult.score);
-    }
+    expect(partialResult).toBeDefined();
+    expect(exactResult!.score).toBeGreaterThan(partialResult!.score);
   });
 
   it('search with mood filter boosts matching snippets', () => {
@@ -143,9 +142,8 @@ describe('component-registry search', () => {
     const calmResult = results.find((r) => r.snippet.id === 'calm-btn');
 
     expect(boldResult).toBeDefined();
-    if (boldResult && calmResult) {
-      expect(boldResult.score).toBeGreaterThan(calmResult.score);
-    }
+    expect(calmResult).toBeDefined();
+    expect(boldResult!.score).toBeGreaterThan(calmResult!.score);
   });
 
   it('search with industry filter boosts matching snippets', () => {
@@ -157,9 +155,8 @@ describe('component-registry search', () => {
     const generalResult = results.find((r) => r.snippet.id === 'general-card');
 
     expect(saasResult).toBeDefined();
-    if (saasResult && generalResult) {
-      expect(saasResult.score).toBeGreaterThan(generalResult.score);
-    }
+    expect(generalResult).toBeDefined();
+    expect(saasResult!.score).toBeGreaterThan(generalResult!.score);
   });
 
   it('search with visual style filter works', () => {
@@ -330,9 +327,8 @@ describe('component-registry composeSection', () => {
     // composeSection always queries category:'organism', so any organism
     // gets a non-zero score from the category match alone
     const section = composeSection('zzz-no-match-widget');
-    if (section) {
-      expect(section.category).toBe('organism');
-    }
+    expect(section).toBeDefined();
+    expect(section!.category).toBe('organism');
   });
 
   it('applies visual style when provided', () => {

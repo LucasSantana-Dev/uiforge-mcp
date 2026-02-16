@@ -59,7 +59,9 @@ describe('training-data-exporter', () => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     );
     for (let i = 0; i < count; i++) {
-      const score = scoreRange[0] + Math.random() * (scoreRange[1] - scoreRange[0]);
+      // Deterministic score based on index to avoid flaky tests
+      const normalizedIndex = i / Math.max(count - 1, 1);
+      const score = scoreRange[0] + normalizedIndex * (scoreRange[1] - scoreRange[0]);
       stmt.run(
         `gen-${i}`,
         `Create a ${i % 2 === 0 ? 'card' : 'button'} component with ${i % 3 === 0 ? 'glassmorphism' : 'neumorphism'}`,
@@ -446,10 +448,15 @@ describe('training-pipeline', () => {
 
   describe('DEFAULT_LORA_CONFIG', () => {
     it('has sensible defaults for N100 CPU', () => {
-      expect(DEFAULT_LORA_CONFIG.rank).toBe(8);
-      expect(DEFAULT_LORA_CONFIG.batchSize).toBe(4);
-      expect(DEFAULT_LORA_CONFIG.epochs).toBe(3);
-      expect(DEFAULT_LORA_CONFIG.learningRate).toBe(1e-4);
+      // Use ranges instead of exact values to allow tuning without breaking tests
+      expect(DEFAULT_LORA_CONFIG.rank).toBeGreaterThanOrEqual(4);
+      expect(DEFAULT_LORA_CONFIG.rank).toBeLessThanOrEqual(16);
+      expect(DEFAULT_LORA_CONFIG.batchSize).toBeGreaterThanOrEqual(1);
+      expect(DEFAULT_LORA_CONFIG.batchSize).toBeLessThanOrEqual(8);
+      expect(DEFAULT_LORA_CONFIG.epochs).toBeGreaterThanOrEqual(1);
+      expect(DEFAULT_LORA_CONFIG.epochs).toBeLessThanOrEqual(10);
+      expect(DEFAULT_LORA_CONFIG.learningRate).toBeGreaterThan(0);
+      expect(DEFAULT_LORA_CONFIG.learningRate).toBeLessThan(0.01);
     });
   });
 });

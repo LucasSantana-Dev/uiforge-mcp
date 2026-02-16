@@ -9,7 +9,6 @@ import {
   getPatternStats,
   ensurePatternsTable,
 } from '../lib/feedback/pattern-promotion.js';
-import { isPromotable } from '../lib/feedback/pattern-detector.js';
 import type { ICodePattern } from '../lib/feedback/types.js';
 import type Database from 'better-sqlite3';
 

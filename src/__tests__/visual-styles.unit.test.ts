@@ -56,14 +56,17 @@ function makeSnippet(): IComponentSnippet {
 
 // ── Visual Style Registry ──────────────────────────────────
 
+// Minimum expected pre-registered visual styles (glassmorphism, neubrutalism, soft-depth, etc.)
+const MIN_PREREGISTERED_VISUAL_STYLES = 10;
+
 describe('visual-styles registry', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     initializeStyles();
   });
 
   it('has pre-registered styles', () => {
     const all = getAllVisualStyles();
-    expect(all.length).toBeGreaterThanOrEqual(10);
+    expect(all.length).toBeGreaterThanOrEqual(MIN_PREREGISTERED_VISUAL_STYLES);
   });
 
   it('every style has required fields', () => {
