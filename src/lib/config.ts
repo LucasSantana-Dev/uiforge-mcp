@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ConfigNotInitializedError } from './errors/config.error.js';
+import { logger } from './logger.js';
 
 export const configSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
@@ -33,15 +34,18 @@ export function getConfig(): Config {
 }
 
 /**
- * Safely parse JSON with fallback to empty object on error.
+ * Safely parse JSON with typed fallback on error.
  * Used for parsing JSON fields from database to avoid crashes on malformed data.
+ * @param jsonString - JSON string to parse
+ * @param defaultValue - Fallback value if parsing fails (defaults to empty object)
  */
-export function safeJSONParse<T = any>(jsonString: string | null | undefined): T {
-  if (!jsonString) return {} as T;
+export function safeJSONParse<T = any>(jsonString: string | null | undefined, defaultValue?: T): T {
+  const fallback = (defaultValue !== undefined ? defaultValue : {}) as T;
+  if (!jsonString) return fallback;
   try {
     return JSON.parse(jsonString) as T;
   } catch (err) {
-    console.error('Failed to parse JSON, returning empty object:', err);
-    return {} as T;
+    logger.error({ err, jsonString: jsonString.substring(0, 100) }, 'Failed to parse JSON, returning fallback');
+    return fallback;
   }
 }

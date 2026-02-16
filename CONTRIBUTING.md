@@ -1,6 +1,7 @@
 # Contributing to UIForge MCP
 
-Thank you for your interest in contributing to UIForge MCP! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to UIForge MCP! This document
+provides guidelines and instructions for contributing.
 
 ## Development Setup
 
@@ -13,22 +14,26 @@ Thank you for your interest in contributing to UIForge MCP! This document provid
 ### Getting Started
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/uiforge-mcp.git
    cd uiforge-mcp
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install --legacy-peer-deps
    ```
 
 3. **Build the project**
+
    ```bash
    npm run build
    ```
 
 4. **Run tests**
+
    ```bash
    npm test
    ```
@@ -106,11 +111,36 @@ npm run test:watch
 npm test -- path/to/test.ts
 ```
 
+### Validation Scripts
+
+The project provides two validation scripts with different control-flow
+semantics:
+
+**`npm run validate`** (recommended for local development)
+
+- Uses `&&` operator (stops on first failure)
+- Runs: lint → format check → type check → tests
+- **Use when**: Quick local checks before commit
+- **Behavior**: Fails fast on first error, saving time
+- **Example**: `npm run validate`
+
+**`npm run validate:all`** (recommended for CI)
+
+- Uses `;` operator (runs all commands regardless of failures)
+- Runs: lint → format check → type check → tests (all execute)
+- **Use when**: CI pipelines to surface all issues at once
+- **Behavior**: Continues through all checks even if some fail
+- **Example**: `npm run validate:all`
+
+Choose `validate` for rapid feedback during development, and `validate:all` in
+CI to see all problems in one run.
+
 ## Pull Request Process
 
 ### Before Submitting
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -146,20 +176,24 @@ Before submitting your PR, ensure:
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] Manual testing performed
 
 ## Checklist
+
 - [ ] Code builds successfully
 - [ ] All tests pass
 - [ ] Coverage maintained
@@ -171,6 +205,7 @@ Brief description of changes
 ### Adding a New Tool
 
 1. **Create tool file**: `src/tools/your-tool.ts`
+
    ```typescript
    import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
    import { z } from 'zod';
@@ -195,6 +230,7 @@ Brief description of changes
    ```
 
 2. **Register in index**: Add to `src/index.ts`
+
    ```typescript
    import { registerYourTool } from './tools/your-tool.js';
    registerYourTool(server);
@@ -299,11 +335,13 @@ Releases are managed by maintainers:
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licensed under the
+MIT License.
 
 ## Recognition
 
 Contributors are recognized in:
+
 - GitHub contributors page
 - CHANGELOG.md for significant contributions
 - README.md for major features
