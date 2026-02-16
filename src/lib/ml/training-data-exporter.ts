@@ -165,7 +165,7 @@ export function writeJsonl<T extends object>(
   mkdirSync(dir, { recursive: true });
 
   const lines = rows.map((r) => JSON.stringify(r)).join('\n');
-  writeFileSync(filePath, lines + '\n', 'utf-8');
+  writeFileSync(filePath, `${lines  }\n`, 'utf-8');
 
   logger.info({ path: filePath, rows: rows.length }, 'Training data written');
   return rows.length;

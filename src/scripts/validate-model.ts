@@ -197,7 +197,7 @@ async function validateModel(): Promise<void> {
     }
   }
 
-  console.log('\n' + '='.repeat(60) + '\n');
+  console.log(`\n${  '='.repeat(60)  }\n`);
 
   if (allPassed) {
     console.log('🎉 ML system ready!\n');

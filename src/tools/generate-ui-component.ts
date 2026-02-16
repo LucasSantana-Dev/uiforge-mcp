@@ -222,10 +222,10 @@ export function registerGenerateUiComponent(server: McpServer): void {
       const ragInfo = registryMatch
         ? `\n📚 RAG Match: "${registryMatch.name}" (${registryMatch.id})` +
         `\n   Quality: ${registryMatch.quality.inspirationSource}` +
-        `\n   A11y: ${registryMatch.a11y.keyboardNav}` +
-        (registryMatch.quality.antiGeneric.length > 0
+        `\n   A11y: ${registryMatch.a11y.keyboardNav}${ 
+        registryMatch.quality.antiGeneric.length > 0
           ? `\n   Anti-generic: ${registryMatch.quality.antiGeneric.join(', ')}`
-          : '')
+          : ''}`
         : '\n📚 RAG: No registry match — using fallback template';
 
       const summary = [
