@@ -13,6 +13,9 @@ Thumbs.db
 # Coverage
 coverage/
 
+# Runtime data
+.uiforge/
+
 # Editor
 .idea/
 .vscode/
