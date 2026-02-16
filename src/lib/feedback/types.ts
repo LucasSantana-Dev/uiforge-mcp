@@ -12,6 +12,12 @@ export interface IGeneration {
   outputHash: string;
   timestamp: number;
   sessionId: string;
+  prompt?: string;
+  variant?: string;
+  mood?: string;
+  industry?: string;
+  style?: string;
+  codeHash?: string;
 }
 
 /** Feedback for a generation (explicit or implicit). */

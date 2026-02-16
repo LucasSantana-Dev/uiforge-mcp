@@ -189,7 +189,7 @@ export async function infer(
 
     return {
       text: response,
-      source: 'sidecar' as const,
+      source: 'model' as const,
       latencyMs: Date.now() - start,
     };
   } catch (err) {
