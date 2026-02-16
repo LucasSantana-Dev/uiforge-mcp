@@ -1,6 +1,6 @@
 {
   "name": "uiforge-mcp",
-  "version": "0.2.1",
+  "version": "0.4.1",
   "description": "MCP server for AI-driven UI generation — from code scaffolding to interactive prototypes and design images",
   "type": "module",
   "main": "dist/index.js",
@@ -10,7 +10,8 @@
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "clean": "rm -rf dist coverage .tsbuildinfo node_modules/.cache",
-    "validate": "npm run lint && npm run format:check && npx tsc --noEmit && npm test",
+    "validate": "npm run lint && npm run format:check && npx tsc --noEmit && npm test && npm run build",
+    "validate:all": "npm run lint; npm run format:check; npx tsc --noEmit; npm test; npm run build",
     "docker:build": "docker build -t uiforge-mcp:latest .",
     "docker:run": "docker run -i uiforge-mcp:latest",
     "lint": "eslint src/",
@@ -65,7 +66,8 @@
   "lint-staged": {
     "src/**/*.ts": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "tsc --noEmit"
     ]
   }
 }
