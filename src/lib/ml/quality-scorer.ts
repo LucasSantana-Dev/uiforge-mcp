@@ -1,0 +1,208 @@
+/**
+ * Quality scorer — predicts whether generated code will be accepted by the user.
+ *
+ * Uses the sidecar model when available, otherwise falls back to
+ * heuristic scoring based on code structure analysis.
+ *
+ * Score range: 0-10 (0 = likely rejected, 10 = likely accepted).
+ */
+
+import pino from 'pino';
+import { isSidecarReady, infer } from './sidecar-model.js';
+
+const logger = pino({ name: 'quality-scorer' });
+
+/** Quality score result. */
+export interface IQualityScore {
+  /** Score from 0-10. */
+  score: number;
+  /** Confidence in the score (0-1). */
+  confidence: number;
+  /** Whether the score came from the model or heuristics. */
+  source: 'model' | 'heuristic';
+  /** Breakdown of heuristic factors (when source is 'heuristic'). */
+  factors?: Record<string, number>;
+  /** Inference latency in ms. */
+  latencyMs: number;
+}
+
+/**
+ * Score the quality of generated code.
+ *
+ * When the sidecar model is loaded, uses it for prediction.
+ * Otherwise, applies structural heuristics.
+ */
+export async function scoreQuality(
+  prompt: string,
+  generatedCode: string,
+  params?: { componentType?: string; framework?: string; style?: string }
+): Promise<IQualityScore> {
+  const start = Date.now();
+
+  if (isSidecarReady()) {
+    return scoreWithModel(prompt, generatedCode, params, start);
+  }
+
+  return scoreWithHeuristics(prompt, generatedCode, params, start);
+}
+
+/**
+ * Score using the sidecar model.
+ */
+async function scoreWithModel(
+  prompt: string,
+  generatedCode: string,
+  params: { componentType?: string; framework?: string; style?: string } | undefined,
+  start: number
+): Promise<IQualityScore> {
+  const inferPrompt = [
+    'Rate the likelihood that the following UI generation request will be accepted by the user.',
+    'Respond with ONLY a number from 0 to 10.',
+    '',
+    `Prompt: ${prompt}`,
+    `Component: ${params?.componentType ?? 'unknown'}`,
+    `Framework: ${params?.framework ?? 'unknown'}`,
+    `Style: ${params?.style ?? 'default'}`,
+    `Code length: ${generatedCode.length} chars`,
+    '',
+    'Score:',
+  ].join('\n');
+
+  const result = await infer(inferPrompt, { maxTokens: 8, temperature: 0.1 });
+
+  if (result.source === 'model' && result.text.trim()) {
+    const parsed = parseFloat(result.text.trim());
+    if (!isNaN(parsed) && parsed >= 0 && parsed <= 10) {
+      return {
+        score: Math.round(parsed * 10) / 10,
+        confidence: 0.8,
+        source: 'model',
+        latencyMs: Date.now() - start,
+      };
+    }
+  }
+
+  // Fallback to heuristics if model output is unparseable
+  logger.debug('Model output unparseable, falling back to heuristics');
+  return scoreWithHeuristics(prompt, generatedCode, params, start);
+}
+
+/**
+ * Score using structural heuristics.
+ * Analyzes code structure, accessibility markers, and completeness.
+ */
+function scoreWithHeuristics(
+  prompt: string,
+  generatedCode: string,
+  params: { componentType?: string; framework?: string; style?: string } | undefined,
+  start: number
+): IQualityScore {
+  const factors: Record<string, number> = {};
+  let total = 0;
+  let maxPossible = 0;
+
+  // Factor 1: Code length (too short = incomplete, too long = bloated)
+  const len = generatedCode.length;
+  if (len < 50) {
+    factors.length = 0;
+  } else if (len < 200) {
+    factors.length = 0.5;
+  } else if (len < 5000) {
+    factors.length = 1.0;
+  } else {
+    factors.length = 0.7;
+  }
+  total += factors.length;
+  maxPossible += 1;
+
+  // Factor 2: Accessibility markers
+  const a11yMarkers = [
+    /aria-/i,
+    /role=/i,
+    /alt=/i,
+    /tabIndex/i,
+    /sr-only/i,
+    /<label/i,
+    /htmlFor/i,
+  ];
+  const a11yScore = a11yMarkers.filter((r) => r.test(generatedCode)).length / a11yMarkers.length;
+  factors.accessibility = a11yScore;
+  total += a11yScore;
+  maxPossible += 1;
+
+  // Factor 3: Semantic HTML
+  const semanticTags = ['<header', '<main', '<nav', '<section', '<article', '<footer', '<aside'];
+  const semanticCount = semanticTags.filter((t) => generatedCode.includes(t)).length;
+  factors.semanticHtml = Math.min(1.0, semanticCount / 3);
+  total += factors.semanticHtml;
+  maxPossible += 1;
+
+  // Factor 4: Tailwind usage (if expected)
+  if (generatedCode.includes('className') || generatedCode.includes('class=')) {
+    const tailwindPatterns = [/\bflex\b/, /\bgrid\b/, /\bp-\d/, /\bm-\d/, /\btext-/, /\bbg-/, /\brounded/];
+    const twScore = tailwindPatterns.filter((r) => r.test(generatedCode)).length / tailwindPatterns.length;
+    factors.tailwind = twScore;
+    total += twScore;
+    maxPossible += 1;
+  }
+
+  // Factor 5: Component structure (exports, props)
+  const structureMarkers = [
+    /export\s+(default\s+)?function/,
+    /interface\s+\w+Props/,
+    /return\s*\(/,
+    /import\s+/,
+  ];
+  const structScore = structureMarkers.filter((r) => r.test(generatedCode)).length / structureMarkers.length;
+  factors.structure = structScore;
+  total += structScore;
+  maxPossible += 1;
+
+  // Factor 6: Responsive design
+  const responsiveMarkers = [/\bsm:/, /\bmd:/, /\blg:/, /\bxl:/, /@media/];
+  const respScore = responsiveMarkers.filter((r) => r.test(generatedCode)).length / responsiveMarkers.length;
+  factors.responsive = respScore;
+  total += respScore;
+  maxPossible += 1;
+
+  // Factor 7: Dark mode support
+  if (generatedCode.includes('dark:')) {
+    factors.darkMode = 1.0;
+  } else {
+    factors.darkMode = 0;
+  }
+  total += factors.darkMode;
+  maxPossible += 1;
+
+  // Factor 8: Prompt alignment — check if component type appears in code
+  if (params?.componentType) {
+    const typeInCode = generatedCode.toLowerCase().includes(params.componentType.toLowerCase());
+    factors.promptAlignment = typeInCode ? 1.0 : 0.3;
+  } else {
+    factors.promptAlignment = 0.5;
+  }
+  total += factors.promptAlignment;
+  maxPossible += 1;
+
+  const normalizedScore = maxPossible > 0 ? (total / maxPossible) * 10 : 5;
+
+  return {
+    score: Math.round(normalizedScore * 10) / 10,
+    confidence: 0.5, // Heuristics have lower confidence than model
+    source: 'heuristic',
+    factors,
+    latencyMs: Date.now() - start,
+  };
+}
+
+/**
+ * Quick check: is the code likely acceptable? (score >= 6)
+ */
+export async function isLikelyAccepted(
+  prompt: string,
+  generatedCode: string,
+  params?: { componentType?: string; framework?: string; style?: string }
+): Promise<boolean> {
+  const result = await scoreQuality(prompt, generatedCode, params);
+  return result.score >= 6;
+}
