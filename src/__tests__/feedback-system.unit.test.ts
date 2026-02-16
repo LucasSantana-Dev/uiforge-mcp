@@ -143,7 +143,7 @@ describe('pattern-detector', () => {
       expect(skeleton).toContain('div');
       expect(skeleton).toContain('h2[heading]');
       expect(skeleton).toContain('p[body]');
-      expect(skeleton).toContain('button[action]');
+      expect(skeleton).toContain('button[button]');
     });
 
     it('handles self-closing tags', () => {

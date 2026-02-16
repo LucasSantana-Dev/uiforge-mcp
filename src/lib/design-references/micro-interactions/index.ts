@@ -41,6 +41,7 @@ export function getAllInteractions(): readonly IMicroInteraction[] {
  */
 export function clearAllMicroInteractions(): void {
   interactions.length = 0;
+  initialized = false;
 }
 
 // --- Entrance Animations ---

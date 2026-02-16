@@ -58,10 +58,10 @@ describe('cosineSimilarity', () => {
     expect(cosineSimilarity(a, b)).toBeCloseTo(-1, 5);
   });
 
-  it('returns 0 for mismatched dimensions', () => {
+  it('throws error for mismatched dimensions', () => {
     const a = new Float32Array([1, 0]);
     const b = new Float32Array([1, 0, 0]);
-    expect(cosineSimilarity(a, b)).toBe(0);
+    expect(() => cosineSimilarity(a, b)).toThrow('Vector length mismatch: 2 vs 3');
   });
 });
 

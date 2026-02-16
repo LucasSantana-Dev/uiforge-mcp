@@ -16,8 +16,10 @@ const PRAISE_SCORE = 2.0;
 const PRAISE_CONFIDENCE = 0.9;
 const MAJOR_REDO_SCORE = -1.0;
 const MAJOR_REDO_CONFIDENCE = 0.7;
-const MINOR_TWEAK_SCORE = -0.3;
+const MINOR_TWEAK_SCORE = 0.5;
 const MINOR_TWEAK_CONFIDENCE = 0.6;
+const RAPID_FOLLOWUP_SCORE = -0.3;
+const RAPID_FOLLOWUP_CONFIDENCE = 0.5;
 const POSITIVE_THRESHOLD = 0.3;
 const NEGATIVE_THRESHOLD = -0.3;
 
@@ -124,8 +126,8 @@ function detectTimeSignal(prev: IGeneration, curr: IGeneration): IImplicitSignal
   if (gapSeconds < 30) {
     return {
       type: 'rapid_followup',
-      score: -0.3,
-      confidence: 0.5,
+      score: RAPID_FOLLOWUP_SCORE,
+      confidence: RAPID_FOLLOWUP_CONFIDENCE,
       reason: `Rapid follow-up: ${gapSeconds.toFixed(0)}s gap`,
     };
   }
