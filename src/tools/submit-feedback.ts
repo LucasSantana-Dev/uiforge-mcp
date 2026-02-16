@@ -21,16 +21,11 @@ export function registerSubmitFeedback(server: McpServer): void {
     'submit_feedback',
     'Submit feedback on a previously generated UI component or page template. This helps UIForge learn your preferences and improve future generations.',
     {
-      generation_id: z
-        .string()
-        .describe('The ID of the generation to provide feedback for'),
+      generation_id: z.string().describe('The ID of the generation to provide feedback for'),
       rating: z
         .enum(['positive', 'negative'])
         .describe('Whether the generated output was acceptable (positive) or not (negative)'),
-      comment: z
-        .string()
-        .optional()
-        .describe('Optional comment explaining why the output was good or bad'),
+      comment: z.string().optional().describe('Optional comment explaining why the output was good or bad'),
     },
     ({ generation_id, rating, comment }) => {
       try {

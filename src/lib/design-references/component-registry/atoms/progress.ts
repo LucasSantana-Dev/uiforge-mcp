@@ -39,7 +39,11 @@ export const progressSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'div' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['transition-all for animated fill', 'label + percentage for context', 'ease-out for natural deceleration'],
+      antiGeneric: [
+        'transition-all for animated fill',
+        'label + percentage for context',
+        'ease-out for natural deceleration',
+      ],
       inspirationSource: 'shadcn/ui Progress',
       craftDetails: ['h-2 thin bar for modern look', 'rounded-full on both track and fill'],
     },
@@ -74,7 +78,11 @@ export const progressSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'div' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['varied widths (3/4, full, 5/6) mimic real content', 'aria-busy for screen readers', 'matches content shape for low CLS'],
+      antiGeneric: [
+        'varied widths (3/4, full, 5/6) mimic real content',
+        'aria-busy for screen readers',
+        'matches content shape for low CLS',
+      ],
       inspirationSource: 'shadcn/ui Skeleton',
       craftDetails: ['staggered widths prevent uniform shimmer', 'animate-pulse with motion-reduce fallback'],
     },
@@ -119,7 +127,11 @@ export const progressSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'div' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['skeleton mirrors actual card layout', 'button skeletons maintain action area', 'prevents CLS when content loads'],
+      antiGeneric: [
+        'skeleton mirrors actual card layout',
+        'button skeletons maintain action area',
+        'prevents CLS when content loads',
+      ],
       inspirationSource: 'Vercel dashboard loading states',
       craftDetails: ['exact match of card dimensions', 'rounded-lg on buttons matches real buttons'],
     },

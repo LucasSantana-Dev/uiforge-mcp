@@ -126,15 +126,7 @@ function scoreWithHeuristics(
   maxPossible += 1;
 
   // Factor 2: Accessibility markers
-  const a11yMarkers = [
-    /aria-/i,
-    /role=/i,
-    /alt=/i,
-    /tabIndex/i,
-    /sr-only/i,
-    /<label/i,
-    /htmlFor/i,
-  ];
+  const a11yMarkers = [/aria-/i, /role=/i, /alt=/i, /tabIndex/i, /sr-only/i, /<label/i, /htmlFor/i];
   const a11yScore = a11yMarkers.filter((r) => r.test(generatedCode)).length / a11yMarkers.length;
   factors.accessibility = a11yScore;
   total += a11yScore;
@@ -157,12 +149,7 @@ function scoreWithHeuristics(
   }
 
   // Factor 5: Component structure (exports, props)
-  const structureMarkers = [
-    /export\s+(default\s+)?function/,
-    /interface\s+\w+Props/,
-    /return\s*\(/,
-    /import\s+/,
-  ];
+  const structureMarkers = [/export\s+(default\s+)?function/, /interface\s+\w+Props/, /return\s*\(/, /import\s+/];
   const structScore = structureMarkers.filter((r) => r.test(generatedCode)).length / structureMarkers.length;
   factors.structure = structScore;
   total += structScore;

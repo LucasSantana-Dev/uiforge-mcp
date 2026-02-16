@@ -116,10 +116,7 @@ describe('micro-interactions registry', () => {
 
   it('registerInteractions adds multiple at once', () => {
     const before = getAllInteractions().length;
-    registerInteractions([
-      makeInteraction({ id: 'bulk-anim-1' }),
-      makeInteraction({ id: 'bulk-anim-2' }),
-    ]);
+    registerInteractions([makeInteraction({ id: 'bulk-anim-1' }), makeInteraction({ id: 'bulk-anim-2' })]);
     expect(getAllInteractions().length).toBe(before + 2);
   });
 

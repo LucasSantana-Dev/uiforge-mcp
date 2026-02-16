@@ -12,10 +12,12 @@ import { cosineSimilarity } from './embeddings.js';
  */
 export function storeEmbedding(embedding: IEmbedding, db: Database.Database): void {
   const blob = Buffer.from(embedding.vector.buffer);
-  db.prepare(`
+  db.prepare(
+    `
     INSERT OR REPLACE INTO embeddings (source_id, source_type, text, vector_blob, dimensions, model, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run(
+  `
+  ).run(
     embedding.sourceId,
     embedding.sourceType,
     embedding.text,
@@ -48,20 +50,19 @@ export function storeEmbeddings(embeddings: IEmbedding[], db: Database.Database)
 /**
  * Load all embeddings of a given source type.
  */
-export function loadEmbeddings(
-  sourceType: IEmbedding['sourceType'],
-  db: Database.Database
-): IEmbedding[] {
+export function loadEmbeddings(sourceType: IEmbedding['sourceType'], db: Database.Database): IEmbedding[] {
   const rows = db
-    .prepare('SELECT source_id, source_type, text, vector_blob, dimensions, created_at FROM embeddings WHERE source_type = ?')
+    .prepare(
+      'SELECT source_id, source_type, text, vector_blob, dimensions, created_at FROM embeddings WHERE source_type = ?'
+    )
     .all(sourceType) as Array<{
-      source_id: string;
-      source_type: string;
-      text: string;
-      vector_blob: Buffer;
-      dimensions: number;
-      created_at: number;
-    }>;
+    source_id: string;
+    source_type: string;
+    text: string;
+    vector_blob: Buffer;
+    dimensions: number;
+    created_at: number;
+  }>;
 
   return rows.map((r) => ({
     sourceId: r.source_id,
@@ -82,16 +83,18 @@ export function getEmbedding(
   db: Database.Database
 ): IEmbedding | undefined {
   const row = db
-    .prepare('SELECT source_id, source_type, text, vector_blob, dimensions, created_at FROM embeddings WHERE source_id = ? AND source_type = ?')
+    .prepare(
+      'SELECT source_id, source_type, text, vector_blob, dimensions, created_at FROM embeddings WHERE source_id = ? AND source_type = ?'
+    )
     .get(sourceId, sourceType) as
     | {
-      source_id: string;
-      source_type: string;
-      text: string;
-      vector_blob: Buffer;
-      dimensions: number;
-      created_at: number;
-    }
+        source_id: string;
+        source_type: string;
+        text: string;
+        vector_blob: Buffer;
+        dimensions: number;
+        created_at: number;
+      }
     | undefined;
 
   if (!row) return undefined;
@@ -137,23 +140,17 @@ export function semanticSearch(
 /**
  * Get the count of stored embeddings by type.
  */
-export function getEmbeddingCount(
-  sourceType: IEmbedding['sourceType'],
-  db: Database.Database
-): number {
-  const row = db
-    .prepare('SELECT COUNT(*) as cnt FROM embeddings WHERE source_type = ?')
-    .get(sourceType) as { cnt: number };
+export function getEmbeddingCount(sourceType: IEmbedding['sourceType'], db: Database.Database): number {
+  const row = db.prepare('SELECT COUNT(*) as cnt FROM embeddings WHERE source_type = ?').get(sourceType) as {
+    cnt: number;
+  };
   return row.cnt;
 }
 
 /**
  * Delete embeddings by source type.
  */
-export function deleteEmbeddings(
-  sourceType: IEmbedding['sourceType'],
-  db: Database.Database
-): number {
+export function deleteEmbeddings(sourceType: IEmbedding['sourceType'], db: Database.Database): number {
   const result = db.prepare('DELETE FROM embeddings WHERE source_type = ?').run(sourceType);
   return result.changes;
 }

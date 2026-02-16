@@ -138,9 +138,7 @@ describe('training-data-exporter', () => {
     });
 
     it('skips empty prompts', () => {
-      const examples: ITrainingExample[] = [
-        { prompt: '', code: '', score: 1.0, params: {} },
-      ];
+      const examples: ITrainingExample[] = [{ prompt: '', code: '', score: 1.0, params: {} }];
       expect(buildQualityScorerData(examples).length).toBe(0);
     });
   });
@@ -300,11 +298,7 @@ describe('model-manager', () => {
   it('lists all adapters', () => {
     const adapters = listAdapters();
     expect(adapters.length).toBe(3);
-    expect(adapters.map((a) => a.adapter)).toEqual([
-      'quality-scorer',
-      'prompt-enhancer',
-      'style-recommender',
-    ]);
+    expect(adapters.map((a) => a.adapter)).toEqual(['quality-scorer', 'prompt-enhancer', 'style-recommender']);
     expect(adapters.every((a) => !a.available)).toBe(true);
   });
 
@@ -343,9 +337,11 @@ describe('training-pipeline', () => {
       const jobId = createTrainingJob('quality-scorer', 100, db);
       expect(jobId).toBeGreaterThan(0);
 
-      const row = db
-        .prepare('SELECT * FROM training_jobs WHERE id = ?')
-        .get(jobId) as { adapter: string; status: string; examples_count: number };
+      const row = db.prepare('SELECT * FROM training_jobs WHERE id = ?').get(jobId) as {
+        adapter: string;
+        status: string;
+        examples_count: number;
+      };
       expect(row.adapter).toBe('quality-scorer');
       expect(row.status).toBe('preparing');
       expect(row.examples_count).toBe(100);
@@ -357,9 +353,10 @@ describe('training-pipeline', () => {
       const jobId = createTrainingJob('quality-scorer', 50, db);
       updateJobStatus(jobId, 'training', 45, db);
 
-      const row = db
-        .prepare('SELECT status, progress FROM training_jobs WHERE id = ?')
-        .get(jobId) as { status: string; progress: number };
+      const row = db.prepare('SELECT status, progress FROM training_jobs WHERE id = ?').get(jobId) as {
+        status: string;
+        progress: number;
+      };
       expect(row.status).toBe('training');
       expect(row.progress).toBe(45);
     });
@@ -368,9 +365,9 @@ describe('training-pipeline', () => {
       const jobId = createTrainingJob('quality-scorer', 50, db);
       updateJobStatus(jobId, 'complete', 100, db);
 
-      const row = db
-        .prepare('SELECT completed_at FROM training_jobs WHERE id = ?')
-        .get(jobId) as { completed_at: number | null };
+      const row = db.prepare('SELECT completed_at FROM training_jobs WHERE id = ?').get(jobId) as {
+        completed_at: number | null;
+      };
       expect(row.completed_at).not.toBeNull();
     });
 
@@ -378,9 +375,7 @@ describe('training-pipeline', () => {
       const jobId = createTrainingJob('quality-scorer', 50, db);
       updateJobStatus(jobId, 'failed', 0, db, 'Out of memory');
 
-      const row = db
-        .prepare('SELECT error FROM training_jobs WHERE id = ?')
-        .get(jobId) as { error: string | null };
+      const row = db.prepare('SELECT error FROM training_jobs WHERE id = ?').get(jobId) as { error: string | null };
       expect(row.error).toBe('Out of memory');
     });
   });

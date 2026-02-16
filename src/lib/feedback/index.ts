@@ -14,17 +14,9 @@ export type {
   IPromptClassification,
 } from './types.js';
 
-export {
-  classifyPromptPair,
-  classifyPromptText,
-} from './prompt-classifier.js';
+export { classifyPromptPair, classifyPromptText } from './prompt-classifier.js';
 
-export {
-  extractSkeleton,
-  hashSkeleton,
-  fingerprint,
-  isPromotable,
-} from './pattern-detector.js';
+export { extractSkeleton, hashSkeleton, fingerprint, isPromotable } from './pattern-detector.js';
 
 export {
   recordGeneration,
@@ -36,10 +28,7 @@ export {
   clearSessionCache,
 } from './feedback-tracker.js';
 
-export {
-  feedbackBoostedSearch,
-  getFeedbackBoost,
-} from './feedback-boosted-search.js';
+export { feedbackBoostedSearch, getFeedbackBoost } from './feedback-boosted-search.js';
 
 export {
   recordPattern,

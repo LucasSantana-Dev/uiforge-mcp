@@ -70,15 +70,14 @@ export function recordPattern(
     updated_at: number;
   }
 
-  const existing = db
-    .prepare('SELECT * FROM code_patterns WHERE skeleton_hash = ?')
-    .get(skeletonHash) as CodePatternRow | undefined;
+  const existing = db.prepare('SELECT * FROM code_patterns WHERE skeleton_hash = ?').get(skeletonHash) as
+    | CodePatternRow
+    | undefined;
 
   if (existing) {
     // Update frequency and running average score
     const newFreq = existing.frequency + 1;
-    const newAvg =
-      (existing.avg_score * existing.frequency + feedbackScore) / newFreq;
+    const newAvg = (existing.avg_score * existing.frequency + feedbackScore) / newFreq;
 
     db.prepare(
       `UPDATE code_patterns
@@ -96,7 +95,10 @@ export function recordPattern(
       promoted: existing.promoted === 1,
     };
   } else {
-    const id = `pat-${createHash('sha256').update(skeletonHash + Date.now()).digest('hex').slice(0, 12)}`;
+    const id = `pat-${createHash('sha256')
+      .update(skeletonHash + Date.now())
+      .digest('hex')
+      .slice(0, 12)}`;
 
     db.prepare(
       `INSERT INTO code_patterns (id, skeleton_hash, skeleton, snippet, component_type, category, frequency, avg_score, promoted)
@@ -129,14 +131,14 @@ export function getPromotablePatternsFromDb(db: Database.Database): ICodePattern
        ORDER BY avg_score DESC, frequency DESC`
     )
     .all() as Array<{
-      id: string;
-      skeleton_hash: string;
-      skeleton: string;
-      snippet: string;
-      frequency: number;
-      avg_score: number;
-      promoted: number;
-    }>;
+    id: string;
+    skeleton_hash: string;
+    skeleton: string;
+    snippet: string;
+    frequency: number;
+    avg_score: number;
+    promoted: number;
+  }>;
 
   return rows.map((r) => ({
     id: r.id,
@@ -226,9 +228,9 @@ export function runPromotionCycle(db: Database.Database): number {
 
   for (const pattern of candidates) {
     // Infer type/category from the stored pattern data
-    const row = db
-      .prepare('SELECT component_type, category FROM code_patterns WHERE id = ?')
-      .get(pattern.id) as { component_type: string | null; category: string | null } | undefined;
+    const row = db.prepare('SELECT component_type, category FROM code_patterns WHERE id = ?').get(pattern.id) as
+      | { component_type: string | null; category: string | null }
+      | undefined;
 
     const componentType = row?.component_type ?? 'unknown';
     const category = (row?.category as ComponentCategory) ?? 'atom';
@@ -261,9 +263,10 @@ export function getPatternStats(db: Database.Database): {
   const eligible = db
     .prepare('SELECT COUNT(*) as cnt FROM code_patterns WHERE promoted = 0 AND frequency >= 3 AND avg_score > 0.5')
     .get() as { cnt: number };
-  const stats = db
-    .prepare('SELECT AVG(frequency) as avg_freq, AVG(avg_score) as avg_sc FROM code_patterns')
-    .get() as { avg_freq: number | null; avg_sc: number | null };
+  const stats = db.prepare('SELECT AVG(frequency) as avg_freq, AVG(avg_score) as avg_sc FROM code_patterns').get() as {
+    avg_freq: number | null;
+    avg_sc: number | null;
+  };
 
   return {
     total: total.cnt,

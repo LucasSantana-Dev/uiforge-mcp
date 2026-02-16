@@ -16,13 +16,7 @@ import { existsSync } from 'node:fs';
 import pino from 'pino';
 import type { AdapterType, ILoRAConfig, ITrainingStatus } from './types.js';
 import { exportForAdapter, hasEnoughData } from './training-data-exporter.js';
-import {
-  ensureDirectories,
-  getAdapterPath,
-  getModelPath,
-  isModelAvailable,
-  type ModelId,
-} from './model-manager.js';
+import { ensureDirectories, getAdapterPath, getModelPath, isModelAvailable, type ModelId } from './model-manager.js';
 
 const logger = pino({ name: 'training-pipeline' });
 
@@ -40,11 +34,7 @@ const activeJobs = new Map<AdapterType, ChildProcess>();
 /**
  * Create a new training job record in the database.
  */
-export function createTrainingJob(
-  adapter: AdapterType,
-  examplesCount: number,
-  db: Database.Database
-): number {
+export function createTrainingJob(adapter: AdapterType, examplesCount: number, db: Database.Database): number {
   const result = db
     .prepare(
       `INSERT INTO training_jobs (adapter, status, progress, started_at, examples_count)
@@ -65,9 +55,7 @@ export function updateJobStatus(
   db: Database.Database,
   error?: string
 ): void {
-  const completedAt = status === 'complete' || status === 'failed'
-    ? Date.now()
-    : null;
+  const completedAt = status === 'complete' || status === 'failed' ? Date.now() : null;
 
   db.prepare(
     `UPDATE training_jobs
@@ -79,10 +67,7 @@ export function updateJobStatus(
 /**
  * Get the latest training job status for an adapter.
  */
-export function getLatestJobStatus(
-  adapter: AdapterType,
-  db: Database.Database
-): ITrainingStatus | null {
+export function getLatestJobStatus(adapter: AdapterType, db: Database.Database): ITrainingStatus | null {
   const row = db
     .prepare(
       `SELECT adapter, status, progress, error, started_at, completed_at
@@ -91,14 +76,16 @@ export function getLatestJobStatus(
        ORDER BY id DESC
        LIMIT 1`
     )
-    .get(adapter) as {
-      adapter: string;
-      status: string;
-      progress: number;
-      error: string | null;
-      started_at: number | null;
-      completed_at: number | null;
-    } | undefined;
+    .get(adapter) as
+    | {
+        adapter: string;
+        status: string;
+        progress: number;
+        error: string | null;
+        started_at: number | null;
+        completed_at: number | null;
+      }
+    | undefined;
 
   if (!row) return null;
 
@@ -115,9 +102,7 @@ export function getLatestJobStatus(
 /**
  * Get status of all training jobs.
  */
-export function getAllJobStatuses(
-  db: Database.Database
-): ITrainingStatus[] {
+export function getAllJobStatuses(db: Database.Database): ITrainingStatus[] {
   const adapters: AdapterType[] = ['quality-scorer', 'prompt-enhancer', 'style-recommender'];
   const statuses: ITrainingStatus[] = [];
 
@@ -160,16 +145,12 @@ export function checkTrainingReadiness(
   // Check data availability
   const dataCheck = hasEnoughData(adapter, db);
   if (!dataCheck.ready) {
-    issues.push(
-      `Not enough training data: ${dataCheck.count}/${dataCheck.required} examples`
-    );
+    issues.push(`Not enough training data: ${dataCheck.count}/${dataCheck.required} examples`);
   }
 
   // Check model availability
   if (!isModelAvailable(modelId)) {
-    issues.push(
-      `Base model '${modelId}' not found. Download it first.`
-    );
+    issues.push(`Base model '${modelId}' not found. Download it first.`);
   }
 
   // Check if already training
@@ -223,14 +204,9 @@ export function startTrainingJob(
   // Determine training command
   const modelPath = getModelPath(modelId);
   const adapterPath = getAdapterPath(adapter);
-  const cmd =
-    trainingCommand ??
-    buildDefaultTrainingCommand(modelPath, dataPath, adapterPath, config);
+  const cmd = trainingCommand ?? buildDefaultTrainingCommand(modelPath, dataPath, adapterPath, config);
 
-  logger.info(
-    { adapter, jobId, count, modelId },
-    'Starting LoRA training job'
-  );
+  logger.info({ adapter, jobId, count, modelId }, 'Starting LoRA training job');
 
   // Spawn training process
   try {
@@ -275,13 +251,7 @@ export function startTrainingJob(
         updateJobStatus(jobId, 'complete', 100, db);
         logger.info({ adapter, jobId }, 'Training completed successfully');
       } else {
-        updateJobStatus(
-          jobId,
-          'failed',
-          0,
-          db,
-          `Process exited with code ${code}`
-        );
+        updateJobStatus(jobId, 'failed', 0, db, `Process exited with code ${code}`);
         logger.error({ adapter, jobId, code }, 'Training failed');
       }
     });
@@ -312,10 +282,7 @@ export function startTrainingJob(
 /**
  * Cancel a running training job.
  */
-export function cancelTrainingJob(
-  adapter: AdapterType,
-  db: Database.Database
-): boolean {
+export function cancelTrainingJob(adapter: AdapterType, db: Database.Database): boolean {
   const child = activeJobs.get(adapter);
   if (!child) return false;
 
@@ -326,11 +293,9 @@ export function cancelTrainingJob(
     const status = getLatestJobStatus(adapter, db);
     if (status) {
       // Find job ID by querying
-      const row = db
-        .prepare(
-          `SELECT id FROM training_jobs WHERE adapter = ? ORDER BY id DESC LIMIT 1`
-        )
-        .get(adapter) as { id: number } | undefined;
+      const row = db.prepare(`SELECT id FROM training_jobs WHERE adapter = ? ORDER BY id DESC LIMIT 1`).get(adapter) as
+        | { id: number }
+        | undefined;
       if (row) {
         updateJobStatus(row.id, 'failed', 0, db, 'Cancelled by user');
       }
@@ -352,10 +317,7 @@ export function getTrainingSummary(db: Database.Database): {
   activeCount: number;
 } {
   const adapters: AdapterType[] = ['quality-scorer', 'prompt-enhancer', 'style-recommender'];
-  const dataReadiness = {} as Record<
-    AdapterType,
-    { ready: boolean; count: number; required: number }
-  >;
+  const dataReadiness = {} as Record<AdapterType, { ready: boolean; count: number; required: number }>;
 
   for (const adapter of adapters) {
     dataReadiness[adapter] = hasEnoughData(adapter, db);

@@ -103,22 +103,9 @@ export interface IVisualStyle {
 
 // --- Micro-Interaction Types ---
 
-export type AnimationCategory =
-  | 'entrance'
-  | 'hover'
-  | 'scroll'
-  | 'loading'
-  | 'text'
-  | 'transition'
-  | 'feedback';
+export type AnimationCategory = 'entrance' | 'hover' | 'scroll' | 'loading' | 'text' | 'transition' | 'feedback';
 
-export type AnimationPurpose =
-  | 'user-feedback'
-  | 'attention'
-  | 'delight'
-  | 'confirmation'
-  | 'orientation'
-  | 'progress';
+export type AnimationPurpose = 'user-feedback' | 'attention' | 'delight' | 'confirmation' | 'orientation' | 'progress';
 
 export interface IMicroInteraction {
   id: string;

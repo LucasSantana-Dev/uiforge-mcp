@@ -171,11 +171,7 @@ export function createOrganizationSchema(opts: {
   };
 }
 
-export function createWebPageSchema(opts: {
-  name: string;
-  description: string;
-  url: string;
-}): IJsonLdSchema {
+export function createWebPageSchema(opts: { name: string; description: string; url: string }): IJsonLdSchema {
   return {
     type: 'WebPage',
     properties: {

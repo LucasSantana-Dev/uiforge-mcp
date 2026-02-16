@@ -214,7 +214,8 @@ const feedbackAnimations: IMicroInteraction[] = [
     purpose: ['user-feedback'],
     tailwindClasses: '',
     css: '.error-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }',
-    keyframes: '@keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }',
+    keyframes:
+      '@keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }',
     reducedMotionFallback: 'motion-reduce:animate-none',
     duration: '500ms',
     description: 'Horizontal shake — for form validation errors',
@@ -259,7 +260,8 @@ const textAnimations: IMicroInteraction[] = [
     name: 'Text Shimmer',
     category: 'text',
     purpose: ['attention', 'delight'],
-    tailwindClasses: 'bg-gradient-to-r from-foreground via-muted-foreground to-foreground bg-clip-text text-transparent bg-[length:200%_100%]',
+    tailwindClasses:
+      'bg-gradient-to-r from-foreground via-muted-foreground to-foreground bg-clip-text text-transparent bg-[length:200%_100%]',
     css: '.text-shimmer { animation: shimmer 3s linear infinite; }',
     keyframes: '@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }',
     reducedMotionFallback: 'motion-reduce:animate-none text-foreground',

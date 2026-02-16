@@ -22,10 +22,7 @@ const MIN_FEEDBACK_FOR_BOOST = 3;
  * 2. Looks up aggregate feedback scores per component type from SQLite.
  * 3. Boosts/penalizes results by up to ±30% based on feedback history.
  */
-export function feedbackBoostedSearch(
-  query: IComponentQuery,
-  db: Database.Database
-): ISearchResult[] {
+export function feedbackBoostedSearch(query: IComponentQuery, db: Database.Database): ISearchResult[] {
   // 1. Base search
   const baseResults = searchComponents(query);
   if (baseResults.length === 0) return [];
@@ -57,7 +54,7 @@ export function feedbackBoostedSearch(
   }
 
   if (uniquePairs.size > 0) {
-    const pairsList = Array.from(uniquePairs).map(s => JSON.parse(s) as [string, string | null]);
+    const pairsList = Array.from(uniquePairs).map((s) => JSON.parse(s) as [string, string | null]);
     const placeholders = pairsList.map(() => '(?, ?)').join(', ');
     const params = pairsList.flatMap(([type, style]) => [type, style]);
 
@@ -115,10 +112,7 @@ export function feedbackBoostedSearch(
  * Get the feedback boost factor for a specific component type.
  * Returns a multiplier between 0.7 and 1.3 (±30%).
  */
-export function getFeedbackBoost(
-  componentType: string,
-  db: Database.Database
-): number {
+export function getFeedbackBoost(componentType: string, db: Database.Database): number {
   const row = db
     .prepare(
       `SELECT AVG(score) as avg_score, COUNT(*) as cnt

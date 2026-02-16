@@ -15,11 +15,22 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       heading: 'scroll-m-20 text-4xl font-bold tracking-tight text-foreground lg:text-5xl',
     },
-    a11y: { roles: ['heading'], ariaAttributes: ['aria-level="1"'], keyboardNav: 'N/A', contrastRatio: '7:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['heading'],
+      ariaAttributes: ['aria-level="1"'],
+      keyboardNav: 'N/A',
+      contrastRatio: '7:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'h1', headingLevel: 'h1' },
     responsive: { strategy: 'mobile-first', breakpoints: ['lg'] },
     quality: {
-      antiGeneric: ['tracking-tight for editorial feel', 'scroll-m-20 for anchor link offset', 'responsive sizing 4xl→5xl'],
+      antiGeneric: [
+        'tracking-tight for editorial feel',
+        'scroll-m-20 for anchor link offset',
+        'responsive sizing 4xl→5xl',
+      ],
       inspirationSource: 'shadcn/ui Typography',
       craftDetails: ['tight tracking for large headings', 'scroll-margin for sticky header offset'],
     },
@@ -38,7 +49,14 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       heading: 'scroll-m-20 text-3xl font-semibold tracking-tight text-foreground first:mt-0',
     },
-    a11y: { roles: ['heading'], ariaAttributes: ['aria-level="2"'], keyboardNav: 'N/A', contrastRatio: '7:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['heading'],
+      ariaAttributes: ['aria-level="2"'],
+      keyboardNav: 'N/A',
+      contrastRatio: '7:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'h2', headingLevel: 'h2' },
     responsive: { strategy: 'mobile-first', breakpoints: ['lg'] },
     quality: {
@@ -61,7 +79,14 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       heading: 'scroll-m-20 text-2xl font-semibold tracking-tight text-foreground',
     },
-    a11y: { roles: ['heading'], ariaAttributes: ['aria-level="3"'], keyboardNav: 'N/A', contrastRatio: '7:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['heading'],
+      ariaAttributes: ['aria-level="3"'],
+      keyboardNav: 'N/A',
+      contrastRatio: '7:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'h3', headingLevel: 'h3' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -84,11 +109,22 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       paragraph: 'text-base leading-7 text-muted-foreground [&:not(:first-child)]:mt-6',
     },
-    a11y: { roles: [], ariaAttributes: [], keyboardNav: 'N/A', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: [],
+      ariaAttributes: [],
+      keyboardNav: 'N/A',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'p' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['leading-7 for readable line height', 'muted-foreground for hierarchy', 'paragraph spacing via arbitrary variant'],
+      antiGeneric: [
+        'leading-7 for readable line height',
+        'muted-foreground for hierarchy',
+        'paragraph spacing via arbitrary variant',
+      ],
       inspirationSource: 'shadcn/ui Typography',
       craftDetails: ['leading-7 (1.75rem) for comfortable reading', 'auto paragraph spacing'],
     },
@@ -107,7 +143,14 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       paragraph: 'text-xl text-muted-foreground leading-relaxed',
     },
-    a11y: { roles: [], ariaAttributes: [], keyboardNav: 'N/A', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: [],
+      ariaAttributes: [],
+      keyboardNav: 'N/A',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'p' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -132,7 +175,14 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       blockquote: 'mt-6 border-l-4 border-primary/30 pl-6 text-muted-foreground italic leading-7',
     },
-    a11y: { roles: [], ariaAttributes: [], keyboardNav: 'N/A', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: [],
+      ariaAttributes: [],
+      keyboardNav: 'N/A',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'blockquote' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -155,7 +205,14 @@ export const typographySnippets: IComponentSnippet[] = [
     tailwindClasses: {
       code: 'relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium text-foreground',
     },
-    a11y: { roles: [], ariaAttributes: [], keyboardNav: 'N/A', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: [],
+      ariaAttributes: [],
+      keyboardNav: 'N/A',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'code' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {

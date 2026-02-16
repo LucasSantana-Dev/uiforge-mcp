@@ -9,9 +9,7 @@ import pino from 'pino';
 const logger = pino({ name: 'analyze-design-image-for-training' });
 
 const inputSchema = {
-  image_data: z
-    .string()
-    .describe('Base64-encoded image data of the UI design reference to analyze for ML training'),
+  image_data: z.string().describe('Base64-encoded image data of the UI design reference to analyze for ML training'),
   image_mime_type: z
     .enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
     .default('image/png')
@@ -19,13 +17,8 @@ const inputSchema = {
   description: z
     .string()
     .optional()
-    .describe(
-      'Optional description of the design (e.g., "Modern SaaS dashboard with glassmorphism effects")'
-    ),
-  component_name: z
-    .string()
-    .optional()
-    .describe('Optional name for the design reference (auto-generated if omitted)'),
+    .describe('Optional description of the design (e.g., "Modern SaaS dashboard with glassmorphism effects")'),
+  component_name: z.string().optional().describe('Optional name for the design reference (auto-generated if omitted)'),
   framework: z
     .enum(['react', 'nextjs', 'vue', 'angular', 'svelte', 'html'])
     .default('react')
@@ -99,7 +92,7 @@ export function registerAnalyzeDesignImageForTraining(server: McpServer): void {
             framework,
             imageSize: image_data.length,
             hasMimeType: !!image_mime_type,
-            hasDescription: !!description
+            hasDescription: !!description,
           },
           'Starting design image analysis for ML training'
         );
@@ -122,7 +115,7 @@ export function registerAnalyzeDesignImageForTraining(server: McpServer): void {
             componentsDetected: analysis.components.length,
             visualStyle: analysis.visualStyle.primary,
             mood: analysis.mood,
-            industry: analysis.industry
+            industry: analysis.industry,
           },
           'Design patterns extracted'
         );
@@ -192,7 +185,7 @@ export function registerAnalyzeDesignImageForTraining(server: McpServer): void {
             error,
             componentName: name,
             framework,
-            imageSize: image_data.length
+            imageSize: image_data.length,
           },
           'Failed to analyze design image for training'
         );
@@ -230,7 +223,7 @@ function detectComponentTypesFromDescription(description: string): string[] {
   };
 
   for (const [type, keywords] of Object.entries(componentKeywords)) {
-    if (keywords.some(kw => lowerDesc.includes(kw))) {
+    if (keywords.some((kw) => lowerDesc.includes(kw))) {
       types.push(type);
     }
   }
@@ -247,12 +240,8 @@ function detectComponentTypesFromDescription(description: string): string[] {
  * Generate sample code for analysis based on detected components.
  * In production, this would be replaced with actual vision AI image-to-code conversion.
  */
-function generateSampleCodeForAnalysis(
-  name: string,
-  componentTypes: string[],
-  _framework: string
-): string {
-  const components = componentTypes.map(type => {
+function generateSampleCodeForAnalysis(name: string, componentTypes: string[], _framework: string): string {
+  const components = componentTypes.map((type) => {
     switch (type) {
       case 'button':
         return `<button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">

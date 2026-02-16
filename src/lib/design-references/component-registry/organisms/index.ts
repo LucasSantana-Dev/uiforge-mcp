@@ -9,8 +9,4 @@ export function registerOrganisms(): void {
   registerSnippets(ctaFooterSnippets);
 }
 
-export {
-  heroSnippets,
-  featureSnippets,
-  ctaFooterSnippets,
-};
+export { heroSnippets, featureSnippets, ctaFooterSnippets };

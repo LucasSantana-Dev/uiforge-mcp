@@ -47,7 +47,10 @@ export function storeDesignLearning(
         registerSnippet(snippet);
         result.snippetsCreated++;
       }
-      logger.info({ count: snippets.length, qualityScore: analysis.qualityScore }, 'Component snippets created from design analysis');
+      logger.info(
+        { count: snippets.length, qualityScore: analysis.qualityScore },
+        'Component snippets created from design analysis'
+      );
     } catch (err) {
       logger.error({ err }, 'Failed to convert design to component snippets');
     }
@@ -126,11 +129,7 @@ function convertToComponentSnippets(
 /**
  * Generate feedback entries for ML training.
  */
-function generateFeedbackEntries(
-  analysis: IDesignAnalysis,
-  componentName: string,
-  db: Database.Database
-): number {
+function generateFeedbackEntries(analysis: IDesignAnalysis, componentName: string, db: Database.Database): number {
   const generationId = `design-learning-${Date.now()}`;
   const score = analysis.qualityScore * 2; // Scale to 0-2 range
 
@@ -174,11 +173,7 @@ function generateFeedbackEntries(
 /**
  * Detect and store code patterns from design analysis.
  */
-function detectAndStorePatterns(
-  analysis: IDesignAnalysis,
-  generatedCode: string,
-  db: Database.Database
-): number {
+function detectAndStorePatterns(analysis: IDesignAnalysis, generatedCode: string, db: Database.Database): number {
   const patterns: Array<{ skeleton: string; snippet: string; componentType: string }> = [];
 
   // Extract patterns from components
@@ -240,7 +235,7 @@ function generateSummary(analysis: IDesignAnalysis, result: ITrainingDataResult)
     `- ${result.feedbackEntriesCreated} feedback entry(ies) for ML training`,
     `- ${result.patternsDetected} code pattern(s) detected`,
     ``,
-    `**Components Detected:** ${analysis.components.map(c => c.type).join(', ')}`,
+    `**Components Detected:** ${analysis.components.map((c) => c.type).join(', ')}`,
     `**Color Palette:** ${Object.values(analysis.colors).flat().length} colors extracted`,
     `**Typography:** ${analysis.typography.fontFamilies.length} font(s), ${analysis.typography.weights.length} weight(s)`,
     `**Layout:** ${analysis.layout.type} (${analysis.layout.responsive ? 'responsive' : 'fixed'})`,
@@ -292,10 +287,8 @@ function extractTags(analysis: IDesignAnalysis, componentType: string): string[]
 function extractComponentJSX(code: string, componentType: string): string {
   // Simple extraction - in production, use proper AST parsing
   const lines = code.split('\n');
-  const relevantLines = lines.filter(line =>
-    line.toLowerCase().includes(componentType) ||
-    line.includes('className') ||
-    line.includes('class=')
+  const relevantLines = lines.filter(
+    (line) => line.toLowerCase().includes(componentType) || line.includes('className') || line.includes('class=')
   );
 
   return relevantLines.slice(0, 10).join('\n').trim() || `<div className="placeholder-${componentType}">Content</div>`;
@@ -303,7 +296,7 @@ function extractComponentJSX(code: string, componentType: string): string {
 
 function extractTailwindClasses(code: string, _componentType: string): Record<string, string> {
   const classMatches = code.match(/className="([^"]+)"/g) || [];
-  const classes = classMatches.map(m => m.replace(/className="|"/g, ''));
+  const classes = classMatches.map((m) => m.replace(/className="|"/g, ''));
 
   return {
     root: classes[0] || 'flex items-center justify-center',
@@ -377,7 +370,7 @@ function hashString(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return Math.abs(hash).toString(36);

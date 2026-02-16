@@ -31,7 +31,15 @@ describe('pattern-promotion', () => {
 
   describe('recordPattern', () => {
     it('creates a new pattern', () => {
-      const pattern = recordPattern('hash1', 'div>h2+p', '<div><h2>Title</h2><p>Body</p></div>', 'card', 'molecule', 0.8, db);
+      const pattern = recordPattern(
+        'hash1',
+        'div>h2+p',
+        '<div><h2>Title</h2><p>Body</p></div>',
+        'card',
+        'molecule',
+        0.8,
+        db
+      );
       expect(pattern.id).toBeTruthy();
       expect(pattern.frequency).toBe(1);
       expect(pattern.avgScore).toBe(0.8);
@@ -40,7 +48,15 @@ describe('pattern-promotion', () => {
 
     it('increments frequency on duplicate hash', () => {
       recordPattern('hash2', 'div>button', '<div><button>CTA</button></div>', 'button', 'atom', 1.0, db);
-      const updated = recordPattern('hash2', 'div>button', '<div><button>CTA</button></div>', 'button', 'atom', 0.6, db);
+      const updated = recordPattern(
+        'hash2',
+        'div>button',
+        '<div><button>CTA</button></div>',
+        'button',
+        'atom',
+        0.6,
+        db
+      );
       expect(updated.frequency).toBe(2);
       expect(updated.avgScore).toBeCloseTo(0.8, 1); // (1.0 + 0.6) / 2
     });
@@ -119,7 +135,17 @@ describe('pattern-promotion', () => {
       db.prepare(
         `INSERT INTO code_patterns (id, skeleton_hash, skeleton, snippet, component_type, category, frequency, avg_score, promoted)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      ).run(pattern.id, pattern.skeletonHash, pattern.skeleton, pattern.snippet, 'card', 'molecule', pattern.frequency, pattern.avgScore, 0);
+      ).run(
+        pattern.id,
+        pattern.skeletonHash,
+        pattern.skeleton,
+        pattern.snippet,
+        'card',
+        'molecule',
+        pattern.frequency,
+        pattern.avgScore,
+        0
+      );
 
       const result = promotePattern(pattern, 'card', 'molecule', db);
       expect(result).not.toBeNull();

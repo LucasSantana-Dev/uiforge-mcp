@@ -62,10 +62,7 @@ export function getMemoryDatabase(): Database.Database {
   const memDb = new Database(':memory:');
   memDb.pragma('foreign_keys = ON');
   memDb.exec(CREATE_TABLES);
-  memDb.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run(
-    'schema_version',
-    String(SCHEMA_VERSION)
-  );
+  memDb.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run('schema_version', String(SCHEMA_VERSION));
   return memDb;
 }
 
@@ -85,9 +82,7 @@ export function closeDatabase(): void {
  */
 export function isSeeded(database?: Database.Database): boolean {
   const d = database ?? getDatabase();
-  const row = d.prepare('SELECT value FROM meta WHERE key = ?').get('seeded') as
-    | { value: string }
-    | undefined;
+  const row = d.prepare('SELECT value FROM meta WHERE key = ?').get('seeded') as { value: string } | undefined;
   return row?.value === 'true';
 }
 
@@ -97,10 +92,7 @@ export function isSeeded(database?: Database.Database): boolean {
  * Seed the database from an array of component snippets.
  * This is called after loading static TypeScript files into the in-memory registry.
  */
-export function seedComponents(
-  snippets: IComponentSnippet[],
-  database?: Database.Database
-): void {
+export function seedComponents(snippets: IComponentSnippet[], database?: Database.Database): void {
   const d = database ?? getDatabase();
 
   const insertComponent = d.prepare(`
@@ -113,9 +105,7 @@ export function seedComponents(
   const insertIndustry = d.prepare('INSERT OR IGNORE INTO industries (name) VALUES (?)');
   const insertStyle = d.prepare('INSERT OR IGNORE INTO visual_styles (name) VALUES (?)');
 
-  const insertComponentTag = d.prepare(
-    'INSERT OR IGNORE INTO component_tags (component_id, tag_name) VALUES (?, ?)'
-  );
+  const insertComponentTag = d.prepare('INSERT OR IGNORE INTO component_tags (component_id, tag_name) VALUES (?, ?)');
   const insertComponentMood = d.prepare(
     'INSERT OR IGNORE INTO component_moods (component_id, mood_name) VALUES (?, ?)'
   );
@@ -167,10 +157,7 @@ export function seedComponents(
     }
 
     d.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run('seeded', 'true');
-    d.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run(
-      'seed_count',
-      String(snippets.length)
-    );
+    d.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run('seed_count', String(snippets.length));
   });
 
   seedAll();
@@ -183,10 +170,7 @@ export function seedComponents(
  * Search components using indexed SQL queries.
  * Replaces the O(n) linear search with indexed lookups.
  */
-export function queryComponents(
-  query: IComponentQuery,
-  database?: Database.Database
-): ISearchResult[] {
+export function queryComponents(query: IComponentQuery, database?: Database.Database): ISearchResult[] {
   const d = database ?? getDatabase();
 
   // Build dynamic score + WHERE using positional ? params (separated arrays)
@@ -261,8 +245,11 @@ export function queryComponents(
   logger.debug({ query, resultCount: rows.length }, 'Query executed');
 
   // Hydrate full snippets (batch queries to avoid N+1)
-  const snippets = hydrateSnippetsBatch(rows.map(r => r.id), d);
-  const snippetById = new Map(snippets.map(s => [s.id, s]));
+  const snippets = hydrateSnippetsBatch(
+    rows.map((r) => r.id),
+    d
+  );
+  const snippetById = new Map(snippets.map((s) => [s.id, s]));
   return rows
     .map((row) => {
       const snippet = snippetById.get(row.id);
@@ -275,14 +262,9 @@ export function queryComponents(
 /**
  * Get a single component by ID, fully hydrated.
  */
-export function getComponentById(
-  id: string,
-  database?: Database.Database
-): IComponentSnippet | undefined {
+export function getComponentById(id: string, database?: Database.Database): IComponentSnippet | undefined {
   const d = database ?? getDatabase();
-  const row = d.prepare('SELECT id FROM components WHERE id = ?').get(id) as
-    | { id: string }
-    | undefined;
+  const row = d.prepare('SELECT id FROM components WHERE id = ?').get(id) as { id: string } | undefined;
   if (!row) return undefined;
   return hydrateSnippet(id, d);
 }
@@ -305,10 +287,7 @@ export function getComponentsByCategory(
 /**
  * Get components that share a relationship (e.g., same mood, same industry).
  */
-export function getRelatedComponents(
-  componentId: string,
-  database?: Database.Database
-): IComponentSnippet[] {
+export function getRelatedComponents(componentId: string, database?: Database.Database): IComponentSnippet[] {
   const d = database ?? getDatabase();
 
   // Find components that share at least one mood or industry with the given component

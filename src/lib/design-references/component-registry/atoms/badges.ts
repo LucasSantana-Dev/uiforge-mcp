@@ -15,7 +15,14 @@ export const badgeSnippets: IComponentSnippet[] = [
     tailwindClasses: {
       badge: 'inline-flex items-center rounded-md bg-primary px-2.5 py-0.5 text-xs font-medium text-primary-foreground',
     },
-    a11y: { roles: ['status'], ariaAttributes: [], keyboardNav: 'N/A — decorative', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: [],
+      keyboardNav: 'N/A — decorative',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'span' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -36,9 +43,17 @@ export const badgeSnippets: IComponentSnippet[] = [
     visualStyles: ['minimal-editorial', 'linear-modern', 'soft-depth'],
     jsx: `<span className="inline-flex items-center rounded-md border border-border px-2.5 py-0.5 text-xs font-medium text-foreground">Outline</span>`,
     tailwindClasses: {
-      badge: 'inline-flex items-center rounded-md border border-border px-2.5 py-0.5 text-xs font-medium text-foreground',
+      badge:
+        'inline-flex items-center rounded-md border border-border px-2.5 py-0.5 text-xs font-medium text-foreground',
     },
-    a11y: { roles: ['status'], ariaAttributes: [], keyboardNav: 'N/A — decorative', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: [],
+      keyboardNav: 'N/A — decorative',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'span' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -62,16 +77,33 @@ export const badgeSnippets: IComponentSnippet[] = [
   Active
 </span>`,
     tailwindClasses: {
-      badge: 'inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/20',
+      badge:
+        'inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/20',
       dot: 'h-1.5 w-1.5 rounded-full bg-emerald-500',
     },
-    a11y: { roles: ['status'], ariaAttributes: ['aria-hidden on dot'], keyboardNav: 'N/A — decorative', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: ['aria-hidden on dot'],
+      keyboardNav: 'N/A — decorative',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'span' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['dot indicator — not color-only', 'ring-inset for subtle border', 'dark mode variants included', 'emerald-700/50 not just "green"'],
+      antiGeneric: [
+        'dot indicator — not color-only',
+        'ring-inset for subtle border',
+        'dark mode variants included',
+        'emerald-700/50 not just "green"',
+      ],
       inspirationSource: 'Tailwind UI status badges',
-      craftDetails: ['ring-1 ring-inset for inset border effect', 'gap-1.5 for dot spacing', 'dark: variants for theme support'],
+      craftDetails: [
+        'ring-1 ring-inset for inset border effect',
+        'gap-1.5 for dot spacing',
+        'dark: variants for theme support',
+      ],
     },
   },
   {
@@ -89,10 +121,18 @@ export const badgeSnippets: IComponentSnippet[] = [
   Pending
 </span>`,
     tailwindClasses: {
-      badge: 'inline-flex items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/20',
+      badge:
+        'inline-flex items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/20',
       dot: 'h-1.5 w-1.5 rounded-full bg-amber-500',
     },
-    a11y: { roles: ['status'], ariaAttributes: ['aria-hidden on dot'], keyboardNav: 'N/A — decorative', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: ['aria-hidden on dot'],
+      keyboardNav: 'N/A — decorative',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'span' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -116,10 +156,18 @@ export const badgeSnippets: IComponentSnippet[] = [
   Failed
 </span>`,
     tailwindClasses: {
-      badge: 'inline-flex items-center gap-1.5 rounded-md bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/20',
+      badge:
+        'inline-flex items-center gap-1.5 rounded-md bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/20',
       dot: 'h-1.5 w-1.5 rounded-full bg-red-500',
     },
-    a11y: { roles: ['status'], ariaAttributes: ['aria-hidden on dot'], keyboardNav: 'N/A — decorative', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: ['aria-hidden on dot'],
+      keyboardNav: 'N/A — decorative',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'span' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -142,11 +190,22 @@ export const badgeSnippets: IComponentSnippet[] = [
     tailwindClasses: {
       badge: 'inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary',
     },
-    a11y: { roles: ['status'], ariaAttributes: [], keyboardNav: 'N/A — decorative', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: [],
+      keyboardNav: 'N/A — decorative',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'span' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['rounded-full for pill shape', 'bg-primary/10 for subtle tinted background', 'font-semibold for tag emphasis'],
+      antiGeneric: [
+        'rounded-full for pill shape',
+        'bg-primary/10 for subtle tinted background',
+        'font-semibold for tag emphasis',
+      ],
       inspirationSource: 'Vercel dashboard tags',
       craftDetails: ['primary/10 opacity for accessible tinted bg', 'px-3 py-1 for pill proportions'],
     },

@@ -42,7 +42,12 @@ export function recordGeneration(
       implicitFeedback = {
         id: `ifb-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         generationId: prev.id,
-        rating: classification.combinedScore > 0.3 ? 'positive' : classification.combinedScore < -0.3 ? 'negative' : 'neutral',
+        rating:
+          classification.combinedScore > 0.3
+            ? 'positive'
+            : classification.combinedScore < -0.3
+              ? 'negative'
+              : 'neutral',
         source: 'implicit',
         score: classification.combinedScore,
         confidence: classification.combinedConfidence,
@@ -99,16 +104,15 @@ export function recordExplicitFeedback(
  * Get the aggregate feedback score for a component snippet or pattern.
  * Returns a value between -1 and 2, or 0 if no feedback exists.
  */
-export function getAggregateScore(
-  componentType: string,
-  db: Database.Database
-): number {
+export function getAggregateScore(componentType: string, db: Database.Database): number {
   const row = db
-    .prepare(`
+    .prepare(
+      `
       SELECT AVG(score) as avg_score, COUNT(*) as cnt
       FROM feedback
       WHERE component_type = ?
-    `)
+    `
+    )
     .get(componentType) as { avg_score: number | null; cnt: number };
 
   if (!row || row.cnt === 0) return 0;
@@ -136,8 +140,12 @@ export function getFeedbackStats(db: Database.Database): {
   neutral: number;
 } {
   const total = db.prepare('SELECT COUNT(*) as cnt FROM feedback').get() as { cnt: number };
-  const explicit = db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE feedback_type = 'explicit'").get() as { cnt: number };
-  const implicit = db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE feedback_type = 'implicit'").get() as { cnt: number };
+  const explicit = db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE feedback_type = 'explicit'").get() as {
+    cnt: number;
+  };
+  const implicit = db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE feedback_type = 'implicit'").get() as {
+    cnt: number;
+  };
   const avg = db.prepare('SELECT AVG(score) as avg FROM feedback').get() as { avg: number | null };
 
   return {
@@ -145,9 +153,11 @@ export function getFeedbackStats(db: Database.Database): {
     explicit: explicit.cnt,
     implicit: implicit.cnt,
     avgScore: avg.avg ?? 0,
-    positive: (db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE score > 0.3").get() as { cnt: number }).cnt,
-    negative: (db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE score < -0.3").get() as { cnt: number }).cnt,
-    neutral: (db.prepare("SELECT COUNT(*) as cnt FROM feedback WHERE score >= -0.3 AND score <= 0.3").get() as { cnt: number }).cnt,
+    positive: (db.prepare('SELECT COUNT(*) as cnt FROM feedback WHERE score > 0.3').get() as { cnt: number }).cnt,
+    negative: (db.prepare('SELECT COUNT(*) as cnt FROM feedback WHERE score < -0.3').get() as { cnt: number }).cnt,
+    neutral: (
+      db.prepare('SELECT COUNT(*) as cnt FROM feedback WHERE score >= -0.3 AND score <= 0.3').get() as { cnt: number }
+    ).cnt,
   };
 }
 
@@ -164,11 +174,11 @@ export function exportTrainingData(
   const rows = db
     .prepare(`SELECT prompt, score, component_type, style FROM feedback ${whereClause} ORDER BY created_at DESC`)
     .all(...params) as Array<{
-      prompt: string;
-      score: number;
-      component_type: string | null;
-      style: string | null;
-    }>;
+    prompt: string;
+    score: number;
+    component_type: string | null;
+    style: string | null;
+  }>;
 
   return rows.map((r) => ({
     prompt: r.prompt,

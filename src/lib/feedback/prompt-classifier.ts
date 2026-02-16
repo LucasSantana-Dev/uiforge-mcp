@@ -26,21 +26,60 @@ const _NEGATIVE_THRESHOLD = -0.3;
 // --- Keyword dictionaries ---
 
 const NEGATIVE_KEYWORDS = [
-  'redo', 'wrong', 'fix', 'change', 'not what i', 'try again',
-  'different', 'instead', 'actually', 'no,', 'nope', 'bad',
-  'ugly', 'broken', 'doesn\'t work', 'not right', 'scrap',
+  'redo',
+  'wrong',
+  'fix',
+  'change',
+  'not what i',
+  'try again',
+  'different',
+  'instead',
+  'actually',
+  'no,',
+  'nope',
+  'bad',
+  'ugly',
+  'broken',
+  "doesn't work",
+  'not right',
+  'scrap',
 ];
 
 const POSITIVE_KEYWORDS = [
-  'perfect', 'great', 'looks good', 'thanks', 'love it',
-  'awesome', 'nice', 'exactly', 'good job', 'well done',
-  'that\'s it', 'keep', 'ship it', 'deploy', 'done',
+  'perfect',
+  'great',
+  'looks good',
+  'thanks',
+  'love it',
+  'awesome',
+  'nice',
+  'exactly',
+  'good job',
+  'well done',
+  "that's it",
+  'keep',
+  'ship it',
+  'deploy',
+  'done',
 ];
 
 const TWEAK_KEYWORDS = [
-  'darker', 'lighter', 'bigger', 'smaller', 'more', 'less',
-  'adjust', 'tweak', 'slightly', 'a bit', 'little',
-  'spacing', 'padding', 'margin', 'color', 'font',
+  'darker',
+  'lighter',
+  'bigger',
+  'smaller',
+  'more',
+  'less',
+  'adjust',
+  'tweak',
+  'slightly',
+  'a bit',
+  'little',
+  'spacing',
+  'padding',
+  'margin',
+  'color',
+  'font',
 ];
 
 // --- Signal detectors ---
@@ -148,11 +187,7 @@ function detectTimeSignal(prev: IGeneration, curr: IGeneration): IImplicitSignal
  * Detect if the user is re-requesting the same component type with same params.
  */
 function detectSameParamsIteration(prev: IGeneration, curr: IGeneration): boolean {
-  return (
-    prev.componentType === curr.componentType &&
-    prev.framework === curr.framework &&
-    prev.tool === curr.tool
-  );
+  return prev.componentType === curr.componentType && prev.framework === curr.framework && prev.tool === curr.tool;
 }
 
 // --- Main classifier ---

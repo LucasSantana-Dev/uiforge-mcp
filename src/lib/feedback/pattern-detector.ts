@@ -8,8 +8,20 @@ import type { ICodePattern } from './types.js';
 
 // Void elements that self-close (all HTML self-closing tags)
 const VOID_TAGS = new Set([
-  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-  'link', 'meta', 'param', 'source', 'track', 'wbr'
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
 ]);
 
 /**
@@ -149,9 +161,5 @@ export function fingerprint(code: string): { skeleton: string; hash: string } {
  * Check if a pattern meets promotion criteria.
  */
 export function isPromotable(pattern: ICodePattern): boolean {
-  return (
-    pattern.frequency >= 3 &&
-    pattern.avgScore > 0.5 &&
-    !pattern.promoted
-  );
+  return pattern.frequency >= 3 && pattern.avgScore > 0.5 && !pattern.promoted;
 }

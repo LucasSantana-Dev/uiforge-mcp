@@ -65,7 +65,7 @@ export function registerSnippet(snippet: IComponentSnippet): void {
     ...snippet,
     type: snippet.type.toLowerCase().trim(),
     variant: snippet.variant.toLowerCase().trim(),
-    tags: snippet.tags.map(t => t.toLowerCase().trim()),
+    tags: snippet.tags.map((t) => t.toLowerCase().trim()),
   };
 
   const exists = registry.findIndex((s) => s.id === normalized.id);
@@ -253,10 +253,7 @@ export function getByIndustry(industry: IndustryTag): IComponentSnippet[] {
  * Apply a visual style layer onto a component snippet.
  * Returns a new snippet with modified tailwind classes.
  */
-export function applyVisualStyle(
-  snippet: IComponentSnippet,
-  styleId: VisualStyleId
-): IComponentSnippet {
+export function applyVisualStyle(snippet: IComponentSnippet, styleId: VisualStyleId): IComponentSnippet {
   const style = getVisualStyle(styleId);
   if (!style) {
     logger.warn(
@@ -272,10 +269,7 @@ export function applyVisualStyle(
  * Inject micro-interaction animations into a snippet.
  * Returns a new snippet with animation classes added.
  */
-export function injectAnimations(
-  snippet: IComponentSnippet,
-  animationIds: string[]
-): IComponentSnippet {
+export function injectAnimations(snippet: IComponentSnippet, animationIds: string[]): IComponentSnippet {
   const additionalClasses: string[] = [];
   let additionalCss = snippet.css ?? '';
 
@@ -298,9 +292,7 @@ export function injectAnimations(
     newTailwindClasses.root = additionalClasses.join(' ').trim();
   } else {
     // Prefer explicit 'root' or 'container' keys, otherwise use first key
-    const rootKey = 'root' in newTailwindClasses ? 'root' :
-      'container' in newTailwindClasses ? 'container' :
-        keys[0];
+    const rootKey = 'root' in newTailwindClasses ? 'root' : 'container' in newTailwindClasses ? 'container' : keys[0];
     if (rootKey !== 'root' && rootKey !== 'container') {
       logger.warn({ snippetId: snippet.id, animationIds, rootKey }, 'No root/container key found, using first key');
     }
@@ -356,9 +348,7 @@ export function getBestMatch(
 ): IComponentSnippet | undefined {
   // Try exact type + variant first
   if (options?.variant) {
-    const exact = registry.find(
-      (s) => s.type === type.toLowerCase() && s.variant === options.variant!.toLowerCase()
-    );
+    const exact = registry.find((s) => s.type === type.toLowerCase() && s.variant === options.variant!.toLowerCase());
     if (exact) return exact;
   }
 

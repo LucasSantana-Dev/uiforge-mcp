@@ -41,10 +41,7 @@ export function getVisualStylesByMood(mood: string): IVisualStyle[] {
  * Apply a visual style to a component snippet.
  * Merges style class modifiers into the snippet's tailwindClasses.
  */
-export function applyVisualStyle(
-  snippet: IComponentSnippet,
-  style: IVisualStyle
-): IComponentSnippet {
+export function applyVisualStyle(snippet: IComponentSnippet, style: IVisualStyle): IComponentSnippet {
   const newClasses = { ...snippet.tailwindClasses };
   const droppedModifiers: string[] = [];
 
@@ -112,8 +109,10 @@ const builtInStyles: IVisualStyle[] = [
     classModifiers: {
       root: 'border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
       card: 'border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none bg-background',
-      button: 'border-2 border-foreground shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-none hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold',
-      input: 'border-2 border-foreground rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]',
+      button:
+        'border-2 border-foreground shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-none hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold',
+      input:
+        'border-2 border-foreground rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]',
       badge: 'border-2 border-foreground rounded-none font-bold uppercase tracking-wider',
     },
     mood: ['bold', 'playful', 'creative', 'energetic'],
@@ -126,7 +125,8 @@ const builtInStyles: IVisualStyle[] = [
     classModifiers: {
       root: 'shadow-sm bg-background',
       card: 'shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)] bg-background rounded-xl',
-      button: 'shadow-[0_1px_2px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.1)] rounded-lg transition-shadow',
+      button:
+        'shadow-[0_1px_2px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.1)] rounded-lg transition-shadow',
       input: 'shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] bg-muted/30 rounded-lg',
       container: 'bg-gradient-to-b from-background to-muted/20',
     },
@@ -154,7 +154,8 @@ const builtInStyles: IVisualStyle[] = [
     classModifiers: {
       root: 'bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20',
       card: 'bg-gradient-to-br from-card/80 to-card border border-border/50 shadow-lg',
-      button: 'bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/25',
+      button:
+        'bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/25',
       heading: 'bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent',
       container: 'bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(var(--primary-rgb),0.15),transparent)]',
     },
@@ -207,8 +208,10 @@ const builtInStyles: IVisualStyle[] = [
       root: 'bg-zinc-950 text-zinc-300',
       card: 'bg-white/[0.03] border border-white/[0.06] rounded-lg',
       button: 'bg-indigo-500 text-white rounded-md text-sm font-medium hover:bg-indigo-400 shadow-sm',
-      'button-secondary': 'bg-white/[0.06] text-zinc-300 border border-white/[0.08] rounded-md text-sm hover:bg-white/[0.1]',
-      input: 'bg-white/[0.03] border border-white/[0.08] text-zinc-200 text-sm placeholder:text-zinc-500 rounded-md focus:border-indigo-500/50',
+      'button-secondary':
+        'bg-white/[0.06] text-zinc-300 border border-white/[0.08] rounded-md text-sm hover:bg-white/[0.1]',
+      input:
+        'bg-white/[0.03] border border-white/[0.08] text-zinc-200 text-sm placeholder:text-zinc-500 rounded-md focus:border-indigo-500/50',
       nav: 'bg-zinc-950 border-b border-white/[0.06]',
       sidebar: 'bg-zinc-950 border-r border-white/[0.06] w-56',
       badge: 'bg-white/[0.06] text-zinc-400 border border-white/[0.08] text-xs rounded-md',
@@ -223,9 +226,12 @@ const builtInStyles: IVisualStyle[] = [
     classModifiers: {
       root: 'bg-amber-50 text-zinc-800',
       card: 'bg-white rounded-3xl border-2 border-zinc-200 shadow-md p-6',
-      button: 'bg-violet-500 text-white rounded-full px-6 py-2.5 font-semibold hover:bg-violet-600 active:scale-95 transition-all shadow-md shadow-violet-500/25',
-      'button-secondary': 'bg-pink-100 text-pink-700 rounded-full px-6 py-2.5 font-semibold hover:bg-pink-200 active:scale-95 transition-all',
-      input: 'bg-white border-2 border-zinc-200 rounded-2xl px-4 py-2.5 focus:border-violet-400 focus:ring-4 focus:ring-violet-100',
+      button:
+        'bg-violet-500 text-white rounded-full px-6 py-2.5 font-semibold hover:bg-violet-600 active:scale-95 transition-all shadow-md shadow-violet-500/25',
+      'button-secondary':
+        'bg-pink-100 text-pink-700 rounded-full px-6 py-2.5 font-semibold hover:bg-pink-200 active:scale-95 transition-all',
+      input:
+        'bg-white border-2 border-zinc-200 rounded-2xl px-4 py-2.5 focus:border-violet-400 focus:ring-4 focus:ring-violet-100',
       badge: 'bg-emerald-100 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold',
       heading: 'font-extrabold tracking-tight',
     },
@@ -239,9 +245,12 @@ const builtInStyles: IVisualStyle[] = [
     classModifiers: {
       root: 'bg-white text-slate-900',
       card: 'bg-white border border-slate-200 rounded-lg shadow-sm p-6',
-      button: 'bg-blue-700 text-white rounded-md px-5 py-2.5 font-medium hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-      'button-secondary': 'bg-white text-slate-700 border border-slate-300 rounded-md px-5 py-2.5 font-medium hover:bg-slate-50',
-      input: 'border border-slate-300 rounded-md bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500',
+      button:
+        'bg-blue-700 text-white rounded-md px-5 py-2.5 font-medium hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+      'button-secondary':
+        'bg-white text-slate-700 border border-slate-300 rounded-md px-5 py-2.5 font-medium hover:bg-slate-50',
+      input:
+        'border border-slate-300 rounded-md bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500',
       heading: 'font-semibold text-slate-900',
       nav: 'bg-white border-b border-slate-200 shadow-sm',
       table: 'divide-y divide-slate-200',

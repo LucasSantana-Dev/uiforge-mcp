@@ -41,10 +41,7 @@ export interface IEnhancementContext {
 /**
  * Enhance a user prompt for better generation results.
  */
-export function enhancePrompt(
-  prompt: string,
-  context?: IEnhancementContext
-): Promise<IEnhancedPrompt> {
+export function enhancePrompt(prompt: string, context?: IEnhancementContext): Promise<IEnhancedPrompt> {
   const start = Date.now();
 
   if (isSidecarReady()) {
@@ -185,14 +182,14 @@ export function needsEnhancement(prompt: string): boolean {
 // --- Internal helpers ---
 
 const VAGUE_EXPANSIONS: Record<string, string> = {
-  'nice': 'polished and visually refined',
+  nice: 'polished and visually refined',
   'good-looking': 'aesthetically pleasing with balanced spacing and typography',
-  'cool': 'modern with subtle animations and visual depth',
-  'simple': 'clean and minimal with clear visual hierarchy',
-  'basic': 'straightforward with essential elements and clear layout',
-  'fancy': 'sophisticated with layered effects and refined details',
-  'pretty': 'visually appealing with harmonious colors and spacing',
-  'beautiful': 'elegantly designed with attention to typography and whitespace',
+  cool: 'modern with subtle animations and visual depth',
+  simple: 'clean and minimal with clear visual hierarchy',
+  basic: 'straightforward with essential elements and clear layout',
+  fancy: 'sophisticated with layered effects and refined details',
+  pretty: 'visually appealing with harmonious colors and spacing',
+  beautiful: 'elegantly designed with attention to typography and whitespace',
 };
 
 function expandVagueTerms(prompt: string, additions: string[]): string {
@@ -208,16 +205,16 @@ function expandVagueTerms(prompt: string, additions: string[]): string {
 }
 
 const COMPONENT_HINTS: Record<string, string> = {
-  'card': '. Use consistent padding, clear content hierarchy with heading, body, and action areas',
-  'button': '. Include hover, focus, and active states with appropriate contrast ratios',
-  'form': '. Add proper label associations, validation feedback, and logical tab order',
-  'modal': '. Trap focus within the dialog, handle Escape key, and restore focus on close',
-  'nav': '. Include skip navigation link, clear active state indicators, and mobile menu toggle',
-  'table': '. Add proper scope attributes, sortable column headers if applicable, and responsive overflow handling',
-  'hero': '. Use an attention-grabbing layout with clear CTA, balanced whitespace, and optimized image loading',
-  'footer': '. Include logical link grouping, social links, and sufficient color contrast',
-  'sidebar': '. Support collapsible state, keyboard navigation, and proper landmark role',
-  'header': '. Include logo placement, navigation, and responsive breakpoint behavior',
+  card: '. Use consistent padding, clear content hierarchy with heading, body, and action areas',
+  button: '. Include hover, focus, and active states with appropriate contrast ratios',
+  form: '. Add proper label associations, validation feedback, and logical tab order',
+  modal: '. Trap focus within the dialog, handle Escape key, and restore focus on close',
+  nav: '. Include skip navigation link, clear active state indicators, and mobile menu toggle',
+  table: '. Add proper scope attributes, sortable column headers if applicable, and responsive overflow handling',
+  hero: '. Use an attention-grabbing layout with clear CTA, balanced whitespace, and optimized image loading',
+  footer: '. Include logical link grouping, social links, and sufficient color contrast',
+  sidebar: '. Support collapsible state, keyboard navigation, and proper landmark role',
+  header: '. Include logo placement, navigation, and responsive breakpoint behavior',
 };
 
 function addComponentHints(prompt: string, componentType: string, additions: string[]): string {

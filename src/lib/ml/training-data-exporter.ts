@@ -57,15 +57,15 @@ export function exportRawExamples(
        LIMIT ?`
     )
     .all(minAbs, limit) as Array<{
-      prompt: string;
-      score: number;
-      component_type: string | null;
-      variant: string | null;
-      mood: string | null;
-      industry: string | null;
-      style: string | null;
-      code_hash: string | null;
-    }>;
+    prompt: string;
+    score: number;
+    component_type: string | null;
+    variant: string | null;
+    mood: string | null;
+    industry: string | null;
+    style: string | null;
+    code_hash: string | null;
+  }>;
 
   return rows.map((r) => ({
     prompt: r.prompt,
@@ -85,9 +85,7 @@ export function exportRawExamples(
  * Build quality-scorer training data.
  * Format: instruction-following where the model predicts acceptance score.
  */
-export function buildQualityScorerData(
-  examples: ITrainingExample[]
-): IQualityScorerRow[] {
+export function buildQualityScorerData(examples: ITrainingExample[]): IQualityScorerRow[] {
   return examples
     .filter((e) => e.prompt.length > 0)
     .map((e) => ({
@@ -102,9 +100,7 @@ export function buildQualityScorerData(
  * Build prompt-enhancer training data.
  * Pairs low-scored prompts with high-scored prompts for the same component type.
  */
-export function buildPromptEnhancerData(
-  examples: ITrainingExample[]
-): IPromptEnhancerRow[] {
+export function buildPromptEnhancerData(examples: ITrainingExample[]): IPromptEnhancerRow[] {
   // Group by component type
   const byType = new Map<string, ITrainingExample[]>();
   for (const e of examples) {
@@ -138,14 +134,11 @@ export function buildPromptEnhancerData(
  * Build style-recommender training data.
  * Format: prompt → recommended style name.
  */
-export function buildStyleRecommenderData(
-  examples: ITrainingExample[]
-): IStyleRecommenderRow[] {
+export function buildStyleRecommenderData(examples: ITrainingExample[]): IStyleRecommenderRow[] {
   return examples
     .filter((e) => e.score > 0.3 && e.params.style && e.params.style !== 'default')
     .map((e) => ({
-      instruction:
-        'Given the following UI generation request, recommend the best visual style.',
+      instruction: 'Given the following UI generation request, recommend the best visual style.',
       input: e.prompt,
       output: e.params.style!,
     }));
@@ -155,17 +148,14 @@ export function buildStyleRecommenderData(
  * Write training data to a JSONL file.
  * Creates parent directories if needed.
  */
-export function writeJsonl<T extends object>(
-  rows: T[],
-  filePath: string
-): number {
+export function writeJsonl<T extends object>(rows: T[], filePath: string): number {
   if (rows.length === 0) return 0;
 
   const dir = join(filePath, '..');
   mkdirSync(dir, { recursive: true });
 
   const lines = rows.map((r) => JSON.stringify(r)).join('\n');
-  writeFileSync(filePath, `${lines  }\n`, 'utf-8');
+  writeFileSync(filePath, `${lines}\n`, 'utf-8');
 
   logger.info({ path: filePath, rows: rows.length }, 'Training data written');
   return rows.length;
@@ -219,11 +209,8 @@ export function hasEnoughData(
     'style-recommender': 300,
   };
 
-  const count = (
-    db
-      .prepare('SELECT COUNT(*) as cnt FROM feedback WHERE ABS(score) >= 0.3')
-      .get() as { cnt: number }
-  ).cnt;
+  const count = (db.prepare('SELECT COUNT(*) as cnt FROM feedback WHERE ABS(score) >= 0.3').get() as { cnt: number })
+    .cnt;
 
   const required = thresholds[adapter];
 

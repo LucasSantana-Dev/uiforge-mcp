@@ -167,8 +167,8 @@ function extractSpacing(code: string): IDesignAnalysis['spacing'] {
 
   // Infer spacing system base
   const spacingValues = [...paddingClasses, ...marginClasses, ...gapClasses]
-    .map(c => parseInt(c.match(/\d+/)?.[0] || '0'))
-    .filter(v => v > MIN_SPACING_PX && v <= MAX_SPACING_PX);
+    .map((c) => parseInt(c.match(/\d+/)?.[0] || '0'))
+    .filter((v) => v > MIN_SPACING_PX && v <= MAX_SPACING_PX);
 
   const minSpacing = spacingValues.length > 0 ? Math.min(...spacingValues) : COMMON_SPACING_BASES[0];
   const system = minSpacing <= 2 ? '4px base' : minSpacing <= 4 ? '4px base' : '8px base';
@@ -184,10 +184,7 @@ function extractSpacing(code: string): IDesignAnalysis['spacing'] {
 /**
  * Detect UI components from description and types.
  */
-function detectComponents(
-  description: string,
-  componentTypes: string[]
-): IDesignAnalysis['components'] {
+function detectComponents(description: string, componentTypes: string[]): IDesignAnalysis['components'] {
   const components: IDesignAnalysis['components'] = [];
 
   // Map common UI elements to component types
@@ -205,7 +202,7 @@ function detectComponents(
   const lowerDesc = description.toLowerCase();
 
   for (const [type, keywords] of Object.entries(componentKeywords)) {
-    if (keywords.some(kw => lowerDesc.includes(kw)) || componentTypes.includes(type)) {
+    if (keywords.some((kw) => lowerDesc.includes(kw)) || componentTypes.includes(type)) {
       components.push({
         type,
         description: `Detected ${type} component from image analysis`,
@@ -237,10 +234,7 @@ function detectLayout(description: string, code: string): IDesignAnalysis['layou
 /**
  * Infer visual style from code and description.
  */
-function inferVisualStyle(
-  code: string,
-  description: string
-): IDesignAnalysis['visualStyle'] {
+function inferVisualStyle(code: string, description: string): IDesignAnalysis['visualStyle'] {
   const characteristics: string[] = [];
   let primary: VisualStyleId = 'soft-depth';
 
@@ -338,10 +332,7 @@ function calculateQualityScore(
 /**
  * Extract metadata about the design.
  */
-function extractMetadata(
-  description: string,
-  code: string
-): IDesignAnalysis['metadata'] {
+function extractMetadata(description: string, code: string): IDesignAnalysis['metadata'] {
   const componentCount = (code.match(/<[A-Z]/g) || []).length;
   const complexity = componentCount < 3 ? 'simple' : componentCount < 8 ? 'moderate' : 'complex';
 

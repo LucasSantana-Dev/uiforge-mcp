@@ -101,7 +101,7 @@ export async function embedBatch(texts: string[]): Promise<Float32Array[]> {
   for (let i = 0; i < texts.length; i += BATCH_SIZE) {
     const batch = texts.slice(i, i + BATCH_SIZE);
     // Parallelize within batch for better performance
-    const batchPromises = batch.map(text =>
+    const batchPromises = batch.map((text) =>
       ext(text, { pooling: 'mean', normalize: true }).then((output: any) => new Float32Array(output.data))
     );
     const batchResults = await Promise.all(batchPromises);

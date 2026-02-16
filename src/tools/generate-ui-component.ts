@@ -7,7 +7,11 @@ import { extractDesignFromUrl } from '../lib/design-extractor.js';
 import { jsxToHtmlAttributes, jsxToSvelte } from '../lib/utils/jsx.utils.js';
 import type { IGeneratedFile, IDesignContext } from '../lib/types.js';
 import { initializeRegistry } from '../lib/design-references/component-registry/init.js';
-import { getBestMatch, getBestMatchWithFeedback, triggerPatternPromotion } from '../lib/design-references/component-registry/index.js';
+import {
+  getBestMatch,
+  getBestMatchWithFeedback,
+  triggerPatternPromotion,
+} from '../lib/design-references/component-registry/index.js';
 import type { MoodTag, IndustryTag, VisualStyleId } from '../lib/design-references/component-registry/types.js';
 import { enhancePrompt, scoreQuality } from '../lib/ml/index.js';
 import { recordGeneration } from '../lib/feedback/index.js';
@@ -51,10 +55,57 @@ const inputSchema = {
   design_reference_url: z.string().url().optional().describe('URL to extract design inspiration from'),
   existing_tailwind_config: z.string().optional().describe('Existing tailwind.config.js content for style audit'),
   existing_css_variables: z.string().optional().describe('Existing CSS variables for style audit'),
-  variant: z.string().optional().describe('Component variant (e.g., "outline", "ghost", "gradient", "glass", "destructive", "loading", "icon")'),
-  mood: z.enum(['bold', 'calm', 'playful', 'professional', 'premium', 'energetic', 'minimal', 'editorial', 'futuristic', 'warm', 'corporate', 'creative']).optional().describe('Design mood/personality'),
-  industry: z.enum(['saas', 'fintech', 'ecommerce', 'healthcare', 'education', 'startup', 'agency', 'media', 'devtools', 'general']).optional().describe('Target industry for tailored design'),
-  visual_style: z.enum(['glassmorphism', 'neubrutalism', 'soft-depth', 'bento-grid', 'gradient-mesh', 'dark-premium', 'minimal-editorial', 'linear-modern', 'retro-playful', 'corporate-trust']).optional().describe('Visual style layer to apply'),
+  variant: z
+    .string()
+    .optional()
+    .describe('Component variant (e.g., "outline", "ghost", "gradient", "glass", "destructive", "loading", "icon")'),
+  mood: z
+    .enum([
+      'bold',
+      'calm',
+      'playful',
+      'professional',
+      'premium',
+      'energetic',
+      'minimal',
+      'editorial',
+      'futuristic',
+      'warm',
+      'corporate',
+      'creative',
+    ])
+    .optional()
+    .describe('Design mood/personality'),
+  industry: z
+    .enum([
+      'saas',
+      'fintech',
+      'ecommerce',
+      'healthcare',
+      'education',
+      'startup',
+      'agency',
+      'media',
+      'devtools',
+      'general',
+    ])
+    .optional()
+    .describe('Target industry for tailored design'),
+  visual_style: z
+    .enum([
+      'glassmorphism',
+      'neubrutalism',
+      'soft-depth',
+      'bento-grid',
+      'gradient-mesh',
+      'dark-premium',
+      'minimal-editorial',
+      'linear-modern',
+      'retro-playful',
+      'corporate-trust',
+    ])
+    .optional()
+    .describe('Visual style layer to apply'),
   skip_ml: z.boolean().optional().default(false).describe('Skip ML enhancement and scoring for pure generation'),
 };
 
@@ -168,11 +219,11 @@ export function registerGenerateUiComponent(server: McpServer): void {
       if (!skipML && files.length > 0) {
         try {
           const mainFile = files[0];
-          qualityScore = await scoreQuality(
-            enhancedPromptText,
-            mainFile.content,
-            { componentType: component_type, framework, style: visual_style }
-          );
+          qualityScore = await scoreQuality(enhancedPromptText, mainFile.content, {
+            componentType: component_type,
+            framework,
+            style: visual_style,
+          });
         } catch (err) {
           logger.warn({ error: err }, 'Quality scoring failed');
         }
@@ -221,11 +272,12 @@ export function registerGenerateUiComponent(server: McpServer): void {
       // Build metadata about registry match
       const ragInfo = registryMatch
         ? `\n📚 RAG Match: "${registryMatch.name}" (${registryMatch.id})` +
-        `\n   Quality: ${registryMatch.quality.inspirationSource}` +
-        `\n   A11y: ${registryMatch.a11y.keyboardNav}${ 
-        registryMatch.quality.antiGeneric.length > 0
-          ? `\n   Anti-generic: ${registryMatch.quality.antiGeneric.join(', ')}`
-          : ''}`
+          `\n   Quality: ${registryMatch.quality.inspirationSource}` +
+          `\n   A11y: ${registryMatch.a11y.keyboardNav}${
+            registryMatch.quality.antiGeneric.length > 0
+              ? `\n   Anti-generic: ${registryMatch.quality.antiGeneric.join(', ')}`
+              : ''
+          }`
         : '\n📚 RAG: No registry match — using fallback template';
 
       const summary = [
@@ -244,14 +296,16 @@ export function registerGenerateUiComponent(server: McpServer): void {
           },
         ],
         _meta: {
-          ml: skipML ? null : {
-            promptEnhanced: !!promptEnhancement,
-            enhancements: promptEnhancement?.additions ?? [],
-            qualityScore: qualityScore?.score ?? null,
-            qualitySource: qualityScore?.source ?? null,
-            qualityFactors: qualityScore?.factors ?? null,
-            isLikelyAccepted: qualityScore ? qualityScore.score >= 7.0 : null,
-          },
+          ml: skipML
+            ? null
+            : {
+                promptEnhanced: !!promptEnhancement,
+                enhancements: promptEnhancement?.additions ?? [],
+                qualityScore: qualityScore?.score ?? null,
+                qualitySource: qualityScore?.source ?? null,
+                qualityFactors: qualityScore?.factors ?? null,
+                isLikelyAccepted: qualityScore ? qualityScore.score >= 7.0 : null,
+              },
         },
       };
     }
@@ -271,14 +325,22 @@ function generateComponent(
   const propsInterfaceBody =
     props && Object.keys(props).length > 0
       ? Object.entries(props)
-        .map(([key, propType]) => `  ${key}: ${propType};`)
-        .join('\n')
+          .map(([key, propType]) => `  ${key}: ${propType};`)
+          .join('\n')
       : '';
 
   switch (framework) {
     case 'react':
     case 'nextjs':
-      return generateReactComponent(componentName, componentType, designContext, propsInterfaceBody, props, ragOptions, registryMatch);
+      return generateReactComponent(
+        componentName,
+        componentType,
+        designContext,
+        propsInterfaceBody,
+        props,
+        ragOptions,
+        registryMatch
+      );
     case 'vue':
       return generateVueComponent(componentName, componentType, designContext, props, ragOptions, registryMatch);
     case 'angular':
@@ -288,7 +350,15 @@ function generateComponent(
     case 'html':
       return generateHtmlComponent(componentName, componentType, designContext, ragOptions, registryMatch);
     default:
-      return generateReactComponent(componentName, componentType, designContext, propsInterfaceBody, props, ragOptions, registryMatch);
+      return generateReactComponent(
+        componentName,
+        componentType,
+        designContext,
+        propsInterfaceBody,
+        props,
+        ragOptions,
+        registryMatch
+      );
   }
 }
 
@@ -328,8 +398,8 @@ function generateVueComponent(
 ): IGeneratedFile[] {
   const propsBlock = props
     ? Object.entries(props)
-      .map(([key, pType]) => `  ${key}: { type: ${vueType(pType)}, required: true },`)
-      .join('\n')
+        .map(([key, pType]) => `  ${key}: { type: ${vueType(pType)}, required: true },`)
+        .join('\n')
     : '';
   const body = getComponentBody(type, ctx, 'vue', ragOptions, registryMatch);
 
@@ -358,8 +428,8 @@ function generateAngularComponent(
 ): IGeneratedFile[] {
   const inputDecls = props
     ? Object.entries(props)
-      .map(([key, pType]) => `  @Input() ${key}!: ${pType};`)
-      .join('\n')
+        .map(([key, pType]) => `  @Input() ${key}!: ${pType};`)
+        .join('\n')
     : '';
   const body = getComponentBody(type, ctx, 'angular', ragOptions, registryMatch);
 
@@ -393,8 +463,8 @@ function generateSvelteComponent(
 ): IGeneratedFile[] {
   const propsDecl = props
     ? Object.entries(props)
-      .map(([key, pType]) => `  export let ${key}: ${pType};`)
-      .join('\n')
+        .map(([key, pType]) => `  export let ${key}: ${pType};`)
+        .join('\n')
     : '';
   const body = jsxToSvelte(getComponentBody(type, ctx, 'svelte', ragOptions, registryMatch));
 

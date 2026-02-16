@@ -15,11 +15,4 @@ export function registerAtoms(): void {
   registerSnippets(progressSnippets);
 }
 
-export {
-  buttonSnippets,
-  inputSnippets,
-  badgeSnippets,
-  typographySnippets,
-  toggleSnippets,
-  progressSnippets,
-};
+export { buttonSnippets, inputSnippets, badgeSnippets, typographySnippets, toggleSnippets, progressSnippets };

@@ -32,13 +32,15 @@ export const navigationSnippets: IComponentSnippet[] = [
   </nav>
 </header>`,
     tailwindClasses: {
-      header: 'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60',
+      header:
+        'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60',
       nav: 'mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8',
       logo: 'flex items-center gap-2 font-semibold text-foreground',
       links: 'hidden items-center gap-1 md:flex',
       link: 'rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
       cta: 'rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
-      mobileToggle: 'inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+      mobileToggle:
+        'inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
     },
     a11y: {
       roles: ['navigation'],
@@ -51,9 +53,18 @@ export const navigationSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'header', landmark: 'navigation' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'md', 'lg'] },
     quality: {
-      antiGeneric: ['backdrop-blur for modern glass header', 'supports-[backdrop-filter] progressive enhancement', 'max-w-7xl constrained width', 'mobile hamburger hidden on md+'],
+      antiGeneric: [
+        'backdrop-blur for modern glass header',
+        'supports-[backdrop-filter] progressive enhancement',
+        'max-w-7xl constrained width',
+        'mobile hamburger hidden on md+',
+      ],
       inspirationSource: 'shadcn/ui website navbar',
-      craftDetails: ['h-14 fixed height', 'bg-background/95 + backdrop-blur', 'progressive responsive: logo always → links at md → sign-in at sm'],
+      craftDetails: [
+        'h-14 fixed height',
+        'bg-background/95 + backdrop-blur',
+        'progressive responsive: logo always → links at md → sign-in at sm',
+      ],
     },
   },
   {
@@ -101,10 +112,12 @@ export const navigationSnippets: IComponentSnippet[] = [
       sidebar: 'flex h-full w-60 flex-col border-r bg-background',
       header: 'flex h-14 items-center border-b px-4',
       nav: 'flex-1 space-y-1 overflow-y-auto p-3',
-      linkActive: 'flex items-center gap-3 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground transition-colors',
+      linkActive:
+        'flex items-center gap-3 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground transition-colors',
       link: 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
       footer: 'border-t p-3',
-      avatar: 'h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground',
+      avatar:
+        'h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground',
     },
     a11y: {
       roles: ['navigation'],
@@ -117,7 +130,12 @@ export const navigationSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'aside', landmark: 'complementary' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['aria-current="page" on active link', 'icon + text nav items', 'user profile in footer with avatar fallback', 'truncate on email for overflow'],
+      antiGeneric: [
+        'aria-current="page" on active link',
+        'icon + text nav items',
+        'user profile in footer with avatar fallback',
+        'truncate on email for overflow',
+      ],
       inspirationSource: 'Linear sidebar',
       craftDetails: ['w-60 optimal sidebar width', 'overflow-y-auto for scrollable nav', 'border-t footer separation'],
     },
@@ -159,7 +177,12 @@ export const navigationSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'nav', landmark: 'navigation' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['aria-hidden on separators', 'aria-current on last item', 'ol for ordered hierarchy', 'chevron separators with reduced opacity'],
+      antiGeneric: [
+        'aria-hidden on separators',
+        'aria-current on last item',
+        'ol for ordered hierarchy',
+        'chevron separators with reduced opacity',
+      ],
       inspirationSource: 'shadcn/ui Breadcrumb',
       craftDetails: ['ordered list for semantic hierarchy', 'separators hidden from screen readers'],
     },

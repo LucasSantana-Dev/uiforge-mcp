@@ -41,8 +41,10 @@ export const heroSnippets: IComponentSnippet[] = [
       headingAccent: 'text-primary',
       description: 'mx-auto mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed',
       actions: 'mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center',
-      primaryCta: 'inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
-      secondaryCta: 'inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-input px-8 text-sm font-medium text-foreground transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
+      primaryCta:
+        'inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
+      secondaryCta:
+        'inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-input px-8 text-sm font-medium text-foreground transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
       disclaimer: 'mt-6 text-xs text-muted-foreground',
     },
     a11y: {
@@ -56,9 +58,19 @@ export const heroSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'section', headingLevel: 'h1' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'lg'] },
     quality: {
-      antiGeneric: ['badge for context/social proof above heading', 'accent color on key phrase — not entire heading', 'disclaimer reduces friction', 'play icon on demo CTA for visual hint', 'flex-col → flex-row for mobile CTA stacking'],
+      antiGeneric: [
+        'badge for context/social proof above heading',
+        'accent color on key phrase — not entire heading',
+        'disclaimer reduces friction',
+        'play icon on demo CTA for visual hint',
+        'flex-col → flex-row for mobile CTA stacking',
+      ],
       inspirationSource: 'Vercel / shadcn/ui landing pages',
-      craftDetails: ['max-w-5xl container for readability', 'responsive type scale: 4xl → 5xl → 6xl', 'max-w-2xl on description for line length control'],
+      craftDetails: [
+        'max-w-5xl container for readability',
+        'responsive type scale: 4xl → 5xl → 6xl',
+        'max-w-2xl on description for line length control',
+      ],
     },
   },
   {
@@ -119,13 +131,30 @@ export const heroSnippets: IComponentSnippet[] = [
       avatarStack: 'flex -space-x-2',
       visual: 'aspect-[4/3] overflow-hidden rounded-2xl border bg-muted shadow-2xl',
     },
-    a11y: { roles: ['region'], ariaAttributes: ['aria-labelledby'], keyboardNav: 'Tab through CTAs', contrastRatio: '7:1', focusVisible: true, reducedMotion: true },
+    a11y: {
+      roles: ['region'],
+      ariaAttributes: ['aria-labelledby'],
+      keyboardNav: 'Tab through CTAs',
+      contrastRatio: '7:1',
+      focusVisible: true,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'section', headingLevel: 'h1' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'lg'] },
     quality: {
-      antiGeneric: ['avatar stack for social proof', 'status badge with dot indicator', 'shadow-2xl on visual for depth', 'aspect-[4/3] for consistent visual proportions', 'team count with semibold number'],
+      antiGeneric: [
+        'avatar stack for social proof',
+        'status badge with dot indicator',
+        'shadow-2xl on visual for depth',
+        'aspect-[4/3] for consistent visual proportions',
+        'team count with semibold number',
+      ],
       inspirationSource: 'Stripe hero layout',
-      craftDetails: ['grid → stacked on mobile, side-by-side on lg', '-space-x-2 overlapping avatars', 'rounded-2xl + shadow-2xl for premium visual'],
+      craftDetails: [
+        'grid → stacked on mobile, side-by-side on lg',
+        '-space-x-2 overlapping avatars',
+        'rounded-2xl + shadow-2xl for premium visual',
+      ],
     },
   },
   {
@@ -162,22 +191,43 @@ export const heroSnippets: IComponentSnippet[] = [
 </section>`,
     tailwindClasses: {
       section: 'relative overflow-hidden bg-zinc-950',
-      gradientBg: 'absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),transparent)]',
+      gradientBg:
+        'absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),transparent)]',
       container: 'relative mx-auto max-w-5xl px-4 py-28 sm:px-6 sm:py-36 lg:px-8',
-      badge: 'inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300 backdrop-blur-sm mb-8',
+      badge:
+        'inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300 backdrop-blur-sm mb-8',
       heading: 'text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl',
       gradientText: 'bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent',
       description: 'mx-auto mt-6 max-w-2xl text-lg text-zinc-400 leading-relaxed',
-      primaryCta: 'inline-flex h-12 items-center justify-center rounded-lg bg-white px-8 text-sm font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100',
-      secondaryCta: 'inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-white/10 px-8 text-sm font-medium text-zinc-300 transition-all hover:bg-white/5 hover:text-white',
+      primaryCta:
+        'inline-flex h-12 items-center justify-center rounded-lg bg-white px-8 text-sm font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100',
+      secondaryCta:
+        'inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-white/10 px-8 text-sm font-medium text-zinc-300 transition-all hover:bg-white/5 hover:text-white',
     },
-    a11y: { roles: ['region'], ariaAttributes: ['aria-labelledby', 'aria-hidden on decorative bg'], keyboardNav: 'Tab through CTAs', contrastRatio: '7:1', focusVisible: true, reducedMotion: true },
+    a11y: {
+      roles: ['region'],
+      ariaAttributes: ['aria-labelledby', 'aria-hidden on decorative bg'],
+      keyboardNav: 'Tab through CTAs',
+      contrastRatio: '7:1',
+      focusVisible: true,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'section', headingLevel: 'h1' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'lg'] },
     quality: {
-      antiGeneric: ['radial gradient background (not linear)', 'gradient text with via stop for richness', 'inverted CTA (white on dark)', 'pulsing dot for live status feel', 'ring-offset-zinc-950 for dark mode focus rings'],
+      antiGeneric: [
+        'radial gradient background (not linear)',
+        'gradient text with via stop for richness',
+        'inverted CTA (white on dark)',
+        'pulsing dot for live status feel',
+        'ring-offset-zinc-950 for dark mode focus rings',
+      ],
       inspirationSource: 'Linear / Vercel dark hero sections',
-      craftDetails: ['radial-gradient from above for aurora effect', 'text scale up to 7xl', 'h-12 larger CTAs for dark hero impact'],
+      craftDetails: [
+        'radial-gradient from above for aurora effect',
+        'text scale up to 7xl',
+        'h-12 larger CTAs for dark hero impact',
+      ],
     },
   },
 ];

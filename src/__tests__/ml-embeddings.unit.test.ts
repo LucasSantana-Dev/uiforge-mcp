@@ -70,10 +70,7 @@ describe('cosineSimilarity', () => {
 describe('findSimilar', () => {
   it('ranks identical vector first', () => {
     const query = makeVector(16, 1);
-    const candidates: IEmbedding[] = [
-      makeEmbedding('same', 1, 16),
-      makeEmbedding('different', 99, 16),
-    ];
+    const candidates: IEmbedding[] = [makeEmbedding('same', 1, 16), makeEmbedding('different', 99, 16)];
     const results = findSimilar(query, candidates, 5, 0);
     expect(results[0]!.id).toBe('same');
     expect(results[0]!.similarity).toBeCloseTo(1, 3);
@@ -81,10 +78,7 @@ describe('findSimilar', () => {
 
   it('respects threshold', () => {
     const query = makeVector(16, 1);
-    const candidates: IEmbedding[] = [
-      makeEmbedding('close', 1, 16),
-      makeEmbedding('far', 99, 16),
-    ];
+    const candidates: IEmbedding[] = [makeEmbedding('close', 1, 16), makeEmbedding('far', 99, 16)];
     const results = findSimilar(query, candidates, 5, 0.99);
     expect(results.length).toBe(1);
     expect(results[0]!.id).toBe('close');

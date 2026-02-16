@@ -51,9 +51,12 @@ export const formSnippets: IComponentSnippet[] = [
       title: 'text-2xl font-bold tracking-tight text-foreground',
       subtitle: 'text-sm text-muted-foreground',
       label: 'text-sm font-medium text-foreground',
-      input: 'flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-      submit: 'inline-flex h-10 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground ring-offset-background transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
-      socialButton: 'inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      input:
+        'flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      submit:
+        'inline-flex h-10 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground ring-offset-background transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]',
+      socialButton:
+        'inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     },
     a11y: {
       roles: ['form'],
@@ -67,9 +70,18 @@ export const formSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'form' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm'] },
     quality: {
-      antiGeneric: ['autoComplete attributes for browser autofill', 'visual divider for social login section', 'forgot password positioned inline with label', 'noValidate for custom validation'],
+      antiGeneric: [
+        'autoComplete attributes for browser autofill',
+        'visual divider for social login section',
+        'forgot password positioned inline with label',
+        'noValidate for custom validation',
+      ],
       inspirationSource: 'shadcn/ui login form + Clerk auth pages',
-      craftDetails: ['max-w-sm for focused form', 'space-y-6 section spacing', 'consistent h-10 for all interactive elements'],
+      craftDetails: [
+        'max-w-sm for focused form',
+        'space-y-6 section spacing',
+        'consistent h-10 for all interactive elements',
+      ],
     },
   },
   {
@@ -111,9 +123,12 @@ export const formSnippets: IComponentSnippet[] = [
       form: 'mx-auto w-full max-w-lg space-y-6',
       nameGrid: 'grid gap-4 sm:grid-cols-2',
       label: 'text-sm font-medium text-foreground',
-      input: 'flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-      textarea: 'flex min-h-[120px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y',
-      submit: 'inline-flex h-10 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground ring-offset-background transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] sm:w-auto sm:px-8',
+      input:
+        'flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      textarea:
+        'flex min-h-[120px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y',
+      submit:
+        'inline-flex h-10 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground ring-offset-background transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] sm:w-auto sm:px-8',
     },
     a11y: {
       roles: ['form'],
@@ -127,7 +142,11 @@ export const formSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'form' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm'] },
     quality: {
-      antiGeneric: ['2-column name grid on sm+', 'autoComplete for autofill', 'button full-width on mobile, auto on desktop'],
+      antiGeneric: [
+        '2-column name grid on sm+',
+        'autoComplete for autofill',
+        'button full-width on mobile, auto on desktop',
+      ],
       inspirationSource: 'Tailwind UI contact forms',
       craftDetails: ['responsive grid for first/last name', 'min-h-[120px] textarea', 'sm:w-auto button sizing'],
     },

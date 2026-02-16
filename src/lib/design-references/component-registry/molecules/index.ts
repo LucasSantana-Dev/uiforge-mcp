@@ -11,9 +11,4 @@ export function registerMolecules(): void {
   registerSnippets(feedbackSnippets);
 }
 
-export {
-  cardSnippets,
-  navigationSnippets,
-  formSnippets,
-  feedbackSnippets,
-};
+export { cardSnippets, navigationSnippets, formSnippets, feedbackSnippets };

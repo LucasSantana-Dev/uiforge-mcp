@@ -87,10 +87,7 @@ export function getSidecarInfo(): {
  * This lazily imports node-llama-cpp and loads the GGUF model.
  * Returns false if the library or model files are not available.
  */
-export async function loadSidecar(
-  modelId: 'qwen2.5-0.5b' = 'qwen2.5-0.5b',
-  adapter?: AdapterType
-): Promise<boolean> {
+export async function loadSidecar(modelId: 'qwen2.5-0.5b' = 'qwen2.5-0.5b', adapter?: AdapterType): Promise<boolean> {
   if (state.loaded) {
     logger.debug('Sidecar already loaded');
     return true;

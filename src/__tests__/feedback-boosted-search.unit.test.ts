@@ -1,9 +1,6 @@
 import { getMemoryDatabase } from '../lib/design-references/database/store.js';
 import { initializeRegistry, resetInitialization } from '../lib/design-references/component-registry/init.js';
-import {
-  feedbackBoostedSearch,
-  getFeedbackBoost,
-} from '../lib/feedback/feedback-boosted-search.js';
+import { feedbackBoostedSearch, getFeedbackBoost } from '../lib/feedback/feedback-boosted-search.js';
 import type Database from 'better-sqlite3';
 
 describe('feedback-boosted-search', () => {

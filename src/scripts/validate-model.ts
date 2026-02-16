@@ -47,7 +47,8 @@ async function validateModel(): Promise<void> {
       message: `❌ Not found at ${modelPath}`,
       details: {
         expectedPath: modelPath,
-        suggestion: 'Run: wget -O ~/.uiforge/models/qwen2.5-0.5b-instruct-q4_k_m.gguf https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf',
+        suggestion:
+          'Run: wget -O ~/.uiforge/models/qwen2.5-0.5b-instruct-q4_k_m.gguf https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf',
       },
     });
     allPassed = false;
@@ -57,9 +58,7 @@ async function validateModel(): Promise<void> {
   if (existsSync(modelPath)) {
     const stats = statSync(modelPath);
     const sizeMB = stats.size / 1024 / 1024;
-    const sizeOk =
-      sizeMB >= EXPECTED_SIZE_MB - SIZE_TOLERANCE_MB &&
-      sizeMB <= EXPECTED_SIZE_MB + SIZE_TOLERANCE_MB;
+    const sizeOk = sizeMB >= EXPECTED_SIZE_MB - SIZE_TOLERANCE_MB && sizeMB <= EXPECTED_SIZE_MB + SIZE_TOLERANCE_MB;
 
     if (sizeOk) {
       results.push({
@@ -86,7 +85,7 @@ async function validateModel(): Promise<void> {
   try {
     // Dynamic import to avoid errors if node-llama-cpp not installed
     const { getLlama, LlamaChatSession } = await import('node-llama-cpp');
-    
+
     results.push({
       step: 'node-llama-cpp available',
       passed: true,
@@ -97,7 +96,7 @@ async function validateModel(): Promise<void> {
     try {
       const llama = await getLlama();
       const model = await llama.loadModel({ modelPath });
-      
+
       results.push({
         step: 'Model loads successfully',
         passed: true,
@@ -108,10 +107,10 @@ async function validateModel(): Promise<void> {
       try {
         const context = await model.createContext();
         const session = new LlamaChatSession({ contextSequence: context.getSequence() });
-        
+
         const response = await session.prompt('Say "OK" if you can read this.');
         const responseText = response.toLowerCase();
-        
+
         if (responseText.includes('ok') || responseText.includes('yes')) {
           results.push({
             step: 'Inference test passed',
@@ -197,7 +196,7 @@ async function validateModel(): Promise<void> {
     }
   }
 
-  console.log(`\n${  '='.repeat(60)  }\n`);
+  console.log(`\n${'='.repeat(60)}\n`);
 
   if (allPassed) {
     console.log('🎉 ML system ready!\n');

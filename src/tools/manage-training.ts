@@ -16,14 +16,7 @@ const logger = pino({ name: 'manage-training' });
 
 const inputSchema = {
   action: z
-    .enum([
-      'check_readiness',
-      'start_training',
-      'get_status',
-      'cancel_training',
-      'list_adapters',
-      'get_summary',
-    ])
+    .enum(['check_readiness', 'start_training', 'get_status', 'cancel_training', 'list_adapters', 'get_summary'])
     .describe('Action to perform on the training system'),
   adapter_name: z
     .string()
@@ -54,17 +47,15 @@ export function registerManageTraining(server: McpServer): void {
               throw new Error(`Invalid adapter_name: ${adapter_name}. Must be one of: ${validAdapters.join(', ')}`);
             }
             const db = getDatabase();
-            const readiness = checkTrainingReadiness(
-              adapter_name as AdapterType,
-              'qwen2.5-0.5b' as ModelId,
-              db
-            );
+            const readiness = checkTrainingReadiness(adapter_name as AdapterType, 'qwen2.5-0.5b' as ModelId, db);
             const summary = [
               '🔍 Training Readiness Check',
               `Adapter: ${adapter_name}`,
               `Ready: ${readiness.ready ? '✅' : '❌'}`,
-              readiness.ready ? '' : `\nIssues:\n${readiness.issues.map(i => `  • ${i}`).join('\n')}`,
-            ].filter(Boolean).join('\n');
+              readiness.ready ? '' : `\nIssues:\n${readiness.issues.map((i) => `  • ${i}`).join('\n')}`,
+            ]
+              .filter(Boolean)
+              .join('\n');
 
             return {
               content: [
@@ -80,11 +71,7 @@ export function registerManageTraining(server: McpServer): void {
             }
 
             const db = getDatabase();
-            const job = startTrainingJob(
-              adapter_name as AdapterType,
-              'qwen2.5-0.5b' as ModelId,
-              db
-            );
+            const job = startTrainingJob(adapter_name as AdapterType, 'qwen2.5-0.5b' as ModelId, db);
             const summary = [
               '🚀 Training Job Started',
               `Job ID: ${job.jobId}`,
@@ -160,8 +147,7 @@ export function registerManageTraining(server: McpServer): void {
               `Total: ${adapters.length}`,
               '',
               ...adapters.map(
-                (a) =>
-                  `• ${a.adapter} (${(a.sizeBytes / 1024 / 1024).toFixed(2)} MB) - ${a.available ? '✅' : '❌'}`
+                (a) => `• ${a.adapter} (${(a.sizeBytes / 1024 / 1024).toFixed(2)} MB) - ${a.available ? '✅' : '❌'}`
               ),
             ].join('\n');
 
@@ -185,7 +171,8 @@ export function registerManageTraining(server: McpServer): void {
               '',
               'Data Readiness:',
               ...Object.entries(summary.dataReadiness).map(
-                ([adapter, info]) => `  • ${adapter}: ${info.ready ? '✅' : '❌'} (${info.count}/${info.required} samples)`
+                ([adapter, info]) =>
+                  `  • ${adapter}: ${info.ready ? '✅' : '❌'} (${info.count}/${info.required} samples)`
               ),
             ].join('\n');
 

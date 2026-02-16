@@ -27,9 +27,53 @@ const inputSchema = {
     .describe('Component library to use'),
   dark_mode: z.boolean().default(false).describe('Include dark mode variant classes'),
   project_name: z.string().optional().describe('Project/app name to use in the template (defaults to "MyApp")'),
-  mood: z.enum(['bold', 'calm', 'playful', 'professional', 'premium', 'energetic', 'minimal', 'editorial', 'futuristic', 'warm', 'corporate', 'creative']).optional().describe('Design mood/personality'),
-  industry: z.enum(['saas', 'fintech', 'ecommerce', 'healthcare', 'education', 'startup', 'agency', 'media', 'devtools', 'general']).optional().describe('Target industry for tailored design'),
-  visual_style: z.enum(['glassmorphism', 'neubrutalism', 'soft-depth', 'bento-grid', 'gradient-mesh', 'dark-premium', 'minimal-editorial', 'linear-modern', 'retro-playful', 'corporate-trust']).optional().describe('Visual style layer to apply'),
+  mood: z
+    .enum([
+      'bold',
+      'calm',
+      'playful',
+      'professional',
+      'premium',
+      'energetic',
+      'minimal',
+      'editorial',
+      'futuristic',
+      'warm',
+      'corporate',
+      'creative',
+    ])
+    .optional()
+    .describe('Design mood/personality'),
+  industry: z
+    .enum([
+      'saas',
+      'fintech',
+      'ecommerce',
+      'healthcare',
+      'education',
+      'startup',
+      'agency',
+      'media',
+      'devtools',
+      'general',
+    ])
+    .optional()
+    .describe('Target industry for tailored design'),
+  visual_style: z
+    .enum([
+      'glassmorphism',
+      'neubrutalism',
+      'soft-depth',
+      'bento-grid',
+      'gradient-mesh',
+      'dark-premium',
+      'minimal-editorial',
+      'linear-modern',
+      'retro-playful',
+      'corporate-trust',
+    ])
+    .optional()
+    .describe('Visual style layer to apply'),
 };
 
 /**
@@ -75,11 +119,14 @@ export function registerGeneratePageTemplate(server: McpServer): void {
           mood && `Mood: ${mood}`,
           industry && `Industry: ${industry}`,
           visual_style && `Style: ${visual_style}`,
-        ].filter(Boolean).join(' | ');
+        ]
+          .filter(Boolean)
+          .join(' | ');
 
-        const ragInfo = registrySize > 0
-          ? `\n📚 RAG Registry: ${registrySize} snippets loaded${designParams ? ` | ${designParams}` : ''}`
-          : '';
+        const ragInfo =
+          registrySize > 0
+            ? `\n📚 RAG Registry: ${registrySize} snippets loaded${designParams ? ` | ${designParams}` : ''}`
+            : '';
 
         const summary = [
           `📄 Generated "${template}" page template for ${framework}`,

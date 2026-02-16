@@ -76,10 +76,7 @@ describe('database seed', () => {
 
   it('seedComponents inserts snippets and marks as seeded', () => {
     const db = createTestDb();
-    const snippets = [
-      makeSnippet({ id: 'btn-1' }),
-      makeSnippet({ id: 'btn-2', variant: 'secondary', mood: ['calm'] }),
-    ];
+    const snippets = [makeSnippet({ id: 'btn-1' }), makeSnippet({ id: 'btn-2', variant: 'secondary', mood: ['calm'] })];
     seedComponents(snippets, db);
     expect(isSeeded(db)).toBe(true);
     expect(getComponentCount(db)).toBe(2);
@@ -98,20 +95,36 @@ describe('database seed', () => {
   it('seedComponents stores tags, moods, industries, styles', () => {
     const db = createTestDb();
     seedComponents(
-      [makeSnippet({ id: 'btn-1', tags: ['cta', 'hero'], mood: ['bold', 'professional'], industry: ['saas'], visualStyles: ['glassmorphism'] })],
+      [
+        makeSnippet({
+          id: 'btn-1',
+          tags: ['cta', 'hero'],
+          mood: ['bold', 'professional'],
+          industry: ['saas'],
+          visualStyles: ['glassmorphism'],
+        }),
+      ],
       db
     );
 
-    const tags = db.prepare('SELECT COUNT(*) as cnt FROM component_tags WHERE component_id = ?').get('btn-1') as { cnt: number };
+    const tags = db.prepare('SELECT COUNT(*) as cnt FROM component_tags WHERE component_id = ?').get('btn-1') as {
+      cnt: number;
+    };
     expect(tags.cnt).toBe(2);
 
-    const moods = db.prepare('SELECT COUNT(*) as cnt FROM component_moods WHERE component_id = ?').get('btn-1') as { cnt: number };
+    const moods = db.prepare('SELECT COUNT(*) as cnt FROM component_moods WHERE component_id = ?').get('btn-1') as {
+      cnt: number;
+    };
     expect(moods.cnt).toBe(2);
 
-    const industries = db.prepare('SELECT COUNT(*) as cnt FROM component_industries WHERE component_id = ?').get('btn-1') as { cnt: number };
+    const industries = db
+      .prepare('SELECT COUNT(*) as cnt FROM component_industries WHERE component_id = ?')
+      .get('btn-1') as { cnt: number };
     expect(industries.cnt).toBe(1);
 
-    const styles = db.prepare('SELECT COUNT(*) as cnt FROM component_visual_styles WHERE component_id = ?').get('btn-1') as { cnt: number };
+    const styles = db
+      .prepare('SELECT COUNT(*) as cnt FROM component_visual_styles WHERE component_id = ?')
+      .get('btn-1') as { cnt: number };
     expect(styles.cnt).toBe(1);
 
     db.close();
@@ -119,11 +132,10 @@ describe('database seed', () => {
 
   it('seedComponents stores tailwind classes', () => {
     const db = createTestDb();
-    seedComponents(
-      [makeSnippet({ id: 'btn-tw', tailwindClasses: { root: 'p-4', heading: 'text-xl' } })],
-      db
-    );
-    const rows = db.prepare('SELECT role, classes FROM component_tailwind WHERE component_id = ?').all('btn-tw') as Array<{ role: string; classes: string }>;
+    seedComponents([makeSnippet({ id: 'btn-tw', tailwindClasses: { root: 'p-4', heading: 'text-xl' } })], db);
+    const rows = db
+      .prepare('SELECT role, classes FROM component_tailwind WHERE component_id = ?')
+      .all('btn-tw') as Array<{ role: string; classes: string }>;
     expect(rows.length).toBe(2);
     expect(rows.find((r) => r.role === 'root')?.classes).toBe('p-4');
     expect(rows.find((r) => r.role === 'heading')?.classes).toBe('text-xl');
@@ -205,10 +217,39 @@ describe('database queryComponents', () => {
     db = createTestDb();
     seedComponents(
       [
-        makeSnippet({ id: 'btn-primary', type: 'button', variant: 'primary', mood: ['professional'], industry: ['saas'], visualStyles: ['linear-modern'] }),
-        makeSnippet({ id: 'btn-ghost', type: 'button', variant: 'ghost', mood: ['minimal'], industry: ['general'], visualStyles: ['minimal-editorial'] }),
-        makeSnippet({ id: 'card-pricing', type: 'card', variant: 'pricing', mood: ['bold', 'premium'], industry: ['fintech'], visualStyles: ['dark-premium'] }),
-        makeSnippet({ id: 'hero-centered', type: 'hero', variant: 'centered', category: 'organism', mood: ['professional', 'bold'], industry: ['saas', 'startup'], visualStyles: ['glassmorphism'] }),
+        makeSnippet({
+          id: 'btn-primary',
+          type: 'button',
+          variant: 'primary',
+          mood: ['professional'],
+          industry: ['saas'],
+          visualStyles: ['linear-modern'],
+        }),
+        makeSnippet({
+          id: 'btn-ghost',
+          type: 'button',
+          variant: 'ghost',
+          mood: ['minimal'],
+          industry: ['general'],
+          visualStyles: ['minimal-editorial'],
+        }),
+        makeSnippet({
+          id: 'card-pricing',
+          type: 'card',
+          variant: 'pricing',
+          mood: ['bold', 'premium'],
+          industry: ['fintech'],
+          visualStyles: ['dark-premium'],
+        }),
+        makeSnippet({
+          id: 'hero-centered',
+          type: 'hero',
+          variant: 'centered',
+          category: 'organism',
+          mood: ['professional', 'bold'],
+          industry: ['saas', 'startup'],
+          visualStyles: ['glassmorphism'],
+        }),
       ],
       db
     );

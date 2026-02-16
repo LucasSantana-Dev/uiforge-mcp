@@ -1,14 +1,6 @@
 import { getMemoryDatabase } from '../lib/design-references/database/store.js';
-import {
-  classifyPromptPair,
-  classifyPromptText,
-} from '../lib/feedback/prompt-classifier.js';
-import {
-  extractSkeleton,
-  hashSkeleton,
-  fingerprint,
-  isPromotable,
-} from '../lib/feedback/pattern-detector.js';
+import { classifyPromptPair, classifyPromptText } from '../lib/feedback/prompt-classifier.js';
+import { extractSkeleton, hashSkeleton, fingerprint, isPromotable } from '../lib/feedback/pattern-detector.js';
 import {
   recordGeneration,
   recordExplicitFeedback,

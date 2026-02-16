@@ -39,9 +39,7 @@ export function getConfig(): Config {
  * @param defaultValue - Fallback value if parsing fails
  */
 export function safeJSONParse<T>(jsonString: string | null | undefined, defaultValue: T): T;
-export function safeJSONParse<T extends Record<string, unknown>>(
-  jsonString: string | null | undefined
-): T;
+export function safeJSONParse<T extends Record<string, unknown>>(jsonString: string | null | undefined): T;
 export function safeJSONParse<T>(jsonString: string | null | undefined, defaultValue?: T): T {
   const fallback = (defaultValue !== undefined ? defaultValue : {}) as T;
   if (!jsonString) return fallback;

@@ -14,7 +14,11 @@ import {
   composeSection,
   getBestMatch,
 } from '../lib/design-references/component-registry/index.js';
-import { initializeRegistry, isRegistryInitialized, resetInitialization } from '../lib/design-references/component-registry/init.js';
+import {
+  initializeRegistry,
+  isRegistryInitialized,
+  resetInitialization,
+} from '../lib/design-references/component-registry/init.js';
 import type { IComponentSnippet } from '../lib/design-references/component-registry/types.js';
 
 // ── Helper: minimal valid snippet ──────────────────────────
@@ -87,10 +91,7 @@ describe('component-registry CRUD', () => {
 
   it('registerSnippets adds multiple at once', () => {
     const before = getRegistrySize();
-    registerSnippets([
-      makeSnippet({ id: 'bulk-1' }),
-      makeSnippet({ id: 'bulk-2' }),
-    ]);
+    registerSnippets([makeSnippet({ id: 'bulk-1' }), makeSnippet({ id: 'bulk-2' })]);
     expect(getRegistrySize()).toBe(before + 2);
   });
 
@@ -165,7 +166,9 @@ describe('component-registry search', () => {
   });
 
   it('search with visual style filter works', () => {
-    registerSnippet(makeSnippet({ id: 'glass-btn', visualStyles: ['glassmorphism'], type: 'button', variant: 'glass-v' }));
+    registerSnippet(
+      makeSnippet({ id: 'glass-btn', visualStyles: ['glassmorphism'], type: 'button', variant: 'glass-v' })
+    );
     const results = searchComponents({ type: 'button', style: 'glassmorphism' });
     const glassResult = results.find((r) => r.snippet.id === 'glass-btn');
     expect(glassResult).toBeDefined();

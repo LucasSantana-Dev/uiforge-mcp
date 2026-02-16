@@ -19,16 +19,29 @@ export const feedbackSnippets: IComponentSnippet[] = [
   </div>
 </div>`,
     tailwindClasses: {
-      alert: 'relative rounded-lg border border-blue-200 bg-blue-50 p-4 text-blue-800 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300',
+      alert:
+        'relative rounded-lg border border-blue-200 bg-blue-50 p-4 text-blue-800 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300',
       icon: 'h-4 w-4',
       title: 'mb-1 font-medium leading-none',
       description: 'text-sm opacity-90',
     },
-    a11y: { roles: ['alert'], ariaAttributes: ['role="alert"'], keyboardNav: 'N/A — announcement', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['alert'],
+      ariaAttributes: ['role="alert"'],
+      keyboardNav: 'N/A — announcement',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'div' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['icon + text — not color-only', 'dark mode variants', 'role=alert for screen readers', 'ring-inset-like border approach'],
+      antiGeneric: [
+        'icon + text — not color-only',
+        'dark mode variants',
+        'role=alert for screen readers',
+        'ring-inset-like border approach',
+      ],
       inspirationSource: 'shadcn/ui Alert',
       craftDetails: ['absolute icon positioning with has() selector', 'semantic alert role'],
     },
@@ -51,12 +64,20 @@ export const feedbackSnippets: IComponentSnippet[] = [
   </div>
 </div>`,
     tailwindClasses: {
-      alert: 'relative rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 dark:border-red-800 dark:bg-red-950/50 dark:text-red-300',
+      alert:
+        'relative rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 dark:border-red-800 dark:bg-red-950/50 dark:text-red-300',
       icon: 'h-4 w-4',
       title: 'mb-1 font-medium leading-none',
       description: 'text-sm opacity-90',
     },
-    a11y: { roles: ['alert'], ariaAttributes: ['role="alert"'], keyboardNav: 'N/A — announcement', contrastRatio: '4.5:1', focusVisible: false, reducedMotion: true },
+    a11y: {
+      roles: ['alert'],
+      ariaAttributes: ['role="alert"'],
+      keyboardNav: 'N/A — announcement',
+      contrastRatio: '4.5:1',
+      focusVisible: false,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'div' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
@@ -91,13 +112,25 @@ export const feedbackSnippets: IComponentSnippet[] = [
       content: 'flex items-start gap-3 p-4',
       title: 'text-sm font-semibold text-foreground',
       description: 'mt-1 text-sm text-muted-foreground',
-      close: 'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-muted-foreground/50 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+      close:
+        'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-muted-foreground/50 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
     },
-    a11y: { roles: ['status'], ariaAttributes: ['role="status"', 'aria-live="polite"', 'aria-label on close'], keyboardNav: 'Tab to close button', contrastRatio: '4.5:1', focusVisible: true, reducedMotion: true },
+    a11y: {
+      roles: ['status'],
+      ariaAttributes: ['role="status"', 'aria-live="polite"', 'aria-label on close'],
+      keyboardNav: 'Tab to close button',
+      contrastRatio: '4.5:1',
+      focusVisible: true,
+      reducedMotion: true,
+    },
     seo: { semanticElement: 'div' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm'] },
     quality: {
-      antiGeneric: ['aria-live=polite for non-intrusive SR', 'pointer-events-auto for stacking context', 'close button with clear aria-label'],
+      antiGeneric: [
+        'aria-live=polite for non-intrusive SR',
+        'pointer-events-auto for stacking context',
+        'close button with clear aria-label',
+      ],
       inspirationSource: 'sonner toast library',
       craftDetails: ['max-w-sm constrained width', 'shadow-lg for elevation', 'rounded-xl for modern feel'],
     },

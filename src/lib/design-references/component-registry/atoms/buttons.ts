@@ -19,7 +19,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Button
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground ring-offset-background transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground ring-offset-background transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
     },
     a11y: {
       roles: ['button'],
@@ -34,7 +35,11 @@ export const buttonSnippets: IComponentSnippet[] = [
     quality: {
       antiGeneric: ['active:scale press feedback', 'gap-2 for icon spacing', 'ring-offset for layered focus'],
       inspirationSource: 'shadcn/ui Button',
-      craftDetails: ['8pt grid spacing (px-4 py-2.5)', 'consistent border-radius (rounded-lg)', 'transition-all for smooth state changes'],
+      craftDetails: [
+        '8pt grid spacing (px-4 py-2.5)',
+        'consistent border-radius (rounded-lg)',
+        'transition-all for smooth state changes',
+      ],
     },
   },
   {
@@ -54,7 +59,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Outline
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg border border-input bg-background px-4 py-2.5 text-sm font-medium text-foreground ring-offset-background transition-all hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg border border-input bg-background px-4 py-2.5 text-sm font-medium text-foreground ring-offset-background transition-all hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
     },
     a11y: {
       roles: ['button'],
@@ -89,7 +95,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Ghost
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-foreground ring-offset-background transition-all hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-foreground ring-offset-background transition-all hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
     },
     a11y: {
       roles: ['button'],
@@ -124,7 +131,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Delete
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg bg-destructive px-4 py-2.5 text-sm font-medium text-destructive-foreground ring-offset-background transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg bg-destructive px-4 py-2.5 text-sm font-medium text-destructive-foreground ring-offset-background transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
     },
     a11y: {
       roles: ['button'],
@@ -159,7 +167,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Get Started
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary via-primary/80 to-accent px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 ring-offset-background transition-all hover:opacity-90 hover:shadow-xl hover:shadow-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary via-primary/80 to-accent px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 ring-offset-background transition-all hover:opacity-90 hover:shadow-xl hover:shadow-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
     },
     a11y: {
       roles: ['button'],
@@ -172,9 +181,17 @@ export const buttonSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'button' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'md'] },
     quality: {
-      antiGeneric: ['shadow-primary/25 for colored shadow', 'via-primary/80 prevents flat two-tone gradient', 'font-semibold for CTA emphasis'],
+      antiGeneric: [
+        'shadow-primary/25 for colored shadow',
+        'via-primary/80 prevents flat two-tone gradient',
+        'font-semibold for CTA emphasis',
+      ],
       inspirationSource: 'Stripe CTA buttons',
-      craftDetails: ['perceptual gradient with via stop', 'colored box-shadow matching gradient', 'larger padding for CTA prominence'],
+      craftDetails: [
+        'perceptual gradient with via stop',
+        'colored box-shadow matching gradient',
+        'larger padding for CTA prominence',
+      ],
     },
   },
   {
@@ -194,7 +211,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Glass Button
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-md ring-offset-background transition-all hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-md ring-offset-background transition-all hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
     },
     a11y: {
       roles: ['button'],
@@ -207,7 +225,11 @@ export const buttonSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'button' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'md'] },
     quality: {
-      antiGeneric: ['backdrop-blur for real frosted glass', 'border-white/20 for subtle edge definition', 'requires dark/gradient background to look right'],
+      antiGeneric: [
+        'backdrop-blur for real frosted glass',
+        'border-white/20 for subtle edge definition',
+        'requires dark/gradient background to look right',
+      ],
       inspirationSource: 'Apple visionOS buttons',
       craftDetails: ['semi-transparent layering', 'focus ring adapts to glass context (white/50)'],
     },
@@ -230,7 +252,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      button:
+        'inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       icon: 'h-5 w-5',
     },
     a11y: {
@@ -244,9 +267,16 @@ export const buttonSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'button' },
     responsive: { strategy: 'mobile-first', breakpoints: [] },
     quality: {
-      antiGeneric: ['fixed 44px hit target (h-11 w-11)', 'aria-label required — never icon-only without it', 'aria-hidden on SVG'],
+      antiGeneric: [
+        'fixed 44px hit target (h-11 w-11)',
+        'aria-label required — never icon-only without it',
+        'aria-hidden on SVG',
+      ],
       inspirationSource: 'Radix Themes IconButton',
-      craftDetails: ['44px touch target (h-11 w-11) for WCAG 2.5.5 compliance', 'muted-foreground for low visual weight'],
+      craftDetails: [
+        '44px touch target (h-11 w-11) for WCAG 2.5.5 compliance',
+        'muted-foreground for low visual weight',
+      ],
     },
   },
   {
@@ -270,7 +300,8 @@ export const buttonSnippets: IComponentSnippet[] = [
   Loading...
 </button>`,
     tailwindClasses: {
-      button: 'inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground opacity-80 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none',
+      button:
+        'inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground opacity-80 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none',
       spinner: 'h-4 w-4 animate-spin',
     },
     a11y: {
@@ -284,9 +315,17 @@ export const buttonSnippets: IComponentSnippet[] = [
     seo: { semanticElement: 'button' },
     responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'md'] },
     quality: {
-      antiGeneric: ['aria-busy for screen readers', 'opacity-80 not opacity-50 — still readable', 'maintains button dimensions during loading'],
+      antiGeneric: [
+        'aria-busy for screen readers',
+        'opacity-80 not opacity-50 — still readable',
+        'maintains button dimensions during loading',
+      ],
       inspirationSource: 'Vercel deploy button loading state',
-      craftDetails: ['spinner matches text size', 'disabled without visual collapse', 'motion-reduce: animate-spin → animate-none'],
+      craftDetails: [
+        'spinner matches text size',
+        'disabled without visual collapse',
+        'motion-reduce: animate-spin → animate-none',
+      ],
     },
   },
 ];
