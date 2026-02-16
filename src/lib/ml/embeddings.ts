@@ -62,11 +62,16 @@ async function getExtractor(): Promise<any> {
   }
 
   logger.info({ model: config.modelId, cache: config.cacheDir }, 'Loading embedding model');
-  extractor = await pipelineFn('feature-extraction', config.modelId, {
-    quantized: true, // Use quantized model for smaller size & faster CPU inference
-  });
-  logger.info('Embedding model loaded');
-  return extractor;
+  try {
+    extractor = await pipelineFn('feature-extraction', config.modelId, {
+      quantized: true, // Use quantized model for smaller size & faster CPU inference
+    });
+    logger.info('Embedding model loaded');
+    return extractor;
+  } catch (err) {
+    logger.error({ err, model: config.modelId }, 'Failed to load embedding model');
+    throw new Error(`Failed to load embedding model: ${err}`);
+  }
 }
 
 /**
@@ -75,7 +80,10 @@ async function getExtractor(): Promise<any> {
 export async function embed(text: string): Promise<Float32Array> {
   const ext = await getExtractor();
   const output = await ext(text, { pooling: 'mean', normalize: true });
-  // output.data is a Float32Array or similar typed array
+  // Ensure output.data is converted to Float32Array
+  if (output.data instanceof Float32Array) {
+    return output.data;
+  }
   return new Float32Array(output.data);
 }
 
@@ -92,10 +100,12 @@ export async function embedBatch(texts: string[]): Promise<Float32Array[]> {
   const BATCH_SIZE = 8;
   for (let i = 0; i < texts.length; i += BATCH_SIZE) {
     const batch = texts.slice(i, i + BATCH_SIZE);
-    for (const text of batch) {
-      const output = await ext(text, { pooling: 'mean', normalize: true });
-      results.push(new Float32Array(output.data));
-    }
+    // Parallelize within batch for better performance
+    const batchPromises = batch.map(text =>
+      ext(text, { pooling: 'mean', normalize: true }).then((output: any) => new Float32Array(output.data))
+    );
+    const batchResults = await Promise.all(batchPromises);
+    results.push(...batchResults);
   }
 
   return results;
@@ -125,7 +135,9 @@ export async function createEmbedding(
  * Assumes both vectors are already normalized (which they are from the pipeline).
  */
 export function cosineSimilarity(a: Float32Array, b: Float32Array): number {
-  if (a.length !== b.length) return 0;
+  if (a.length !== b.length) {
+    throw new Error(`Vector length mismatch: ${a.length} vs ${b.length}`);
+  }
   let dot = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i]! * b[i]!;
