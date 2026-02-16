@@ -44,8 +44,10 @@ export function generateSvelteProject(
           'svelte-check': '^4.0.0',
           prettier: '^3.4.0',
           'prettier-plugin-svelte': '^3.3.0',
+          '@eslint/js': '^9.17.0',
           eslint: '^9.17.0',
           'eslint-plugin-svelte': '^2.46.0',
+          globals: '^15.13.0',
           vitest: '^3.0.0',
           '@testing-library/svelte': '^5.2.0',
           jsdom: '^25.0.0',
@@ -183,23 +185,28 @@ export default {
     ),
   });
 
-  // .eslintrc.cjs
+  // eslint.config.js (flat config for ESLint 9+)
   files.push({
-    path: `${projectName}/.eslintrc.cjs`,
-    content: `module.exports = {
-  root: true,
-  extends: ['eslint:recommended', 'plugin:svelte/recommended'],
-  parserOptions: {
-    sourceType: 'module',
-    ecmaVersion: 2020,
-    extraFileExtensions: ['.svelte']
+    path: `${projectName}/eslint.config.js`,
+    content: `import js from '@eslint/js';
+import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
+
+export default [
+  js.configs.recommended,
+  ...svelte.configs['flat/recommended'],
+  {
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.es2017,
+        ...globals.node,
+      },
+    },
   },
-  env: {
-    browser: true,
-    es2017: true,
-    node: true
-  }
-};
+];
 `,
   });
 
@@ -291,9 +298,14 @@ export function cn(...inputs: ClassValue[]) {
     content: `<script lang="ts">
   import { cn } from '$lib/utils';
 
-  export let variant: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' = 'default';
-  export let size: 'default' | 'sm' | 'lg' | 'icon' = 'default';
-  export let disabled = false;
+  interface Props {
+    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+    size?: 'default' | 'sm' | 'lg' | 'icon';
+    disabled?: boolean;
+    class?: string;
+  }
+
+  const { variant = 'default', size = 'default', disabled = false, class: className = '' }: Props = $props();
 
   const variantClasses = {
     default: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -305,9 +317,6 @@ export function cn(...inputs: ClassValue[]) {
   };
 
   const sizeClasses = {
-    default: 'h-10 px-4 py-2',
-    sm: 'h-9 rounded-md px-3',
-    lg: 'h-11 rounded-md px-8',
     icon: 'h-10 w-10',
   };
 
