@@ -6,8 +6,7 @@ import {
   applyVisualStyle,
   initializeStyles,
 } from '../lib/design-references/visual-styles/index.js';
-import type { IVisualStyle } from '../lib/design-references/component-registry/types.js';
-import type { IComponentSnippet } from '../lib/design-references/component-registry/types.js';
+import type { IVisualStyle, IComponentSnippet } from '../lib/design-references/component-registry/types.js';
 
 // ── Helper ─────────────────────────────────────────────────
 

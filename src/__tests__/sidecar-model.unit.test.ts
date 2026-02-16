@@ -6,14 +6,14 @@ import {
 import {
   scoreQuality,
   isLikelyAccepted,
+  type IQualityScore,
 } from '../lib/ml/quality-scorer.js';
-import type { IQualityScore } from '../lib/ml/quality-scorer.js';
 import {
   enhancePrompt,
   enhanceWithRules,
   needsEnhancement,
+  type IEnhancedPrompt,
 } from '../lib/ml/prompt-enhancer.js';
-import type { IEnhancedPrompt } from '../lib/ml/prompt-enhancer.js';
 
 // ---- Sidecar Model Tests ----
 
