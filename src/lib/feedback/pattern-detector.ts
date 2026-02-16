@@ -33,7 +33,7 @@ export function extractSkeleton(code: string): string {
     const tagName = match[1]!.toLowerCase();
 
     // Skip self-closing tags that are decorative
-    const isSelfClosing = fullTag.endsWith('/>') || ['br', 'hr', 'img', 'input'].includes(tagName);
+    const isSelfClosing = fullTag.endsWith('/>') || VOID_TAGS.has(tagName);
     const isClosing = fullTag.startsWith('</');
 
     if (isClosing) {
@@ -76,11 +76,11 @@ function inferSemanticRole(tagName: string, fullTag: string): string | null {
   // Headings
   if (/^h[1-6]$/.test(tagName)) return 'heading';
 
-  // Buttons / CTAs
-  if (tagName === 'button' || tagName === 'a') {
-    if (lower.includes('submit') || lower.includes('cta')) return 'action';
-    return 'action';
-  }
+  // Interactive - check specific patterns first, then defaults
+  if (tagName === 'button' && lower.includes('link')) return 'link';
+  if (tagName === 'button') return 'button';
+  if (tagName === 'a' && lower.includes('button')) return 'button';
+  if (tagName === 'a') return 'link';
 
   // Form elements
   if (['input', 'textarea', 'select'].includes(tagName)) return 'input';

@@ -49,18 +49,33 @@ export function feedbackBoostedSearch(
   }
 
   // Also check per-snippet feedback (by generation output matching snippet id)
+  // Batch query to avoid N+1
   const snippetScores = new Map<string, { avgScore: number; count: number }>();
+  const uniquePairs = new Set<string>();
   for (const r of baseResults) {
-    const row = db
-      .prepare(
-        `SELECT AVG(f.score) as avg_score, COUNT(*) as cnt
-         FROM feedback f
-         WHERE f.component_type = ? AND f.style = ?`
-      )
-      .get(r.snippet.type, query.style ?? null) as { avg_score: number | null; cnt: number } | undefined;
+    uniquePairs.add(JSON.stringify([r.snippet.type, query.style ?? null]));
+  }
 
-    if (row && row.cnt >= 1 && row.avg_score !== null) {
-      snippetScores.set(r.snippet.id, { avgScore: row.avg_score, count: row.cnt });
+  if (uniquePairs.size > 0) {
+    const pairsList = Array.from(uniquePairs).map(s => JSON.parse(s) as [string, string | null]);
+    const placeholders = pairsList.map(() => '(?, ?)').join(', ');
+    const params = pairsList.flatMap(([type, style]) => [type, style]);
+
+    const rows = db
+      .prepare(
+        `SELECT f.component_type, f.style, AVG(f.score) as avg_score, COUNT(*) as cnt
+         FROM feedback f
+         WHERE (f.component_type, f.style) IN (VALUES ${placeholders})
+         GROUP BY f.component_type, f.style`
+      )
+      .all(...params) as Array<{ component_type: string; style: string | null; avg_score: number; cnt: number }>;
+
+    for (const row of rows) {
+      for (const r of baseResults) {
+        if (r.snippet.type === row.component_type && (query.style ?? null) === row.style) {
+          snippetScores.set(r.snippet.id, { avgScore: row.avg_score, count: row.cnt });
+        }
+      }
     }
   }
 

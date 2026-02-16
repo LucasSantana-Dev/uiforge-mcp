@@ -23,13 +23,13 @@ import type Database from 'better-sqlite3';
 
 function makeGeneration(overrides: Partial<IGeneration> = {}): IGeneration {
   return {
-    id: overrides.id ?? `gen-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    id: overrides.id ?? 'gen-fixed-0001',
     tool: overrides.tool ?? 'generate_ui_component',
     params: overrides.params ?? {},
     componentType: overrides.componentType ?? 'button',
     framework: overrides.framework ?? 'react',
     outputHash: overrides.outputHash ?? '',
-    timestamp: overrides.timestamp ?? Date.now(),
+    timestamp: overrides.timestamp ?? 1672531200000,
     sessionId: overrides.sessionId ?? 'test-session',
   };
 }

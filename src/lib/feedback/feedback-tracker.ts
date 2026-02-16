@@ -164,11 +164,11 @@ export function exportTrainingData(
   const rows = db
     .prepare(`SELECT prompt, score, component_type, style FROM feedback ${whereClause} ORDER BY created_at DESC`)
     .all(...params) as Array<{
-    prompt: string;
-    score: number;
-    component_type: string | null;
-    style: string | null;
-  }>;
+      prompt: string;
+      score: number;
+      component_type: string | null;
+      style: string | null;
+    }>;
 
   return rows.map((r) => ({
     prompt: r.prompt,
@@ -181,15 +181,22 @@ export function exportTrainingData(
 // --- Internal helpers ---
 
 function storeFeedback(feedback: IFeedback, db: Database.Database): void {
-  db.prepare(`
-    INSERT INTO feedback (generation_id, prompt, component_type, score, feedback_type, created_at)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `).run(
+  db.prepare(
+    `INSERT INTO feedback (generation_id, prompt, component_type, variant, mood, industry, style, score, feedback_type, code_hash, rating, confidence, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).run(
     feedback.generationId,
-    feedback.comment ?? '',
-    null, // Will be enriched later when wired into generation tools
+    '', // prompt - not available in IFeedback
+    '', // component_type - not available
+    '', // variant - not available
+    '', // mood - not available
+    '', // industry - not available
+    '', // style - not available
     feedback.score,
     feedback.source,
+    '', // code_hash - not available
+    feedback.rating ?? null,
+    feedback.confidence ?? null,
     feedback.timestamp
   );
 }

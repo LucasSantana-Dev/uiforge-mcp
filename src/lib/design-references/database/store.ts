@@ -11,6 +11,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import pino from 'pino';
 import { CREATE_TABLES, SCHEMA_VERSION } from './schema.js';
+import { safeJSONParse } from '../../config.js';
 
 const logger = pino({ name: 'design-references-db' });
 import type {
@@ -261,10 +262,13 @@ export function queryComponents(
   // Hydrate full snippets (batch queries to avoid N+1)
   const snippets = hydrateSnippetsBatch(rows.map(r => r.id), d);
   const snippetById = new Map(snippets.map(s => [s.id, s]));
-  return rows.map((row) => ({
-    snippet: snippetById.get(row.id)!,
-    score: row.score,
-  }));
+  return rows
+    .map((row) => {
+      const snippet = snippetById.get(row.id);
+      if (!snippet) return null;
+      return { snippet, score: row.score };
+    })
+    .filter((item): item is { snippet: IComponentSnippet; score: number } => item !== null);
 }
 
 /**
@@ -538,10 +542,10 @@ function hydrateSnippet(id: string, d: Database.Database): IComponentSnippet {
     jsx: row.jsx,
     tailwindClasses,
     css: row.css ?? undefined,
-    a11y: JSON.parse(row.a11y_json),
-    seo: row.seo_json ? JSON.parse(row.seo_json) : undefined,
-    responsive: JSON.parse(row.responsive_json),
-    quality: JSON.parse(row.quality_json),
+    a11y: safeJSONParse(row.a11y_json),
+    seo: row.seo_json ? safeJSONParse(row.seo_json) : undefined,
+    responsive: safeJSONParse(row.responsive_json),
+    quality: safeJSONParse(row.quality_json),
   };
 }
 

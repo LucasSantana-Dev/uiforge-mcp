@@ -12,9 +12,6 @@ describe('feedback-boosted-search', () => {
   beforeEach(() => {
     resetInitialization();
     initializeRegistry();
-  });
-
-  beforeEach(() => {
     db = getMemoryDatabase();
   });
 
@@ -47,8 +44,8 @@ describe('feedback-boosted-search', () => {
 
       const boosted = feedbackBoostedSearch({ type: 'button' }, db);
       expect(boosted.length).toBeGreaterThan(0);
-      // Boosted score should be higher than or equal to base
-      expect(boosted[0]!.score).toBeGreaterThanOrEqual(baseScore);
+      // Boosted score should be strictly higher than base
+      expect(boosted[0]!.score).toBeGreaterThan(baseScore);
     });
 
     it('penalizes results when negative feedback exists', () => {

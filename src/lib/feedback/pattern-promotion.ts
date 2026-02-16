@@ -109,7 +109,7 @@ export function getPromotablePatternsFromDb(db: Database.Database): ICodePattern
 
   const rows = db
     .prepare(
-      `SELECT id, skeleton_hash, skeleton, snippet, frequency, avg_score, promoted
+      `SELECT id, skeleton_hash, skeleton, snippet, frequency, avg_score, promoted, component_type, category
        FROM code_patterns
        WHERE promoted = 0 AND frequency >= 3 AND avg_score > 0.5
        ORDER BY avg_score DESC, frequency DESC`
