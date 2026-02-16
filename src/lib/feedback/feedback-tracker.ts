@@ -181,20 +181,23 @@ export function exportTrainingData(
 // --- Internal helpers ---
 
 function storeFeedback(feedback: IFeedback, db: Database.Database): void {
+  // Retrieve generation context from session cache
+  const genContext = lastGeneration.get(feedback.generationId);
+
   db.prepare(
     `INSERT INTO feedback (generation_id, prompt, component_type, variant, mood, industry, style, score, feedback_type, code_hash, rating, confidence, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     feedback.generationId,
-    '', // prompt - not available in IFeedback
-    '', // component_type - not available
-    '', // variant - not available
-    '', // mood - not available
-    '', // industry - not available
-    '', // style - not available
+    genContext?.prompt ?? '',
+    genContext?.componentType ?? '',
+    genContext?.variant ?? '',
+    genContext?.mood ?? '',
+    genContext?.industry ?? '',
+    genContext?.style ?? '',
     feedback.score,
     feedback.source,
-    '', // code_hash - not available
+    genContext?.codeHash ?? '',
     feedback.rating ?? null,
     feedback.confidence ?? null,
     feedback.timestamp

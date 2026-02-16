@@ -54,11 +54,25 @@ export function recordPattern(
   feedbackScore: number,
   db: Database.Database
 ): ICodePattern {
-  ensurePatternsTable(db);
+  // Table should be created during DB initialization, not here
+
+  interface CodePatternRow {
+    id: string;
+    skeleton_hash: string;
+    skeleton: string;
+    snippet: string;
+    component_type: string | null;
+    category: string | null;
+    frequency: number;
+    avg_score: number;
+    promoted: number;
+    created_at: number;
+    updated_at: number;
+  }
 
   const existing = db
     .prepare('SELECT * FROM code_patterns WHERE skeleton_hash = ?')
-    .get(skeletonHash) as any | undefined;
+    .get(skeletonHash) as CodePatternRow | undefined;
 
   if (existing) {
     // Update frequency and running average score
@@ -105,7 +119,7 @@ export function recordPattern(
  * Get all patterns eligible for promotion.
  */
 export function getPromotablePatternsFromDb(db: Database.Database): ICodePattern[] {
-  ensurePatternsTable(db);
+  // Table should be created during DB initialization, not here
 
   const rows = db
     .prepare(

@@ -5,7 +5,21 @@
  * without requiring any external ML model or API.
  */
 
+import pino from 'pino';
 import type { IGeneration, IImplicitSignal, IPromptClassification } from './types.js';
+
+const logger = pino({ name: 'prompt-classifier' });
+
+// Classification thresholds
+const NEW_TASK_CONFIDENCE = 0.8;
+const PRAISE_SCORE = 2.0;
+const PRAISE_CONFIDENCE = 0.9;
+const MAJOR_REDO_SCORE = -1.0;
+const MAJOR_REDO_CONFIDENCE = 0.7;
+const MINOR_TWEAK_SCORE = -0.3;
+const MINOR_TWEAK_CONFIDENCE = 0.6;
+const POSITIVE_THRESHOLD = 0.3;
+const NEGATIVE_THRESHOLD = -0.3;
 
 // --- Keyword dictionaries ---
 
@@ -40,7 +54,7 @@ function detectNewTask(prev: IGeneration, curr: IGeneration): IImplicitSignal | 
     return {
       type: 'new_task',
       score: 1.0,
-      confidence: 0.8,
+      confidence: NEW_TASK_CONFIDENCE,
       reason: diffTool
         ? `Switched tools: ${prev.tool} → ${curr.tool}`
         : `Changed component type: ${prev.componentType} → ${curr.componentType}`,
@@ -61,8 +75,8 @@ function detectKeywordSignals(promptContext: string): IImplicitSignal[] {
     if (lower.includes(kw)) {
       signals.push({
         type: 'praise',
-        score: 2.0,
-        confidence: 0.9,
+        score: PRAISE_SCORE,
+        confidence: PRAISE_CONFIDENCE,
         reason: `Positive keyword detected: "${kw}"`,
       });
       break; // One positive signal is enough
@@ -74,8 +88,8 @@ function detectKeywordSignals(promptContext: string): IImplicitSignal[] {
     if (lower.includes(kw)) {
       signals.push({
         type: 'major_redo',
-        score: -1.0,
-        confidence: 0.7,
+        score: MAJOR_REDO_SCORE,
+        confidence: MAJOR_REDO_CONFIDENCE,
         reason: `Negative keyword detected: "${kw}"`,
       });
       break;
@@ -88,8 +102,8 @@ function detectKeywordSignals(promptContext: string): IImplicitSignal[] {
       if (lower.includes(kw)) {
         signals.push({
           type: 'minor_tweak',
-          score: 0.5,
-          confidence: 0.6,
+          score: MINOR_TWEAK_SCORE,
+          confidence: MINOR_TWEAK_CONFIDENCE,
           reason: `Tweak keyword detected: "${kw}"`,
         });
         break;
