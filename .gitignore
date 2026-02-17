@@ -22,3 +22,11 @@ coverage/
 *.swp
 *.swo
 .windsurf/
+
+# Social media and marketing assets
+social/
+*.tgz
+uiforge-mcp-*.tgz
+
+# Documentation builds
+docs/build/
