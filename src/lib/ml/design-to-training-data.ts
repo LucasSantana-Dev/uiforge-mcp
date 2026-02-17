@@ -90,7 +90,7 @@ function convertToComponentSnippets(
       name: `${componentName} ${component.type}`,
       category: inferCategory(component.type),
       type: component.type,
-      variant: component.variant || 'default',
+      variant: component.variant ?? 'default',
       tags: extractTags(analysis, component.type),
       mood: analysis.mood,
       industry: analysis.industry,
@@ -295,7 +295,7 @@ function extractComponentJSX(code: string, componentType: string): string {
 }
 
 function extractTailwindClasses(code: string, _componentType: string): Record<string, string> {
-  const classMatches = code.match(/className="([^"]+)"/g) || [];
+  const classMatches = code.match(/className="([^"]+)"/g) ?? [];
   const classes = classMatches.map((m) => m.replace(/className="|"/g, ''));
 
   return {
