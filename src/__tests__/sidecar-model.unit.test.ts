@@ -1,6 +1,6 @@
 import { isSidecarReady, getSidecarInfo, unloadSidecar } from '../lib/ml/sidecar-model.js';
-import { scoreQuality, isLikelyAccepted, type IQualityScore } from '../lib/ml/quality-scorer.js';
-import { enhancePrompt, enhanceWithRules, needsEnhancement, type IEnhancedPrompt } from '../lib/ml/prompt-enhancer.js';
+import { scoreQuality, isLikelyAccepted } from '../lib/ml/quality-scorer.js';
+import { enhancePrompt, enhanceWithRules, needsEnhancement } from '../lib/ml/prompt-enhancer.js';
 
 // ---- Sidecar Model Tests ----
 
