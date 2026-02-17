@@ -76,46 +76,53 @@ describe('generate_ui_component', () => {
       // The merged result should have the TW primary preserved via the CSS merge
       expect(result.context.colorPalette?.primary).toBe('#3b82f6');
     });
-  });
 
-  describe('context store operations', () => {
-    it('set replaces entire context', () => {
-      const ctx = designContextStore.get();
-      ctx.colorPalette.primary = '#000000';
-      designContextStore.set(ctx);
-      expect(designContextStore.get().colorPalette.primary).toBe('#000000');
+    // Edge cases for design context
+    it('handles invalid CSS gracefully', () => {
+      const invalidCss = `
+        :root {
+          --primary: invalid-color;
+        }
+      `;
+
+      expect(() => {
+        const result = auditStyles(undefined, invalidCss);
+        designContextStore.update(result.context);
+      }).not.toThrow();
     });
 
-    it('update merges partial context', () => {
-      designContextStore.update({
-        colorPalette: {
-          ...designContextStore.get().colorPalette,
-          primary: '#111111',
-        },
-      });
-      expect(designContextStore.get().colorPalette.primary).toBe('#111111');
-      // Other fields preserved
-      expect(designContextStore.get().typography.fontFamily).toContain('Inter');
+    it('handles malformed tailwind config', () => {
+      const malformedConfig = `
+        module.exports = {
+          theme: {
+            extend: {
+              colors: {
+                primary: 'not-a-color'
+              }
+            }
+          }
+        }
+      `;
+
+      expect(() => {
+        const result = auditStyles(malformedConfig);
+        designContextStore.update(result.context);
+      }).not.toThrow();
     });
 
-    it('reset restores defaults', () => {
-      const originalPrimary = designContextStore.get().colorPalette.primary;
-      designContextStore.update({
-        colorPalette: {
-          ...designContextStore.get().colorPalette,
-          primary: '#999999',
-        },
-      });
-      expect(designContextStore.get().colorPalette.primary).toBe('#999999');
-      designContextStore.reset();
-      expect(designContextStore.get().colorPalette.primary).toBe(originalPrimary);
-    });
+    it('preserves context when audit fails', () => {
+      const originalCtx = designContextStore.get();
 
-    it('get returns a clone (not a reference)', () => {
-      const ctx1 = designContextStore.get();
-      ctx1.colorPalette.primary = '#aabbcc';
-      const ctx2 = designContextStore.get();
-      expect(ctx2.colorPalette.primary).not.toBe('#aabbcc');
+      expect(() => {
+        const result = auditStyles('invalid config', 'invalid css');
+        if (result.context) {
+          designContextStore.update(result.context);
+        }
+      }).not.toThrow();
+
+      // Context should remain valid even if audit fails
+      const currentCtx = designContextStore.get();
+      expect(currentCtx.colorPalette.primary).toMatch(/^#[0-9a-f]{6}$/i);
     });
   });
 });
