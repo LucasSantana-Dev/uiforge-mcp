@@ -12,48 +12,56 @@ beforeAll(async () => {
 // ── Semantic Tailwind Mapper ────────────────────────────────
 describe('semantic tailwind-mapper', () => {
   it('maps spacing 16px to p-4 (not p-[16px])', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'space',
-      type: 'number',
-      value: 16,
-      category: 'spacing'
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'space',
+        type: 'number',
+        value: 16,
+        category: 'spacing',
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-4');
   });
 
   it('maps spacing 8px to p-2', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'space',
-      type: 'number',
-      value: 8,
-      category: 'spacing'
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'space',
+        type: 'number',
+        value: 8,
+        category: 'spacing',
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-2');
   });
 
   it('maps spacing 24px to p-6', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'space',
-      type: 'number',
-      value: 24,
-      category: 'spacing'
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'space',
+        type: 'number',
+        value: 24,
+        category: 'spacing',
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-6');
   });
 
   it('falls back to arbitrary value for non-standard spacing', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'space',
-      type: 'number',
-      value: 100,
-      category: 'spacing'
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'space',
+        type: 'number',
+        value: 100,
+        category: 'spacing',
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     const padding = result.find((m) => m.cssProperty === 'padding');
     expect(padding?.className).toBe('p-[100px]');
@@ -65,7 +73,7 @@ describe('semantic tailwind-mapper', () => {
         name: 'font-size-base',
         type: 'string',
         value: '1rem',
-        category: 'typography'
+        category: 'typography',
       },
     ];
     const result = mapTokensToTailwind(tokens);
@@ -78,7 +86,7 @@ describe('semantic tailwind-mapper', () => {
         name: 'font-size-2xl',
         type: 'string',
         value: '1.5rem',
-        category: 'typography'
+        category: 'typography',
       },
     ];
     const result = mapTokensToTailwind(tokens);
@@ -91,7 +99,7 @@ describe('semantic tailwind-mapper', () => {
         name: 'shadow-md',
         type: 'string',
         value: '0 4px 6px rgba(0,0,0,0.1)',
-        category: 'shadow'
+        category: 'shadow',
       },
     ];
     const result = mapTokensToTailwind(tokens);
@@ -104,7 +112,7 @@ describe('semantic tailwind-mapper', () => {
         name: 'shadow-lg',
         type: 'string',
         value: '0 10px 15px rgba(0,0,0,0.1)',
-        category: 'shadow'
+        category: 'shadow',
       },
     ];
     const result = mapTokensToTailwind(tokens);
@@ -117,7 +125,7 @@ describe('semantic tailwind-mapper', () => {
         name: 'line-height-normal',
         type: 'string',
         value: '1.5',
-        category: 'typography'
+        category: 'typography',
       },
     ];
     const result = mapTokensToTailwind(tokens);
@@ -130,7 +138,7 @@ describe('semantic tailwind-mapper', () => {
         name: 'line-height-tight',
         type: 'string',
         value: '1.25',
-        category: 'typography'
+        category: 'typography',
       },
     ];
     const result = mapTokensToTailwind(tokens);
@@ -144,46 +152,54 @@ describe('semantic tailwind-mapper', () => {
   });
 
   it('handles unknown token categories', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'unknown',
-      type: 'string',
-      value: 'test',
-      category: 'unknown' as any
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'unknown',
+        type: 'string',
+        value: 'test',
+        category: 'unknown' as any,
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     expect(result.length).toBe(0);
   });
 
   it('handles null/undefined values', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'test',
-      type: 'string',
-      value: null as any,
-      category: 'typography'
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'test',
+        type: 'string',
+        value: null as any,
+        category: 'typography',
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     expect(result.length).toBe(0);
   });
 
   it('handles border radius tokens', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'radius',
-      type: 'number',
-      value: 8,
-      category: 'border-radius' as any // This may not be supported
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'radius',
+        type: 'number',
+        value: 8,
+        category: 'border-radius' as any, // This may not be supported
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     // May not be supported - check if result is empty or has expected value
     expect(result.length).toBeGreaterThanOrEqual(0);
   });
 
   it('handles opacity tokens', () => {
-    const tokens: IFigmaDesignToken[] = [{
-      name: 'opacity',
-      type: 'number',
-      value: 0.5,
-      category: 'opacity' as any // This may not be supported
-    }];
+    const tokens: IFigmaDesignToken[] = [
+      {
+        name: 'opacity',
+        type: 'number',
+        value: 0.5,
+        category: 'opacity' as any, // This may not be supported
+      },
+    ];
     const result = mapTokensToTailwind(tokens);
     // May not be supported - check if result is empty or has expected value
     expect(result.length).toBeGreaterThanOrEqual(0);
