@@ -1,6 +1,4 @@
 import pino, { type Logger } from 'pino';
-import { getConfig, configSchema, type Config } from './config.js';
-import { ConfigNotInitializedError } from './errors/config.error.js';
 
 let loggerInstance: Logger | null = null;
 
@@ -10,24 +8,12 @@ const consoleFallbackCache = new Map<string, Logger>();
 function initLogger(): Logger {
   if (loggerInstance) return loggerInstance;
 
-  let config: Config;
-  try {
-    config = getConfig();
-  } catch (err: unknown) {
-    // Check if this is the expected "config not loaded" error using custom error class
-    if (err instanceof ConfigNotInitializedError) {
-      // Fallback for tests or when config not loaded
-      // Use configSchema.parse() to ensure type safety and apply defaults
-      config = configSchema.parse({
-        NODE_ENV: 'test',
-        LOG_LEVEL: 'error',
-      });
-    } else {
-      // Unexpected error - log and rethrow
-      console.error('Unexpected error in logger initialization:', err);
-      throw err;
-    }
-  }
+  // Create a simple config from environment variables to avoid circular dependency
+  const config = {
+    NODE_ENV: process.env.NODE_ENV ?? 'production',
+    FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN,
+    LOG_LEVEL: process.env.LOG_LEVEL ?? 'info',
+  };
 
   const isDevelopment = config.NODE_ENV !== 'production';
 
