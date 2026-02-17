@@ -123,8 +123,8 @@ export function generateComponent(
   const propsInterfaceBody =
     props && Object.keys(props).length > 0
       ? Object.entries(props)
-        .map(([key, propType]) => `  ${key}: ${propType};`)
-        .join('\n')
+          .map(([key, propType]) => `  ${key}: ${propType};`)
+          .join('\n')
       : '';
 
   switch (framework) {
@@ -141,13 +141,44 @@ export function generateComponent(
         componentLibrary
       );
     case 'vue':
-      return generateVueComponent(componentName, componentType, designContext, props, ragOptions, registryMatch, componentLibrary);
+      return generateVueComponent(
+        componentName,
+        componentType,
+        designContext,
+        props,
+        ragOptions,
+        registryMatch,
+        componentLibrary
+      );
     case 'angular':
-      return generateAngularComponent(componentName, componentType, designContext, props, ragOptions, registryMatch, componentLibrary);
+      return generateAngularComponent(
+        componentName,
+        componentType,
+        designContext,
+        props,
+        ragOptions,
+        registryMatch,
+        componentLibrary
+      );
     case 'svelte':
-      return generateSvelteComponent(componentName, componentType, designContext, props, ragOptions, registryMatch, componentLibrary);
+      return generateSvelteComponent(
+        componentName,
+        componentType,
+        designContext,
+        props,
+        ragOptions,
+        registryMatch,
+        componentLibrary
+      );
     case 'html':
-      return generateHtmlComponent(componentName, componentType, designContext, ragOptions, registryMatch, componentLibrary);
+      return generateHtmlComponent(
+        componentName,
+        componentType,
+        designContext,
+        ragOptions,
+        registryMatch,
+        componentLibrary
+      );
     default:
       return generateReactComponent(
         componentName,
@@ -265,7 +296,15 @@ export function registerGenerateUiComponent(server: McpServer): void {
         registryMatch = getBestMatch(component_type, ragOptions);
       }
 
-      const files = generateComponent(component_type, framework, designContext, props, ragOptions, registryMatch, component_library);
+      const files = generateComponent(
+        component_type,
+        framework,
+        designContext,
+        props,
+        ragOptions,
+        registryMatch,
+        component_library
+      );
 
       // ML: Quality scoring (unless skip_ml)
       let qualityScore = null;
@@ -325,11 +364,12 @@ export function registerGenerateUiComponent(server: McpServer): void {
       // Build metadata about registry match
       const ragInfo = registryMatch
         ? `\n📚 RAG Match: "${registryMatch.name}" (${registryMatch.id})` +
-        `\n   Quality: ${registryMatch.quality.inspirationSource}` +
-        `\n   A11y: ${registryMatch.a11y.keyboardNav}${registryMatch.quality.antiGeneric.length > 0
-          ? `\n   Anti-generic: ${registryMatch.quality.antiGeneric.join(', ')}`
-          : ''
-        }`
+          `\n   Quality: ${registryMatch.quality.inspirationSource}` +
+          `\n   A11y: ${registryMatch.a11y.keyboardNav}${
+            registryMatch.quality.antiGeneric.length > 0
+              ? `\n   Anti-generic: ${registryMatch.quality.antiGeneric.join(', ')}`
+              : ''
+          }`
         : '\n📚 RAG: No registry match — using fallback template';
 
       const summary = [
@@ -351,13 +391,13 @@ export function registerGenerateUiComponent(server: McpServer): void {
           ml: skipML
             ? null
             : {
-              promptEnhanced: !!promptEnhancement,
-              enhancements: promptEnhancement?.additions ?? [],
-              qualityScore: qualityScore?.score ?? null,
-              qualitySource: qualityScore?.source ?? null,
-              qualityFactors: qualityScore?.factors ?? null,
-              isLikelyAccepted: qualityScore ? qualityScore.score >= 7.0 : null,
-            },
+                promptEnhanced: !!promptEnhancement,
+                enhancements: promptEnhancement?.additions ?? [],
+                qualityScore: qualityScore?.score ?? null,
+                qualitySource: qualityScore?.source ?? null,
+                qualityFactors: qualityScore?.factors ?? null,
+                isLikelyAccepted: qualityScore ? qualityScore.score >= 7.0 : null,
+              },
         },
       };
     }
@@ -392,11 +432,7 @@ function transformComponentForLibrary(
 /**
  * Transform JSX for shadcn/ui components
  */
-function transformForShadcnUI(
-  jsxBody: string,
-  componentType: string,
-  designContext: IDesignContext
-): string {
+function transformForShadcnUI(jsxBody: string, componentType: string, designContext: IDesignContext): string {
   // Add shadcn/ui imports and cn utility
   const imports = `import { cn } from "@/lib/utils"
 ${getShadcnImports(componentType)}`;
@@ -405,26 +441,14 @@ ${getShadcnImports(componentType)}`;
   let transformed = jsxBody;
 
   // Button transformations
-  transformed = transformed.replace(
-    /<button([^>]*?)className="([^"]*?)"/g,
-    '<Button$1className="$2"'
-  );
-  transformed = transformed.replace(
-    /<\/button>/g,
-    '</Button>'
-  );
+  transformed = transformed.replace(/<button([^>]*?)className="([^"]*?)"/g, '<Button$1className="$2"');
+  transformed = transformed.replace(/<\/button>/g, '</Button>');
 
   // Input transformations
-  transformed = transformed.replace(
-    /<input([^>]*?)className="([^"]*?)"/g,
-    '<Input$1className="$2"'
-  );
+  transformed = transformed.replace(/<input([^>]*?)className="([^"]*?)"/g, '<Input$1className="$2"');
 
   // Card transformations
-  transformed = transformed.replace(
-    /<div[^>]*?className="[^"]*?border[^"]*?rounded[^"]*?p-4[^"]*?"/g,
-    '<Card>'
-  );
+  transformed = transformed.replace(/<div[^>]*?className="[^"]*?border[^"]*?rounded[^"]*?p-4[^"]*?"/g, '<Card>');
 
   // Badge transformations
   transformed = transformed.replace(
@@ -505,32 +529,22 @@ function getShadcnImports(componentType: string): string {
   }
 
   return Array.from(imports)
-    .map(imp => `import { ${imp} } from "@/components/ui/${imp}"`)
+    .map((imp) => `import { ${imp} } from "@/components/ui/${imp}"`)
     .join('\n');
 }
 
 /**
  * Transform JSX for Radix UI components
  */
-function transformForRadixUI(
-  jsxBody: string,
-  componentType: string,
-  designContext: IDesignContext
-): string {
+function transformForRadixUI(jsxBody: string, componentType: string, designContext: IDesignContext): string {
   // Add Radix UI imports
   const imports = getRadixImports(componentType);
 
   let transformed = jsxBody;
 
   // Button transformations
-  transformed = transformed.replace(
-    /<button([^>]*?)className="([^"]*?)"/g,
-    '<Button$1className="$2"'
-  );
-  transformed = transformed.replace(
-    /<\/button>/g,
-    '</Button>'
-  );
+  transformed = transformed.replace(/<button([^>]*?)className="([^"]*?)"/g, '<Button$1className="$2"');
+  transformed = transformed.replace(/<\/button>/g, '</Button>');
 
   // Dialog transformations
   transformed = transformed.replace(
@@ -587,32 +601,22 @@ function getRadixImports(componentType: string): string {
   }
 
   return Array.from(imports)
-    .map(imp => `import * from "@radix-ui/react-${imp}"`)
+    .map((imp) => `import * from "@radix-ui/react-${imp}"`)
     .join('\n');
 }
 
 /**
  * Transform JSX for Headless UI components
  */
-function transformForHeadlessUI(
-  jsxBody: string,
-  componentType: string,
-  designContext: IDesignContext
-): string {
+function transformForHeadlessUI(jsxBody: string, componentType: string, designContext: IDesignContext): string {
   // Add Headless UI imports
   const imports = getHeadlessUIImports(componentType);
 
   let transformed = jsxBody;
 
   // Button transformations
-  transformed = transformed.replace(
-    /<button([^>]*?)className="([^"]*?)"/g,
-    '<Button$1className="$2"'
-  );
-  transformed = transformed.replace(
-    /<\/button>/g,
-    '</Button>'
-  );
+  transformed = transformed.replace(/<button([^>]*?)className="([^"]*?)"/g, '<Button$1className="$2"');
+  transformed = transformed.replace(/<\/button>/g, '</Button>');
 
   return `${imports}
 
@@ -647,18 +651,14 @@ function getHeadlessUIImports(componentType: string): string {
   }
 
   return Array.from(imports)
-    .map(imp => `import { ${imp} } from "@headlessui/react"`)
+    .map((imp) => `import { ${imp} } from "@headlessui/react"`)
     .join('\n');
 }
 
 /**
  * Transform JSX for PrimeVue components (Vue-specific)
  */
-function transformForPrimeVue(
-  jsxBody: string,
-  componentType: string,
-  designContext: IDesignContext
-): string {
+function transformForPrimeVue(jsxBody: string, componentType: string, designContext: IDesignContext): string {
   // This would be used in Vue component generation
   return jsxBody; // Placeholder for Vue implementation
 }
@@ -666,25 +666,15 @@ function transformForPrimeVue(
 /**
  * Transform JSX for Material UI components
  */
-function transformForMaterialUI(
-  jsxBody: string,
-  componentType: string,
-  designContext: IDesignContext
-): string {
+function transformForMaterialUI(jsxBody: string, componentType: string, designContext: IDesignContext): string {
   // Add Material UI imports
   const imports = getMaterialUIImports(componentType);
 
   let transformed = jsxBody;
 
   // Button transformations
-  transformed = transformed.replace(
-    /<button([^>]*?)className="([^"]*?)"/g,
-    '<Button$1className="$2"'
-  );
-  transformed = transformed.replace(
-    /<\/button>/g,
-    '</Button>'
-  );
+  transformed = transformed.replace(/<button([^>]*?)className="([^"]*?)"/g, '<Button$1className="$2"');
+  transformed = transformed.replace(/<\/button>/g, '</Button>');
 
   return `${imports}
 
@@ -723,7 +713,7 @@ function getMaterialUIImports(componentType: string): string {
   }
 
   return Array.from(imports)
-    .map(imp => `import { ${imp} } from "@mui/material"`)
+    .map((imp) => `import { ${imp} } from "@mui/material"`)
     .join('\n');
 }
 
@@ -750,8 +740,8 @@ function generateReactComponent(
     // Extract imports from the transformed content
     const importMatch = transformed.match(/^(import [^\n]+(?:\nimport [^\n]+)*)\n\n/);
     if (importMatch) {
-      libraryImports = importMatch[1] + '\n\n';
-      body = transformed.replace(importMatch[1] + '\n\n', '');
+      libraryImports = `${importMatch[1]}\n\n`;
+      body = transformed.replace(`${importMatch[1]}\n\n`, '');
     } else {
       body = transformed;
     }
@@ -781,8 +771,8 @@ function generateVueComponent(
 ): IGeneratedFile[] {
   const propsBlock = props
     ? Object.entries(props)
-      .map(([key, pType]) => `  ${key}: { type: ${vueType(pType)}, required: true },`)
-      .join('\n')
+        .map(([key, pType]) => `  ${key}: { type: ${vueType(pType)}, required: true },`)
+        .join('\n')
     : '';
   const body = getComponentBody(type, ctx, 'vue', ragOptions, registryMatch);
 
@@ -812,8 +802,8 @@ function generateAngularComponent(
 ): IGeneratedFile[] {
   const inputDecls = props
     ? Object.entries(props)
-      .map(([key, pType]) => `  @Input() ${key}!: ${pType};`)
-      .join('\n')
+        .map(([key, pType]) => `  @Input() ${key}!: ${pType};`)
+        .join('\n')
     : '';
   const body = getComponentBody(type, ctx, 'angular', ragOptions, registryMatch);
 
@@ -848,8 +838,8 @@ function generateSvelteComponent(
 ): IGeneratedFile[] {
   const propsDecl = props
     ? Object.entries(props)
-      .map(([key, pType]) => `  export let ${key}: ${pType};`)
-      .join('\n')
+        .map(([key, pType]) => `  export let ${key}: ${pType};`)
+        .join('\n')
     : '';
   const body = jsxToSvelte(getComponentBody(type, ctx, 'svelte', ragOptions, registryMatch));
 

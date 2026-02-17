@@ -4,11 +4,15 @@
   "description": "MCP server for AI-driven UI generation — from code scaffolding to interactive prototypes and design images",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "uiforge-mcp": "dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "build:bundle": "tsup",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
+    "mcp": "node dist/index.js",
     "clean": "rm -rf dist coverage .tsbuildinfo node_modules/.cache",
     "validate": "npm run lint && npm run format:check && npx tsc --noEmit && npm test && npm run build",
     "validate:all": "npm run lint; npm run format:check; npx tsc --noEmit; npm test; npm run build",
@@ -25,7 +29,8 @@
     "deps:check": "ncu",
     "deps:update": "ncu -u",
     "deps:update-interactive": "ncu -i",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
@@ -62,6 +67,11 @@
   "engines": {
     "node": ">=22"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "license": "MIT",
   "lint-staged": {
     "src/**/*.ts": [

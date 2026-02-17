@@ -36,7 +36,52 @@ Built on the
 
 ## Quick Start
 
-### Option 1: Automated IDE Setup (Recommended)
+### 🚀 MCP Integration (Recommended)
+
+Use UIForge MCP directly in your IDE without cloning the repository:
+
+#### Option 1: Docker (Production Ready)
+
+Add to your IDE's MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "uiforge-mcp": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "FIGMA_ACCESS_TOKEN",
+        "uiforge-mcp:latest"
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
+```
+
+#### Option 2: NPX (Quick Setup)
+
+```json
+{
+  "mcpServers": {
+    "uiforge-mcp": {
+      "command": "npx",
+      "args": ["-y", "uiforge-mcp@latest"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "your_figma_token_here",
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
+```
+
+**📖 Full Setup Guide**: See [MCP_SETUP_GUIDE.md](./MCP_SETUP_GUIDE.md) for detailed configuration options.
+
+### Option 3: Local Development
 
 ```bash
 # Run the automated setup script
@@ -46,7 +91,7 @@ Built on the
 nano .env
 ```
 
-### Option 2: Manual Setup
+### Option 4: Manual Setup
 
 ```bash
 # Install dependencies
@@ -90,6 +135,98 @@ npm run validate
 npm run docker:build
 npm run docker:run
 ```
+
+## MCP Integration
+
+UIForge MCP server can be integrated with any MCP-compatible IDE using standard Docker or NPX commands.
+
+### 🎯 Quick Setup (No Clone Required)
+
+#### Docker Integration (Recommended)
+
+1. **Build Docker image once:**
+   ```bash
+   docker pull uiforge-mcp:latest
+   # Or build from source: docker build -t uiforge-mcp:latest .
+   ```
+
+2. **Add to your IDE's MCP configuration:**
+   ```json
+   {
+     "mcpServers": {
+       "uiforge-mcp": {
+         "command": "docker",
+         "args": [
+           "run", "--rm", "-i",
+           "-e", "FIGMA_ACCESS_TOKEN",
+           "uiforge-mcp:latest"
+         ],
+         "env": {
+           "NODE_ENV": "production"
+         }
+       }
+     }
+   }
+   ```
+
+#### NPX Integration (Easiest)
+
+Add to your IDE's MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "uiforge-mcp": {
+      "command": "npx",
+      "args": ["-y", "uiforge-mcp@latest"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "your_figma_token_here",
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
+```
+
+### 🔧 IDE-Specific Setup
+
+#### Windsurf
+1. Open `/Users/lucassantana/.codeium/windsurf/mcp_config.json`
+2. Add one of the configurations above
+3. Restart Windsurf
+4. Tools appear automatically in the interface
+
+#### Cursor IDE
+1. Open `.cursorrules` or MCP settings
+2. Add the configuration
+3. Restart Cursor
+
+#### VS Code (with MCP extension)
+1. Open MCP settings
+2. Add the configuration
+3. Reload VS Code
+
+### 📋 Available Tools After Setup
+
+Once connected, you'll have access to all 13 MCP tools:
+- `generate_ui_component` - Create React/Vue/Angular components
+- `scaffold_full_application` - Generate full applications
+- `analyze_design_image_for_training` - Analyze UI designs
+- `figma_context_parser` - Extract Figma design tokens
+- `image_to_component` - Convert screenshots to code
+- And 9+ more tools
+
+### 🔐 Authentication
+
+Set your Figma token in the MCP configuration:
+
+```json
+"env": {
+  "FIGMA_ACCESS_TOKEN": "figd_your_token_here"
+}
+```
+
+**📖 Complete Guide**: See [MCP_SETUP_GUIDE.md](./MCP_SETUP_GUIDE.md) for detailed instructions.
 
 ## IDE Setup
 
