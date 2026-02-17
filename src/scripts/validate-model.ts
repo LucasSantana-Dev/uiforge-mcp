@@ -146,7 +146,7 @@ async function validateModel(): Promise<void> {
       });
       allPassed = false;
     }
-  } catch (err) {
+  } catch {
     results.push({
       step: 'node-llama-cpp available',
       passed: false,
