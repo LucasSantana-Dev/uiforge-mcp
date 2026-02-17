@@ -82,7 +82,7 @@ export const TrainingExampleSchema = z.object({
   prompt: z.string().min(1),
   code: z.string().min(1),
   score: z.number().min(-1).max(2),
-  params: z.record(z.string()),
+  params: z.record(z.string(), z.string()),
 });
 
 export const TrainingStatusSchema = z.object({

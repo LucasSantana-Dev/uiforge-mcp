@@ -24,7 +24,7 @@ const screenElementSchema: z.ZodType<IScreenElement> = z.object({
   label: z.string().optional(),
   placeholder: z.string().optional(),
   children: z.lazy(() => z.array(screenElementSchema)).optional(),
-  styles: z.record(z.string()).optional(),
+  styles: z.record(z.string(), z.string()).optional(),
   action: z.string().optional(),
 });
 
