@@ -85,10 +85,44 @@ jobs:
         if: matrix.node-version == 22
         uses: codecov/codecov-action@v5
         with:
-          files: ./coverage/coverage-final.json
+          files: ./coverage/coverage-final.json,./coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+
+      - name: Generate coverage report
+        if: matrix.node-version == 22
+        run: |
+          echo "## 📊 Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f coverage/coverage-summary.json ]; then
+            echo "### Coverage Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
+
+            # Extract coverage percentages
+            LINES=$(cat coverage/coverage-summary.json | jq '.total.lines.pct // 0')
+            FUNCTIONS=$(cat coverage/coverage-summary.json | jq '.total.functions.pct // 0')
+            BRANCHES=$(cat coverage/coverage-summary.json | jq '.total.branches.pct // 0')
+            STATEMENTS=$(cat coverage/coverage-summary.json | jq '.total.statements.pct // 0')
+
+            echo "| Lines | ${LINES}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Functions | ${FUNCTIONS}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Branches | ${BRANCHES}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Statements | ${STATEMENTS}% |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if coverage meets threshold
+            if (( $(echo "$LINES >= 80" | bc -l) )); then
+              echo "✅ Line coverage meets 80% threshold" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ Line coverage below 80% threshold" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
 
   build:
     name: Build
@@ -146,6 +180,79 @@ jobs:
           if [ $SIZE_MB -gt 500 ]; then
             echo "::warning::Image size exceeds 500MB: ${SIZE_MB}MB"
           fi
+
+  snyk-security:
+    name: Snyk Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+          command: monitor
+
+      - name: Upload Snyk results to GitHub Security tab
+        if: always()
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk.sarif
+          command: test
+
+      - name: Upload SARIF file to GitHub
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+
+  snyk-code-security:
+    name: Snyk Code Security
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run Snyk Code analysis
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk-code.sarif
+          command: code test
+
+      - name: Upload Snyk Code results to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-code.sarif
 
   dependency-check:
     name: Dependency Check

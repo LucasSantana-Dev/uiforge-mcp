@@ -28,6 +28,8 @@ For detailed branching strategy, see [Branching Strategy Guide](./BRANCHING_STRA
    - `NPM_TOKEN`: npm automation token with publish permissions
    - `DOCKER_USERNAME`: Docker Hub username
    - `DOCKER_PASSWORD`: Docker Hub access token
+   - `SNYK_TOKEN`: Snyk API token for security scanning
+   - `CODECOV_TOKEN`: Codecov upload token for coverage reporting
 
    ⚠️ **Security Note**: Secrets are now configured via the **Setup Deployment** admin workflow in GitHub Actions, not via local scripts.
 
@@ -60,6 +62,8 @@ For detailed branching strategy, see [Branching Strategy Guide](./BRANCHING_STRA
 # 4. Configure inputs:
 #    - setup_npm: Guide npm token setup
 #    - setup_docker: Guide Docker credential setup
+#    - setup_snyk: Guide Snyk security scanning setup
+#    - setup_codecov: Guide Codecov coverage reporting setup
 #    - verify_configuration: Check existing setup
 # 5. Follow the guided setup instructions
 ```
@@ -70,6 +74,10 @@ For detailed branching strategy, see [Branching Strategy Guide](./BRANCHING_STRA
 - Guides secret configuration through GitHub UI
 - Checks repository configuration
 - Generates setup reports
+
+**Security & Coverage Setup**:
+- **Snyk Token**: Enables automated security scanning for dependencies and code
+- **Codecov Token**: Enables comprehensive coverage reporting and trend analysis
 
 #### Admin Lint Workflow
 
