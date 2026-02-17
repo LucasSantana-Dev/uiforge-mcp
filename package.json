@@ -18,7 +18,7 @@
     "validate:all": "npm run lint; npm run format:check; npx tsc --noEmit; npm test; npm run build",
     "docker:build": "docker build -t uiforge-mcp:latest .",
     "docker:run": "docker run -i uiforge-mcp:latest",
-    "lint": "eslint src/",
+    "lint": "node scripts/lint.js",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
@@ -45,6 +45,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.17.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/jest": "^29.5.14",

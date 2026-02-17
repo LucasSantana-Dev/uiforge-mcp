@@ -29,9 +29,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Lint
-        run: |
-          echo "⚠️ ESLint temporarily disabled due to Node.js 24 compatibility issue"
-          echo "Skipping lint step - will be re-enabled once ESLint compatibility is fixed"
+        run: npm run lint
 
       - name: Format check
         run: npm run format:check
