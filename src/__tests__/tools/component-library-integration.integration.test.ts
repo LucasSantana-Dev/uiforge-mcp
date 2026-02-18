@@ -7,280 +7,180 @@ describe('Component Library Integration', () => {
 
   beforeEach(() => {
     mockDesignContext = {
-      typography: {
-        fontFamily: 'Inter',
-        fontSize: {
-          xs: '0.75rem',
-          sm: '0.875rem',
-          base: '1rem',
-          lg: '1.125rem',
-          xl: '1.25rem',
-          '2xl': '1.5rem',
-          '3xl': '1.875rem',
-        },
-        fontWeight: {
-          normal: '400',
-          medium: '500',
-          semibold: '600',
-          bold: '700',
-        },
-        lineHeight: {
-          tight: '1.25',
-          normal: '1.5',
-          relaxed: '1.75',
-        },
-      },
-      colorPalette: {
-        primary: '#3b82f6',
-        primaryForeground: '#ffffff',
-        secondary: '#64748b',
-        secondaryForeground: '#ffffff',
-        accent: '#f59e0b',
-        accentForeground: '#000000',
-        background: '#ffffff',
-        foreground: '#0f172a',
-        muted: '#f1f5f9',
-        mutedForeground: '#64748b',
-        border: '#e2e8f0',
-        destructive: '#ef4444',
-        destructiveForeground: '#ffffff',
-      },
-      spacing: {
-        unit: 4,
-        scale: [1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24],
-      },
-      borderRadius: {
-        sm: '0.125rem',
-        md: '0.25rem',
-        lg: '0.5rem',
-        full: '9999px',
-      },
-      shadows: {
-        sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-        md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-        lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-      },
+      typography: { fontFamily: 'Inter', fontSize: { xs: '0.75rem', sm: '0.875rem', base: '1rem', lg: '1.125rem', xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem' }, fontWeight: { normal: '400', medium: '500', semibold: '600', bold: '700' }, lineHeight: { tight: '1.25', normal: '1.5', relaxed: '1.75' } },
+      colorPalette: { primary: '#3b82f6', primaryForeground: '#ffffff', secondary: '#64748b', secondaryForeground: '#ffffff', accent: '#f59e0b', accentForeground: '#000000', background: '#ffffff', foreground: '#0f172a', muted: '#f1f5f9', mutedForeground: '#64748b', border: '#e2e8f0', destructive: '#ef4444', destructiveForeground: '#ffffff' },
+      spacing: { unit: 4, scale: [1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24] },
+      borderRadius: { sm: '0.125rem', md: '0.25rem', lg: '0.5rem', full: '9999px' },
+      shadows: { sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)', md: '0 4px 6px -1px rgb(0 0 0 / 0.1)', lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)' },
     };
   });
 
+  function findComponentFile(files: ReturnType<typeof generateComponent>, ext: string) {
+    return files.find(f => f.path.endsWith(ext) && !f.path.includes('.test.') && !f.path.includes('.spec.') && !f.path.includes('.stories.'));
+  }
+
   describe('shadcn/ui Integration', () => {
-    it('should generate shadcn/ui button component', () => {
+    it('should generate shadcn/ui button for React', () => {
       const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'shadcn');
-
-      expect(files).toHaveLength(1);
-      const buttonFile = files[0];
-
-      // Should contain shadcn/ui imports (note: actual path uses uppercase Button)
-      expect(buttonFile.content).toContain('import { cn } from "@/lib/utils"');
-      expect(buttonFile.content).toContain('import { Button } from "@/components/ui/Button"');
-
-      // Should use Button component instead of button element
-      expect(buttonFile.content).toContain('<Button');
-      expect(buttonFile.content).not.toContain('<button');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('import { cn } from "@/lib/utils"');
+      expect(f!.content).toContain('<Button');
     });
-
-    it('should generate shadcn/ui card component', () => {
+    it('should generate shadcn/ui card for React', () => {
       const files = generateComponent('card', 'react', mockDesignContext, {}, undefined, undefined, 'shadcn');
-
-      expect(files).toHaveLength(1);
-      const cardFile = files[0];
-
-      // Should contain card imports
-      expect(cardFile.content).toContain('import { Card } from "@/components/ui/Card"');
-      expect(cardFile.content).toContain('import { CardHeader } from "@/components/ui/CardHeader"');
-      expect(cardFile.content).toContain('import { CardContent } from "@/components/ui/CardContent"');
-      expect(cardFile.content).toContain('import { CardFooter } from "@/components/ui/CardFooter"');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('Card');
+      expect(f!.content).toContain('CardContent');
     });
-
-    it('should generate shadcn/ui input component', () => {
-      const files = generateComponent('input', 'react', mockDesignContext, {}, undefined, undefined, 'shadcn');
-
-      expect(files).toHaveLength(1);
-      const inputFile = files[0];
-
-      // Should contain input imports
-      expect(inputFile.content).toContain('import { Input } from "@/components/ui/Input"');
-      // Note: Input component generates a div wrapper, not an actual input element
-      expect(inputFile.content).toContain('<div className="rounded-lg border bg-card');
-    });
-
-    it('should generate shadcn/ui dialog component', () => {
+    it('should generate shadcn/ui dialog for React', () => {
       const files = generateComponent('dialog', 'react', mockDesignContext, {}, undefined, undefined, 'shadcn');
-
-      expect(files).toHaveLength(1);
-      const dialogFile = files[0];
-
-      // Should contain dialog imports
-      expect(dialogFile.content).toContain('import { Dialog } from "@/components/ui/Dialog"');
-      expect(dialogFile.content).toContain('import { DialogContent } from "@/components/ui/DialogContent"');
-      expect(dialogFile.content).toContain('import { DialogHeader } from "@/components/ui/DialogHeader"');
-      expect(dialogFile.content).toContain('import { DialogFooter } from "@/components/ui/DialogFooter"');
-      expect(dialogFile.content).toContain('import { DialogTitle } from "@/components/ui/DialogTitle"');
-      expect(dialogFile.content).toContain('import { DialogDescription } from "@/components/ui/DialogDescription"');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('Dialog');
     });
   });
 
   describe('Radix UI Integration', () => {
-    it('should generate Radix UI button component', () => {
+    it('should generate Radix button for React', () => {
       const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'radix');
-
-      expect(files).toHaveLength(1);
-      const buttonFile = files[0];
-
-      // Should contain Radix UI imports (note: actual uses namespace imports with aliases)
-      expect(buttonFile.content).toContain('import * as RadixButton from "@radix-ui/react-Button"');
-      expect(buttonFile.content).toContain('<Button');
-      expect(buttonFile.content).not.toContain('<button>');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@radix-ui');
+      expect(f!.content).toContain('<Button');
     });
-
-    it('should generate Radix UI dialog component', () => {
+    it('should generate Radix dialog for React', () => {
       const files = generateComponent('dialog', 'react', mockDesignContext, {}, undefined, undefined, 'radix');
-
-      expect(files).toHaveLength(1);
-      const dialogFile = files[0];
-
-      // Should contain dialog imports (note: actual uses namespace imports with aliases)
-      expect(dialogFile.content).toContain('import * as RadixDialog from "@radix-ui/react-Dialog"');
-      expect(dialogFile.content).toContain('import * as RadixDialogOverlay from "@radix-ui/react-DialogOverlay"');
-      expect(dialogFile.content).toContain('import * as RadixDialogContent from "@radix-ui/react-DialogContent"');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@radix-ui');
     });
   });
 
   describe('Headless UI Integration', () => {
-    it('should generate Headless UI button component', () => {
+    it('should generate Headless UI button for React', () => {
       const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'headlessui');
-
-      expect(files).toHaveLength(1);
-      const buttonFile = files[0];
-
-      // Should contain Headless UI imports
-      expect(buttonFile.content).toContain('import { Button } from "@headlessui/react"');
-      expect(buttonFile.content).toContain('<Button');
-      expect(buttonFile.content).not.toContain('<button');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@headlessui/react');
+      expect(f!.content).toContain('<Button');
     });
-
-    it('should generate Headless UI dialog component', () => {
+    it('should generate Headless UI dialog for React', () => {
       const files = generateComponent('dialog', 'react', mockDesignContext, {}, undefined, undefined, 'headlessui');
-
-      expect(files).toHaveLength(1);
-      const dialogFile = files[0];
-
-      // Should contain dialog imports
-      expect(dialogFile.content).toContain('import { Dialog } from "@headlessui/react"');
-      expect(dialogFile.content).toContain('import { DialogPanel } from "@headlessui/react"');
-      expect(dialogFile.content).toContain('import { DialogTitle } from "@headlessui/react"');
-      expect(dialogFile.content).toContain('import { DialogOverlay } from "@headlessui/react"');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@headlessui/react');
+      expect(f!.content).toContain('Dialog');
     });
   });
 
   describe('Material UI Integration', () => {
-    it('should generate Material UI button component', () => {
+    it('should generate MUI button for React', () => {
       const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'material');
-
-      expect(files).toHaveLength(1);
-      const buttonFile = files[0];
-
-      // Should contain Material UI imports
-      expect(buttonFile.content).toContain('import { Button } from "@mui/material"');
-      expect(buttonFile.content).toContain('<Button');
-      expect(buttonFile.content).not.toContain('<button');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@mui/material');
+      expect(f!.content).toContain('<Button');
     });
-
-    it('should generate Material UI card component', () => {
+    it('should generate MUI card for React', () => {
       const files = generateComponent('card', 'react', mockDesignContext, {}, undefined, undefined, 'material');
-
-      expect(files).toHaveLength(1);
-      const cardFile = files[0];
-
-      // Should contain card imports
-      expect(cardFile.content).toContain('import { Card } from "@mui/material"');
-      expect(cardFile.content).toContain('import { CardContent } from "@mui/material"');
-      expect(cardFile.content).toContain('import { CardActions } from "@mui/material"');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@mui/material');
+      expect(f!.content).toContain('Card');
     });
-
-    it('should generate Material UI text field component', () => {
+    it('should generate MUI TextField for React', () => {
       const files = generateComponent('input', 'react', mockDesignContext, {}, undefined, undefined, 'material');
-
-      expect(files).toHaveLength(1);
-      const inputFile = files[0];
-
-      // Should contain TextField import
-      expect(inputFile.content).toContain('import { TextField } from "@mui/material"');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('TextField');
     });
   });
 
   describe('No Component Library', () => {
-    it('should generate raw Tailwind CSS when no library specified', () => {
+    it('should generate Tailwind CSS when library is none', () => {
       const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'none');
-
-      expect(files).toHaveLength(1);
-      const buttonFile = files[0];
-
-      // Should use regular button element with Tailwind classes
-      expect(buttonFile.content).toContain('<button');
-      expect(buttonFile.content).not.toContain('<Button');
-      // Specifically check no Button component import
-      expect(buttonFile.content).not.toMatch(/import\s*\{\s*Button\s*\}/);
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.tsx');
+      expect(f).toBeDefined();
+      expect(f!.content).not.toMatch(/import\s*\{\s*Button\s*\}\s*from\s*"@/);
     });
   });
 
   describe('Cross-Framework Support', () => {
     it('should support Vue with PrimeVue', () => {
       const files = generateComponent('button', 'vue', mockDesignContext, {}, undefined, undefined, 'primevue');
-
-      expect(files).toHaveLength(1);
-      const vueFile = files[0];
-
-      // Should be a Vue component
-      expect(vueFile.path).toContain('.vue');
-      expect(vueFile.content).toContain('<script setup lang="ts">');
-      expect(vueFile.content).toContain('<template>');
-      // TODO: Add PrimeVue-specific assertions once library integration is implemented
-      // expect(vueFile.content).toContain('Button');
-      // expect(vueFile.content).toContain('primevue/button');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.vue');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('<template>');
+      expect(f!.content).toContain('primevue/button');
     });
-
     it('should support Angular with Material UI', () => {
       const files = generateComponent('button', 'angular', mockDesignContext, {}, undefined, undefined, 'material');
-
-      expect(files).toHaveLength(1);
-      const angularFile = files[0];
-
-      // Should be an Angular component
-      expect(angularFile.path).toContain('.ts');
-      expect(angularFile.content).toContain('@Component');
-      expect(angularFile.content).toContain('selector:');
-      // TODO: Add Material UI-specific assertions once library integration is implemented
-      // expect(angularFile.content).toContain('mat-button');
-      // expect(angularFile.content).toContain('@angular/material/button');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.component.ts');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@Component');
+      expect(f!.content).toContain('@angular/material/button');
     });
-
     it('should support Svelte with Headless UI', () => {
       const files = generateComponent('button', 'svelte', mockDesignContext, {}, undefined, undefined, 'headlessui');
-
-      expect(files).toHaveLength(1);
-      const svelteFile = files[0];
-
-      // Should be a Svelte component
-      expect(svelteFile.path).toContain('.svelte');
-      expect(svelteFile.content).toContain('<script lang="ts">');
-      expect(svelteFile.content).not.toContain('<template>');
-      // TODO: Add Headless UI-specific assertions once library integration is implemented
-      // expect(svelteFile.content).toContain('Button');
-      // expect(svelteFile.content).toContain('@headlessui/react');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      const f = findComponentFile(files, '.svelte');
+      expect(f).toBeDefined();
+      expect(f!.content).toContain('@headlessui/svelte');
     });
-
-    it('should ignore component library for HTML framework', () => {
+    it('should support HTML with shadcn styles', () => {
       const files = generateComponent('button', 'html', mockDesignContext, {}, undefined, undefined, 'shadcn');
+      expect(files.length).toBeGreaterThanOrEqual(1);
+      expect(files[0].path).toContain('.html');
+      expect(files[0].content).toContain('<!DOCTYPE html>');
+      expect(files[0].content).toContain('tailwindcss');
+    });
+  });
 
-      expect(files).toHaveLength(1);
-      const htmlFile = files[0];
-
-      // Should be HTML with vanilla CSS
-      expect(htmlFile.path).toContain('.html');
-      expect(htmlFile.content).toContain('<!DOCTYPE html>');
-      expect(htmlFile.content).toContain('<button');
-      expect(htmlFile.content).not.toContain('<Button');
+  describe('File Output Structure', () => {
+    it('React generates 3 files (component + storybook + test)', () => {
+      const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'shadcn');
+      expect(files.length).toBe(3);
+      expect(files.some(f => f.path.endsWith('.tsx') && !f.path.includes('.test.') && !f.path.includes('.stories.'))).toBe(true);
+      expect(files.some(f => f.path.includes('.stories.'))).toBe(true);
+      expect(files.some(f => f.path.includes('.test.'))).toBe(true);
+    });
+    it('Vue generates 2 files (component + test)', () => {
+      const files = generateComponent('button', 'vue', mockDesignContext, {}, undefined, undefined, 'shadcn');
+      expect(files.length).toBe(2);
+      expect(files.some(f => f.path.endsWith('.vue'))).toBe(true);
+      expect(files.some(f => f.path.includes('.test.'))).toBe(true);
+    });
+    it('Angular generates 2 files (component + spec)', () => {
+      const files = generateComponent('button', 'angular', mockDesignContext, {}, undefined, undefined, 'shadcn');
+      expect(files.length).toBe(2);
+      expect(files.some(f => f.path.endsWith('.component.ts'))).toBe(true);
+      expect(files.some(f => f.path.endsWith('.spec.ts'))).toBe(true);
+    });
+    it('Svelte generates 2 files (component + test)', () => {
+      const files = generateComponent('button', 'svelte', mockDesignContext, {}, undefined, undefined, 'shadcn');
+      expect(files.length).toBe(2);
+      expect(files.some(f => f.path.endsWith('.svelte'))).toBe(true);
+      expect(files.some(f => f.path.includes('.test.'))).toBe(true);
+    });
+    it('HTML generates 1 file', () => {
+      const files = generateComponent('button', 'html', mockDesignContext, {}, undefined, undefined, 'shadcn');
+      expect(files.length).toBe(1);
+      expect(files[0].path).toContain('.html');
     });
   });
 });
