@@ -21,28 +21,23 @@
 
 ### 🧪 **Quality & Testing**
 
-[![Tests](https://img.shields.io/github/actions/workflows/ci.yml/LucasSantana-Dev/uiforge-mcp?label=tests)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/LucasSantana-Dev/uiforge-mcp)](https://codecov.io/gh/LucasSantana-Dev/uiforge-mcp)
+[![Tests](https://img.shields.io/github/actions/workflow/status/LucasSantana-Dev/uiforge-mcp/ci.yml?label=tests)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/badge/coverage-84%25-brightgreen)](https://github.com/LucasSantana-Dev/uiforge-mcp)
-[![Tests Passing](https://img.shields.io/badge/tests-550%2F550-brightgreen)](https://github.com/LucasSantana-Dev/uiforge-mcp)
-[![Test Suites](https://img.shields.io/badge/suites-39%2F39-brightgreen)](https://github.com/LucasSantana-Dev/uiforge-mcp)
+[![Tests Passing](https://img.shields.io/badge/tests-550%2B-brightgreen)](https://github.com/LucasSantana-Dev/uiforge-mcp)
+[![Test Suites](https://img.shields.io/badge/suites-39%2B-brightgreen)](https://github.com/LucasSantana-Dev/uiforge-mcp)
 
 ### 🔧 **Build & Deployment**
 
-[![Build Status](https://img.shields.io/github/actions/workflows/ci.yml/LucasSantana-Dev/uiforge-mcp?label=build)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
-[![Deploy Status](https://img.shields.io/github/actions/workflows/deploy.yml/LucasSantana-Dev/uiforge-mcp?label=deploy)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
-[![Docker Build](https://img.shields.io/github/actions/workflows/ci.yml/LucasSantana-Dev/uiforge-mcp?label=docker)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
-[![Docker Image Size](https://img.shields.io/docker/image-size/LucasSantanaDev/uiforge-mcp/latest)](https://hub.docker.com/r/LucasSantanaDev/uiforge-mcp)
-[![Docker Pulls](https://img.shields.io/docker/pulls/LucasSantanaDev/uiforge-mcp.svg)](https://hub.docker.com/r/LucasSantanaDev/uiforge-mcp)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/LucasSantana-Dev/uiforge-mcp/ci.yml?label=build)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions/workflows/ci.yml)
+[![Deploy Status](https://img.shields.io/github/actions/workflow/status/LucasSantana-Dev/uiforge-mcp/deploy.yml?label=deploy)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions/workflows/deploy.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/lucassantana/uiforge-mcp.svg)](https://hub.docker.com/r/lucassantana/uiforge-mcp)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)](https://www.typescriptlang.org/)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D22-green)](https://nodejs.org/)
 
 ### 🛡️ **Security & Standards**
 
-[![CodeQL](https://img.shields.io/github/actions/workflows/codeql.yml/LucasSantana-Dev/uiforge-mcp)](https://github.com/LucasSantana-Dev/uiforge-mcp/security)
-[![Security Audit](https://img.shields.io/github/actions/workflows/ci.yml/LucasSantana-Dev/uiforge-mcp?label=security)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
-[![Dependency Check](https://img.shields.io/github/actions/workflows/ci.yml/LucasSantana-Dev/uiforge-mcp?label=deps)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
-[![ESLint](https://img.shields.io/github/actions/workflows/ci.yml/LucasSantana-Dev/uiforge-mcp?label=lint)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/LucasSantana-Dev/uiforge-mcp/codeql.yml?label=CodeQL)](https://github.com/LucasSantana-Dev/uiforge-mcp/security)
+[![Security](https://img.shields.io/github/actions/workflow/status/LucasSantana-Dev/uiforge-mcp/security.yml?label=security)](https://github.com/LucasSantana-Dev/uiforge-mcp/actions/workflows/security.yml)
 [![Prettier](https://img.shields.io/badge/code%20style-prettier-ff69b4.svg)](https://prettier.io/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow)](https://conventionalcommits.org)
 
@@ -60,8 +55,6 @@
 ### 📊 **Activity & Community**
 
 [![GitHub Activity](https://img.shields.io/github/last-commit/LucasSantana-Dev/uiforge-mcp)](https://github.com/LucasSantana-Dev/uiforge-mcp/graphs/commit-activity)
-[![GitHub Issue Milestone](https://img.shields.io/github/milestones/LucasSantana-Dev/uiforge-mcp)](https://github.com/LucasSantana-Dev/uiforge-mcp/milestones)
-[![GitHub Discussions](https://img.shields.io/github/discussions/LucasSantana-Dev/uiforge-mcp)](https://github.com/LucasSantana-Dev/uiforge-mcp/discussions)
 [![GitHub Watchers](https://img.shields.io/github/watchers/LucasSantana-Dev/uiforge-mcp.svg)](https://github.com/LucasSantana-Dev/uiforge-mcp/watchers)
 [![GitHub Tag](https://img.shields.io/github/tag/LucasSantana-Dev/uiforge-mcp.svg)](https://github.com/LucasSantana-Dev/uiforge-mcp/tags)
 [![GitHub License](https://img.shields.io/github/license/LucasSantana-Dev/uiforge-mcp.svg)](https://github.com/LucasSantana-Dev/uiforge-mcp/blob/main/LICENSE)
@@ -106,7 +99,7 @@ Built with the
 | #   | Tool                        | Category | Description                                                                       |
 | --- | --------------------------- | -------- | --------------------------------------------------------------------------------- |
 | 1   | `scaffold_full_application` | Code     | Generate full project boilerplate (React/Next.js/Vue/Angular/HTML + Tailwind)     |
-| 2   | `generate_ui_component`     | Code     | Create/iterate UI components with style audit + design context                    |
+| 2   | `generate_ui_component`     | Code     | Create/iterate UI components with style audit + design context. Supports shadcn/ui, Radix UI, Headless UI, Material UI, PrimeVue |
 | 3   | `generate_prototype`        | Design   | Create interactive HTML prototype with screen flows and navigation                |
 | 4   | `generate_design_image`     | Design   | Generate SVG/PNG mockup images of UI screens/components                           |
 | 5   | `fetch_design_inspiration`  | Context  | Extract visual metadata (colors, typography, layout) from URLs                    |
@@ -117,6 +110,21 @@ Built with the
 | 10  | `generate_page_template`    | Code     | Generate pre-built page templates (landing, dashboard, auth, pricing, CRUD, etc.) |
 | 11  | `refine_component`          | Code     | Iteratively improve existing components via natural language feedback             |
 | 12  | `audit_accessibility`       | Quality  | Audit component code for WCAG 2.1 violations with fix suggestions                 |
+
+## Component Library Support
+
+The `generate_ui_component` and `image_to_component` tools accept a `component_library` parameter to generate framework-specific code using popular UI libraries:
+
+| Library | React | Vue | Angular | Svelte | HTML |
+| ------- | ----- | --- | ------- | ------ | ---- |
+| `shadcn` | ✅ shadcn/ui | ✅ shadcn-vue | ✅ (Tailwind) | ✅ bits-ui | ✅ |
+| `radix` | ✅ @radix-ui/react-* | ✅ @radix-ui/vue | ✅ (Tailwind) | ✅ @radix-ui/svelte | ✅ |
+| `headlessui` | ✅ @headlessui/react | ✅ @headlessui/vue | ✅ (Tailwind) | ✅ @headlessui/svelte | ✅ |
+| `material` | ✅ @mui/material | ✅ (Vuetify) | ✅ @angular/material | ✅ @smui/material | ✅ |
+| `primevue` | ✅ (Headless UI) | ✅ primevue | ✅ primeng | ✅ (Tailwind) | ✅ |
+| `none` / omit | ✅ Tailwind CSS | ✅ Tailwind CSS | ✅ Tailwind CSS | ✅ Tailwind CSS | ✅ |
+
+Each generator produces a component file **plus** a test file (React also generates a Storybook story).
 
 ## Resource
 
