@@ -19,6 +19,7 @@ import { registerAuditAccessibility } from './tools/audit-accessibility.js';
 import { registerSubmitFeedback } from './tools/submit-feedback.js';
 import { registerAnalyzeDesignImageForTraining } from './tools/analyze-design-image-for-training.js';
 import { registerManageTraining } from './tools/manage-training.js';
+import { registerAnalyzeComponentLibrary } from './tools/analyze-component-library.js';
 import { closeDatabase } from './lib/design-references/database/store.js';
 
 // Load and validate configuration BEFORE importing logger
@@ -59,6 +60,7 @@ registerAuditAccessibility(server);
 registerSubmitFeedback(server);
 registerAnalyzeDesignImageForTraining(server);
 registerManageTraining(server);
+registerAnalyzeComponentLibrary(server);
 
 logger.info('All tools and resources registered');
 

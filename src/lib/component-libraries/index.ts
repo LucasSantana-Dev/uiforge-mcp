@@ -9,6 +9,14 @@
  */
 
 import type { IGeneratedFile, IDesignContext, Framework, ComponentLibraryId } from '../types.js';
+import { setupShadcnProject, getAvailableShadcnComponents, getAvailableShadcnPatterns } from './shadcn/index.js';
+import { generateShadcnComponent } from './shadcn/templates.js';
+import { setupRadixProject, getAvailableRadixComponents } from './radix/index.js';
+import { generateRadixComponent } from './radix/templates.js';
+import { setupHeadlessProject, getAvailableHeadlessComponents } from './headlessui/index.js';
+import { generateHeadlessComponent } from './headlessui/templates.js';
+import { setupMaterialProject, getAvailableMaterialComponents } from './material/index.js';
+import { generateMaterialComponent } from './material/templates.js';
 
 // Re-export types for convenience
 export type { IGeneratedFile, IDesignContext, Framework, ComponentLibraryId } from '../types.js';
@@ -50,41 +58,19 @@ export function getComponentLibrary(libraryId: ComponentLibraryId): ComponentLib
         name: 'shadcn/ui',
         id: 'shadcn',
         description: 'Beautifully designed components built with Radix UI and Tailwind CSS',
-        setupProject: (options) => {
-          // Import dynamically to avoid circular dependencies
-          const { setupShadcnProject } = require('./shadcn/index.js');
-          return setupShadcnProject(options);
-        },
-        generateComponent: (name, designContext, customizations) => {
-          const { generateShadcnComponent } = require('./shadcn/templates.js');
-          return generateShadcnComponent(name, designContext, customizations);
-        },
-        getAvailableComponents: () => {
-          const { getAvailableShadcnComponents } = require('./shadcn/index.js');
-          return getAvailableShadcnComponents();
-        },
-        getAvailablePatterns: () => {
-          const { getAvailableShadcnPatterns } = require('./shadcn/index.js');
-          return getAvailableShadcnPatterns();
-        }
+        setupProject: (options) => setupShadcnProject(options),
+        generateComponent: (name, designContext, customizations) => generateShadcnComponent(name, designContext, customizations),
+        getAvailableComponents: () => getAvailableShadcnComponents(),
+        getAvailablePatterns: () => getAvailableShadcnPatterns(),
       };
     case 'radix':
       return {
         name: 'Radix UI',
         id: 'radix',
         description: 'Unstyled, accessible components for building high-quality design systems and web apps',
-        setupProject: (options) => {
-          const { setupRadixProject } = require('./radix/index.js');
-          return setupRadixProject(options);
-        },
-        generateComponent: (name, designContext, customizations) => {
-          const { generateRadixComponent } = require('./radix/templates.js');
-          return generateRadixComponent(name, designContext, customizations);
-        },
-        getAvailableComponents: () => {
-          const { getAvailableRadixComponents } = require('./radix/index.js');
-          return getAvailableRadixComponents();
-        },
+        setupProject: (options) => setupRadixProject(options),
+        generateComponent: (name, designContext, customizations) => generateRadixComponent(name, designContext, customizations),
+        getAvailableComponents: () => getAvailableRadixComponents(),
         getAvailablePatterns: () => []
       };
     case 'headlessui':
@@ -92,18 +78,9 @@ export function getComponentLibrary(libraryId: ComponentLibraryId): ComponentLib
         name: 'Headless UI',
         id: 'headlessui',
         description: 'Unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS',
-        setupProject: (options) => {
-          const { setupHeadlessProject } = require('./headlessui/index.js');
-          return setupHeadlessProject(options);
-        },
-        generateComponent: (name, designContext, customizations) => {
-          const { generateHeadlessComponent } = require('./headlessui/templates.js');
-          return generateHeadlessComponent(name, designContext, customizations);
-        },
-        getAvailableComponents: () => {
-          const { getAvailableHeadlessComponents } = require('./headlessui/index.js');
-          return getAvailableHeadlessComponents();
-        },
+        setupProject: (options) => setupHeadlessProject(options),
+        generateComponent: (name, designContext, customizations) => generateHeadlessComponent(name, designContext, customizations),
+        getAvailableComponents: () => getAvailableHeadlessComponents(),
         getAvailablePatterns: () => []
       };
     case 'material':
@@ -111,18 +88,9 @@ export function getComponentLibrary(libraryId: ComponentLibraryId): ComponentLib
         name: 'Material-UI',
         id: 'material',
         description: 'React components that implement Google\'s Material Design',
-        setupProject: (options) => {
-          const { setupMaterialProject } = require('./material/index.js');
-          return setupMaterialProject(options);
-        },
-        generateComponent: (name, designContext, customizations) => {
-          const { generateMaterialComponent } = require('./material/templates.js');
-          return generateMaterialComponent(name, designContext, customizations);
-        },
-        getAvailableComponents: () => {
-          const { getAvailableMaterialComponents } = require('./material/index.js');
-          return getAvailableMaterialComponents();
-        },
+        setupProject: (options) => setupMaterialProject(options),
+        generateComponent: (name, designContext, customizations) => generateMaterialComponent(name, designContext, customizations),
+        getAvailableComponents: () => getAvailableMaterialComponents(),
         getAvailablePatterns: () => []
       };
     case 'primevue':
