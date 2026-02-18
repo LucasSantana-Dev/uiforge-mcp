@@ -1,6 +1,6 @@
 /**
  * shadcn/ui Common Patterns
- * 
+ *
  * Provides common UI patterns and layouts using shadcn/ui components
  */
 
@@ -124,7 +124,7 @@ import { LoginForm } from "./login-form"
 describe("LoginForm", () => {
   it("renders login form correctly", () => {
     render(<LoginForm />)
-    
+
     expect(screen.getByText("Login")).toBeInTheDocument()
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
@@ -134,11 +134,11 @@ describe("LoginForm", () => {
   it("shows loading state on submit", async () => {
     const user = userEvent.setup()
     render(<LoginForm />)
-    
+
     await user.type(screen.getByLabelText(/email/i), "test@example.com")
     await user.type(screen.getByLabelText(/password/i), "password")
     await user.click(screen.getByRole("button", { name: "Sign In" }))
-    
+
     expect(screen.getByRole("button", { name: "Sign In" })).toBeDisabled()
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument()
   })
@@ -146,10 +146,10 @@ describe("LoginForm", () => {
   it("validates required fields", async () => {
     const user = userEvent.setup()
     render(<LoginForm />)
-    
+
     const submitButton = screen.getByRole("button", { name: "Sign In" })
     await user.click(submitButton)
-    
+
     // HTML5 validation should prevent submission
     expect(screen.getByLabelText(/email/i)).toBeInvalid()
     expect(screen.getByLabelText(/password/i)).toBeInvalid()
@@ -157,11 +157,11 @@ describe("LoginForm", () => {
 
   it("has accessible form elements", () => {
     render(<LoginForm />)
-    
+
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/password/i)
     const submitButton = screen.getByRole("button", { name: "Sign In" })
-    
+
     expect(emailInput).toHaveAttribute("type", "email")
     expect(emailInput).toHaveAttribute("required")
     expect(passwordInput).toHaveAttribute("type", "password")
@@ -714,7 +714,7 @@ export function generateShadcnPattern(
   customizations?: Record<string, any>
 ): IGeneratedFile[] {
   const pattern = getShadcnPattern(patternName);
-  
+
   if (!pattern) {
     throw new Error(`Pattern "${patternName}" not found`);
   }
@@ -738,7 +738,7 @@ function applyDesignContextToPattern(
   // Apply design context customizations similar to templates
   if (designContext.colorPalette) {
     const { primary, secondary, accent, destructive } = designContext.colorPalette;
-    
+
     // This would require more sophisticated parsing for Tailwind classes
     // For now, we'll keep the default shadcn styling
   }
@@ -753,6 +753,3 @@ function applyDesignContextToPattern(
 
   return result;
 }
-
-// Import cn utility for patterns that need it
-import { cn } from '../../utils/consolidated.utils.js';

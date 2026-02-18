@@ -107,8 +107,8 @@ export class DesignService {
     }
 
     // Check spacing
-    if (!context.spacing?.base) {
-      errors.push('Base spacing is required');
+    if (!context.spacing?.unit) {
+      errors.push('Spacing unit is required');
     }
 
     // Validate color format (hex)
@@ -174,16 +174,16 @@ export class DesignService {
       typography: {
         fontFamily: ctx.typography?.fontFamily ?? 'Inter, sans-serif',
         headingFont: ctx.typography?.headingFont ?? 'Inter, sans-serif',
-        baseFontSize: ctx.typography?.baseFontSize ?? '1rem',
-        headingScale: ctx.typography?.headingScale ?? 1.2,
+        baseFontSize: ctx.typography?.fontSize?.base ?? '1rem',
+        headingScale: ctx.typography?.fontSize?.lg ?? '1.125rem',
       },
       spacing: {
-        base: ctx.spacing?.base ?? '1rem',
-        scale: ctx.spacing?.scale ?? 1.5,
+        unit: String(ctx.spacing?.unit ?? 4),
+        scale: (ctx.spacing?.scale ?? [1, 2, 4, 8]).join(','),
       },
       borderRadius: {
-        base: ctx.borderRadius?.base || '0.5rem',
-        scale: ctx.borderRadius?.scale || 1,
+        sm: ctx.borderRadius?.sm ?? '0.25rem',
+        md: ctx.borderRadius?.md ?? '0.375rem',
       },
     };
   }

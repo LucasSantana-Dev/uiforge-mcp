@@ -14,7 +14,12 @@
 export { DesignService, designService } from './design.service.js';
 export { FigmaService, figmaService } from './figma.service.js';
 export { GenerationService, generationService } from './generation.service.js';
-// export { AnalysisService, analysisService } from './analysis.service.js'; // Temporarily disabled due to import issues
+export { AnalysisService, analysisService } from './analysis.service.js';
+
+import { DesignService, designService } from './design.service.js';
+import { FigmaService, figmaService } from './figma.service.js';
+import { GenerationService, generationService } from './generation.service.js';
+import { AnalysisService, analysisService } from './analysis.service.js';
 
 // Type exports for convenience
 export type {
@@ -109,7 +114,7 @@ export function initializeServices(): ServiceContainer {
   container.register('design', designService);
   container.register('figma', figmaService);
   container.register('generation', generationService);
-  // container.register('analysis', analysisService); // Temporarily disabled
+  container.register('analysis', analysisService);
   
   return container;
 }
@@ -122,7 +127,7 @@ export function getServices(): {
   design: DesignService;
   figma: FigmaService;
   generation: GenerationService;
-  // analysis: AnalysisService; // Temporarily disabled
+  analysis: AnalysisService;
 } {
   const container = ServiceContainer.getInstance();
   
@@ -130,6 +135,6 @@ export function getServices(): {
     design: container.get<DesignService>('design'),
     figma: container.get<FigmaService>('figma'),
     generation: container.get<GenerationService>('generation'),
-    // analysis: container.get<AnalysisService>('analysis'), // Temporarily disabled
+    analysis: container.get<AnalysisService>('analysis'),
   };
 }

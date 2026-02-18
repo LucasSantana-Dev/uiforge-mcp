@@ -1,6 +1,6 @@
 /**
  * shadcn/ui Component Library Integration
- * 
+ *
  * Complete integration for shadcn/ui component library including:
  * - Component templates
  * - Dependency management
@@ -34,7 +34,7 @@ export interface ShadcnSetupOptions {
  */
 export function setupShadcnProject(options: ShadcnSetupOptions): IGeneratedFile[] {
   const files: IGeneratedFile[] = [];
-  
+
   // 1. Generate setup files (package.json, tailwind, etc.)
   const setupFiles = generateShadcnSetup(
     options.framework,
@@ -43,14 +43,14 @@ export function setupShadcnProject(options: ShadcnSetupOptions): IGeneratedFile[
     []
   );
   files.push(...setupFiles);
-  
+
   // 2. Generate component files
   if (options.components) {
     options.components.forEach(componentName => {
       try {
         const componentFiles = generateShadcnComponent(
           componentName,
-          options.designContext || {},
+          options.designContext ?? ({} as IDesignContext),
           options.customizations
         );
         files.push(...componentFiles);
@@ -59,14 +59,14 @@ export function setupShadcnProject(options: ShadcnSetupOptions): IGeneratedFile[
       }
     });
   }
-  
+
   // 3. Generate pattern files
   if (options.patterns) {
     options.patterns.forEach(patternName => {
       try {
         const patternFiles = generateShadcnPattern(
           patternName,
-          options.designContext || {},
+          options.designContext ?? ({} as IDesignContext),
           options.customizations
         );
         files.push(...patternFiles);
@@ -75,7 +75,7 @@ export function setupShadcnProject(options: ShadcnSetupOptions): IGeneratedFile[
       }
     });
   }
-  
+
   return files;
 }
 
@@ -85,7 +85,7 @@ export function setupShadcnProject(options: ShadcnSetupOptions): IGeneratedFile[
 export function getAvailableShadcnComponents(): string[] {
   return [
     'Button',
-    'Card', 
+    'Card',
     'Input',
     'Label',
     'Select',
@@ -145,32 +145,32 @@ export function validateShadcnSetup(files: IGeneratedFile[]): {
 } {
   const errors: string[] = [];
   const warnings: string[] = [];
-  
+
   // Check for required files
   const requiredFiles = [
     'package.json',
     'tailwind.config.js',
     'lib/utils.ts'
   ];
-  
+
   requiredFiles.forEach(file => {
     if (!files.find(f => f.path === file)) {
       errors.push(`Missing required file: ${file}`);
     }
   });
-  
+
   // Check for component directory structure
   const componentFiles = files.filter(f => f.path.startsWith('components/ui/'));
   if (componentFiles.length === 0) {
     warnings.push('No UI components generated');
   }
-  
+
   // Check for CSS file
   const cssFile = files.find(f => f.path.includes('.css'));
   if (!cssFile) {
     errors.push('Missing CSS file with Tailwind directives');
   }
-  
+
   return {
     isValid: errors.length === 0,
     errors,

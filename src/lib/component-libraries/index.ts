@@ -73,66 +73,57 @@ export function getComponentLibrary(libraryId: ComponentLibraryId): ComponentLib
         name: 'Radix UI',
         id: 'radix',
         description: 'Unstyled, accessible components for building high-quality design systems and web apps',
-        setupProject: () => {
-          // TODO: Implement Radix UI setup
-          throw new Error('Radix UI integration not yet implemented');
+        setupProject: (options) => {
+          const { setupRadixProject } = require('./radix/index.js');
+          return setupRadixProject(options);
         },
-        generateComponent: () => {
-          // TODO: Implement Radix UI component generation
-          throw new Error('Radix UI component generation not yet implemented');
+        generateComponent: (name, designContext, customizations) => {
+          const { generateRadixComponent } = require('./radix/templates.js');
+          return generateRadixComponent(name, designContext, customizations);
         },
         getAvailableComponents: () => {
-          // TODO: Return available Radix UI components
-          return [];
+          const { getAvailableRadixComponents } = require('./radix/index.js');
+          return getAvailableRadixComponents();
         },
-        getAvailablePatterns: () => {
-          // TODO: Return available Radix UI patterns
-          return [];
-        }
+        getAvailablePatterns: () => []
       };
     case 'headlessui':
       return {
         name: 'Headless UI',
         id: 'headlessui',
         description: 'Unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS',
-        setupProject: () => {
-          // TODO: Implement Headless UI setup
-          throw new Error('Headless UI integration not yet implemented');
+        setupProject: (options) => {
+          const { setupHeadlessProject } = require('./headlessui/index.js');
+          return setupHeadlessProject(options);
         },
-        generateComponent: () => {
-          // TODO: Implement Headless UI component generation
-          throw new Error('Headless UI component generation not yet implemented');
+        generateComponent: (name, designContext, customizations) => {
+          const { generateHeadlessComponent } = require('./headlessui/templates.js');
+          return generateHeadlessComponent(name, designContext, customizations);
         },
         getAvailableComponents: () => {
-          // TODO: Return available Headless UI components
-          return [];
+          const { getAvailableHeadlessComponents } = require('./headlessui/index.js');
+          return getAvailableHeadlessComponents();
         },
-        getAvailablePatterns: () => {
-          // TODO: Return available Headless UI patterns
-          return [];
-        }
+        getAvailablePatterns: () => []
       };
     case 'material':
       return {
         name: 'Material-UI',
         id: 'material',
         description: 'React components that implement Google\'s Material Design',
-        setupProject: () => {
-          // TODO: Implement Material-UI setup
-          throw new Error('Material-UI integration not yet implemented');
+        setupProject: (options) => {
+          const { setupMaterialProject } = require('./material/index.js');
+          return setupMaterialProject(options);
         },
-        generateComponent: () => {
-          // TODO: Implement Material-UI component generation
-          throw new Error('Material-UI component generation not yet implemented');
+        generateComponent: (name, designContext, customizations) => {
+          const { generateMaterialComponent } = require('./material/templates.js');
+          return generateMaterialComponent(name, designContext, customizations);
         },
         getAvailableComponents: () => {
-          // TODO: Return available Material-UI components
-          return [];
+          const { getAvailableMaterialComponents } = require('./material/index.js');
+          return getAvailableMaterialComponents();
         },
-        getAvailablePatterns: () => {
-          // TODO: Return available Material-UI patterns
-          return [];
-        }
+        getAvailablePatterns: () => []
       };
     case 'primevue':
       return {

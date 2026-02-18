@@ -23,7 +23,7 @@ const inputSchema = z.object({
   componentType: z.string().describe('Type of component to generate (e.g., button, card, input)'),
   library: z.enum(['shadcn', 'radix', 'headlessui', 'material', 'primevue', 'none']).describe('Component library to use'),
   framework: z.enum(['react', 'nextjs', 'vue', 'svelte', 'angular', 'html']).describe('Target framework'),
-  customizations: z.record(z.any()).optional().describe('Custom component properties and styling'),
+  customizations: z.record(z.string(), z.any()).optional().describe('Custom component properties and styling'),
   outputPath: z.string().optional().describe('Output directory for generated files'),
   includeTests: z.boolean().default(true).describe('Generate test files'),
   includeStories: z.boolean().default(true).describe('Generate Storybook stories'),
@@ -51,11 +51,7 @@ export type GenerateComponentLibraryOutput = z.infer<typeof outputSchema>;
 export async function generateComponentLibraryHandler(
   input: GenerateComponentLibraryInput
 ): Promise<GenerateComponentLibraryOutput> {
-  logger.info('Generating component library component', {
-    componentType: input.componentType,
-    library: input.library,
-    framework: input.framework,
-  });
+  logger.info(`Generating ${input.library} component: ${input.componentType} for ${input.framework}`);
 
   try {
     // Get current design context
@@ -97,10 +93,7 @@ export async function generateComponentLibraryHandler(
     const examples = generateUsageExamples(input.componentType, input.library, input.framework);
     const setupInstructions = generateSetupInstructions(input.library, input.framework);
 
-    logger.info('Component generation completed', {
-      fileCount: filteredFiles.length,
-      dependencies: dependencies.length,
-    });
+    logger.info(`Component generation completed: ${filteredFiles.length} files, ${dependencies.length} deps`);
 
     return {
       component: filteredFiles,
@@ -109,9 +102,10 @@ export async function generateComponentLibraryHandler(
       setupInstructions,
     };
 
-  } catch (error) {
-    logger.error('Component generation failed', { error: error.message });
-    throw new Error(`Failed to generate component: ${error.message}`);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error(`Component generation failed: ${msg}`);
+    throw new Error(`Failed to generate component: ${msg}`);
   }
 }
 
@@ -130,9 +124,10 @@ export async function getAvailableComponentsHandler(
       library: libraryInfo?.name || library,
       description: libraryInfo?.description || '',
     };
-  } catch (error) {
-    logger.error('Failed to get available components', { library, error: error.message });
-    throw new Error(`Failed to get components for ${library}: ${error.message}`);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error(`Failed to get available components: ${msg}`);
+    throw new Error(`Failed to get components for ${library}: ${msg}`);
   }
 }
 
@@ -160,9 +155,10 @@ export async function getAvailableLibrariesHandler(): Promise<{
         patternCount: lib.getAvailablePatterns().length,
       }))
     };
-  } catch (error) {
-    logger.error('Failed to get available libraries', { error: error.message });
-    throw new Error(`Failed to get libraries: ${error.message}`);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error(`Failed to get available libraries: ${msg}`);
+    throw new Error(`Failed to get libraries: ${msg}`);
   }
 }
 
