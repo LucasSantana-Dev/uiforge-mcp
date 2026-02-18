@@ -7,6 +7,31 @@ on:
     branches: [main]
 
 jobs:
+  shell-lint:
+    name: Shell Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install shfmt
+        run: sudo apt-get install -y shfmt
+
+      - name: Run shellcheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        env:
+          SHELLCHECK_OPTS: --rcfile=.shellcheckrc
+
+      - name: Check shell formatting
+        run: |
+          ERRORS=0
+          while IFS= read -r -d '' f; do
+            if shfmt -d -i 2 "$f" 2>/dev/null | grep -q .; then
+              echo "Formatting violation: $f"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(find . -name "*.sh" ! -path "*/node_modules/*" -print0)
+          [ "$ERRORS" -eq 0 ] && echo "All shell scripts correctly formatted" || exit 1
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -104,7 +129,6 @@ jobs:
             echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
             echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
 
-            # Extract coverage percentages
             LINES=$(cat coverage/coverage-summary.json | jq '.total.lines.pct // 0')
             FUNCTIONS=$(cat coverage/coverage-summary.json | jq '.total.functions.pct // 0')
             BRANCHES=$(cat coverage/coverage-summary.json | jq '.total.branches.pct // 0')
@@ -116,7 +140,6 @@ jobs:
             echo "| Statements | ${STATEMENTS}% |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
 
-            # Check if coverage meets threshold
             if (( $(echo "$LINES >= 80" | bc -l) )); then
               echo "✅ Line coverage meets 80% threshold" >> $GITHUB_STEP_SUMMARY
             else
