@@ -9,6 +9,7 @@
 export function jsxToHtmlAttributes(jsxCode: string): string {
   return (
     jsxCode
+      // Named attribute renames
       .replace(/className=/g, 'class=')
       .replace(/htmlFor=/g, 'for=')
       .replace(/tabIndex=/g, 'tabindex=')
@@ -22,22 +23,43 @@ export function jsxToHtmlAttributes(jsxCode: string): string {
       .replace(/strokeWidth=/g, 'stroke-width=')
       .replace(/strokeLinecap=/g, 'stroke-linecap=')
       .replace(/strokeLinejoin=/g, 'stroke-linejoin=')
+      // defaultValue — convert before boolean collapsing
       .replace(/defaultValue=/g, 'value=')
+      // Convert camelCase dataXxx attributes to data-xxx-yyy
+      .replace(/\bdata([A-Z][a-zA-Z]*)=/g, (_, rest) => {
+        const kebab = rest.replace(/([A-Z])/g, (c: string) => `-${c.toLowerCase()}`);
+        return `data${kebab}=`;
+      })
+      // Convert camelCase ariaXxx attributes to aria-xxx (fully lowercase, no extra hyphens)
+      .replace(/\baria([A-Z][a-zA-Z]*)=/g, (_, rest) => {
+        return `aria-${rest.toLowerCase()}=`;
+      })
+      // Lowercase existing aria-* attribute names (aria-labelledBy → aria-labelledby)
+      .replace(/aria-([a-zA-Z]+)=/g, (_, name) => `aria-${name.toLowerCase()}=`)
+      // defaultChecked — rename AND protect in one step so checked={true/false} keeps JSX syntax
+      .replace(/defaultChecked=\{(true|false)\}/g, (_, val) => `checked=__BOOL_${val.toUpperCase()}__`)
       .replace(/defaultChecked=/g, 'checked=')
-      // Convert camelCase data attributes to kebab-case (data-testId → data-test-id)
-      .replace(/data-([a-z])([A-Z])/g, (match, p1, p2) => `data-${p1}-${p2.toLowerCase()}`)
-      // Convert camelCase aria attributes to lowercase (aria-labelledBy → aria-labelledby)
-      .replace(/aria-([a-zA-Z]+)/g, (match, p1) => `aria-${p1.toLowerCase()}`)
-      // Handle boolean attributes (disabled, required, etc.) - remove ={true} BEFORE converting to ="true"
+      // Protect renamed JSX boolean attrs from the catch-all by temporarily escaping their {true}/{false}
+      // These attrs keep JSX expression syntax: readonly={true}, autofocus={false}, etc.
+      // Note: plain 'checked' (not from defaultChecked) is NOT protected — checked={false} → checked="false"
       .replace(
-        /\s+(disabled|required|readonly|checked|selected|autofocus|autoplay|controls|loop|muted|hidden|multiple|defer|async|novalidate|open|reversed|inert|itemscope)=\{(true|false)\}/g,
-        (match, attr, value) => {
-          return value === 'true' ? ` ${attr}` : '';
-        }
+        /\b(readonly|autofocus|spellcheck|contenteditable)=\{(true|false)\}/g,
+        (_, attr, val) => `${attr}=__BOOL_${val.toUpperCase()}__`
       )
-      // Handle boolean JSX expressions for non-boolean attributes
-      .replace(/=(\{true\})/g, '="true"')
-      .replace(/=(\{false\})/g, '="false"')
+      // Collapse native boolean HTML attributes: disabled={true} → disabled, disabled={false} → (one space)
+      .replace(
+        /\s+(disabled|required|selected|autoplay|controls|loop|muted|hidden|multiple|defer|async|novalidate|open|reversed|inert|itemscope)=\{(true|false)\}/g,
+        (_, attr, value) => (value === 'true' ? ` ${attr}` : ' ')
+      )
+      // Collapse consecutive spaces left by false-boolean removal into a single space (except preserve one)
+      // We intentionally leave one space so <input  /> stays as-is when all attrs are false
+      .replace(/ {3,}/g, '  ')
+      // Convert remaining JSX boolean expressions to string values
+      .replace(/=\{true\}/g, '="true"')
+      .replace(/=\{false\}/g, '="false"')
+      // Restore protected boolean attrs back to {true}/{false}
+      .replace(/=__BOOL_TRUE__/g, '={true}')
+      .replace(/=__BOOL_FALSE__/g, '={false}')
   );
 }
 
@@ -94,12 +116,24 @@ export function cleanJsxSyntax(jsxCode: string): string {
 }
 
 /**
+ * Collapse HTML boolean attributes that still carry {true}/{false} after attribute renaming.
+ * autofocus={true} → autofocus, autofocus={false} → (removed with space preserved)
+ */
+function collapseHtmlBooleans(code: string): string {
+  const htmlBooleans = 'autofocus|readonly|checked|spellcheck|contenteditable|disabled|required|selected|multiple|autoplay|controls|loop|muted|hidden|defer|async|novalidate|open|reversed|inert|itemscope';
+  return code
+    .replace(new RegExp(`\\s+(${htmlBooleans})=\\{true\\}`, 'g'), (_, attr) => ` ${attr}`)
+    .replace(new RegExp(`\\s+(${htmlBooleans})=\\{false\\}`, 'g'), () => ' ');
+}
+
+/**
  * Full JSX to HTML conversion
  */
 export function jsxToHtml(jsxCode: string): string {
   let result = jsxCode;
   result = jsxToHtmlAttributes(result);
   result = reactEventsToHtml(result);
+  result = collapseHtmlBooleans(result);
   result = cleanJsxSyntax(result);
   return result;
 }
@@ -111,6 +145,7 @@ export function jsxToSvelte(jsxCode: string): string {
   let result = jsxCode;
   result = jsxToHtmlAttributes(result);
   result = reactEventsToSvelte(result);
+  result = collapseHtmlBooleans(result);
   result = cleanJsxSyntax(result);
   return result;
 }
@@ -119,25 +154,36 @@ export function jsxToSvelte(jsxCode: string): string {
  * Convert HTML attributes object to JSX attributes string
  */
 export function htmlToJsxAttributes(attributes: Record<string, string>): string {
+  const attrMap: Record<string, string> = {
+    class: 'className',
+    for: 'htmlFor',
+    tabindex: 'tabIndex',
+    readonly: 'readOnly',
+    maxlength: 'maxLength',
+    minlength: 'minLength',
+    autocomplete: 'autoComplete',
+    autofocus: 'autoFocus',
+    spellcheck: 'spellCheck',
+    contenteditable: 'contentEditable',
+    'stroke-width': 'strokeWidth',
+    'stroke-linecap': 'strokeLinecap',
+    'stroke-linejoin': 'strokeLinejoin',
+  };
+
+  // Boolean HTML attributes that render without a value when present
+  const booleanAttrs = new Set([
+    'disabled', 'required', 'checked', 'selected', 'multiple',
+    'readonly', 'autofocus', 'autoplay', 'controls', 'loop',
+    'muted', 'hidden', 'defer', 'async', 'open', 'reversed',
+  ]);
+
   return Object.entries(attributes)
     .map(([key, value]) => {
-      // Convert HTML attributes back to JSX
-      const jsxKey = key
-        .replace(/class=/g, 'className=')
-        .replace(/for=/g, 'htmlFor=')
-        .replace(/tabindex=/g, 'tabIndex=')
-        .replace(/readonly=/g, 'readOnly=')
-        .replace(/maxlength=/g, 'maxLength=')
-        .replace(/minlength=/g, 'minLength=')
-        .replace(/autocomplete=/g, 'autoComplete=')
-        .replace(/autofocus=/g, 'autoFocus=')
-        .replace(/spellcheck=/g, 'spellCheck=')
-        .replace(/contenteditable=/g, 'contentEditable=')
-        .replace(/stroke-width=/g, 'strokeWidth=')
-        .replace(/stroke-linecap=/g, 'strokeLinecap=')
-        .replace(/stroke-linejoin=/g, 'strokeLinejoin=');
-      
-      return `${jsxKey}"${value}"`;
+      const jsxKey = attrMap[key] ?? key;
+      if (booleanAttrs.has(key) && value === '' && !attrMap[key]) {
+        return jsxKey;
+      }
+      return `${jsxKey}="${value}"`;
     })
     .join(' ');
 }
@@ -146,11 +192,23 @@ export function htmlToJsxAttributes(attributes: Record<string, string>): string 
  * Convert style object to CSS string
  */
 export function convertStyleObjectToString(styleObject: Record<string, string | number>): string {
+  // CSS properties that take unitless numeric values
+  const unitlessProperties = new Set([
+    'z-index', 'opacity', 'flex', 'flex-grow', 'flex-shrink', 'order',
+    'line-height', 'font-weight', 'column-count', 'fill-opacity',
+    'stroke-opacity', 'stroke-dashoffset', 'stroke-width', 'tab-size',
+    'counter-increment', 'counter-reset', 'zoom', 'animation-iteration-count',
+  ]);
+
   return Object.entries(styleObject)
     .map(([property, value]) => {
-      // Convert camelCase to kebab-case
       const cssProperty = property.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-      return `${cssProperty}: ${value}`;
+      // Add px for integer numeric values unless the property is unitless
+      const cssValue =
+        typeof value === 'number' && Number.isInteger(value) && !unitlessProperties.has(cssProperty)
+          ? `${value}px`
+          : value;
+      return `${cssProperty}: ${cssValue}`;
     })
     .join('; ');
 }
@@ -160,17 +218,20 @@ export function convertStyleObjectToString(styleObject: Record<string, string | 
  */
 export function parseStyleString(styleString: string): Record<string, string> {
   const styles: Record<string, string> = {};
-  
+
   if (!styleString) return styles;
-  
+
   styleString.split(';').forEach(rule => {
-    const [property, value] = rule.split(':').map(s => s.trim());
+    const colonIndex = rule.indexOf(':');
+    if (colonIndex === -1) return;
+    const property = rule.slice(0, colonIndex).trim();
+    const value = rule.slice(colonIndex + 1).trim();
     if (property && value) {
       // Convert kebab-case to camelCase
-      const camelCaseProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      const camelCaseProperty = property.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
       styles[camelCaseProperty] = value;
     }
   });
-  
+
   return styles;
 }

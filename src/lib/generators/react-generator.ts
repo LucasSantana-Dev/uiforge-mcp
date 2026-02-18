@@ -493,15 +493,37 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 
   protected generateRadixComponent(componentType: string, props: Record<string, any>): string {
     const componentName = this.formatComponentName(componentType);
+    const type = componentType.toLowerCase();
 
-    return `import * as Dialog from "@radix-ui/react-dialog"
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+    if (type === 'button') {
+      return `import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+
+interface ${componentName}Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean
+}
+
+export const ${componentName} = React.forwardRef<HTMLButtonElement, ${componentName}Props>(
+  ({ asChild, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return <Comp ref={ref} {...props} />
+  }
+)
+${componentName}.displayName = "${componentName}"
+
+export function ${componentName}Demo() {
+  return <Button>${componentName}</Button>
+}`;
+    }
+
+    if (type === 'dialog') {
+      return `import * as Dialog from "@radix-ui/react-dialog"
 
 export function ${componentName}(${this.generatePropsInterface(props)}) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button>${componentName}</button>
+        <button>Open ${componentName}</button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
@@ -510,20 +532,24 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
           <Dialog.Description>
             A ${componentType.toLowerCase()} component using Radix UI primitives
           </Dialog.Description>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <button>Options</button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content className="bg-white p-2 rounded-lg shadow-lg">
-                <DropdownMenu.Item>Option 1</DropdownMenu.Item>
-                <DropdownMenu.Item>Option 2</DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+          <Dialog.Close asChild>
+            <button>Close</button>
+          </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  )
+}`;
+    }
+
+    return `import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+
+export function ${componentName}(${this.generatePropsInterface(props)}) {
+  return (
+    <div className="${type}-root">
+      <span>${componentName}</span>
+    </div>
   )
 }`;
   }
