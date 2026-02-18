@@ -14,12 +14,14 @@
     "start": "node dist/index.js",
     "mcp": "node dist/index.js",
     "clean": "rm -rf dist coverage .tsbuildinfo node_modules/.cache",
-    "validate": "npm run lint:check && npm run format:check && npm run test",
+    "validate": "npm run lint:check && npm run format:check && npm run lint:shell && npm run test",
     "validate:all": "npm run lint; npm run format:check; npx tsc --noEmit; npm test; npm run build",
     "docker:build": "docker build -t uiforge-mcp:latest .",
     "docker:run": "docker run -i uiforge-mcp:latest",
     "lint": "eslint . --ext .js,.ts --fix",
     "lint:fix": "eslint src/ --fix",
+    "lint:shell": "bash scripts/lint-shell.sh",
+    "lint:shell:ci": "STRICT=1 bash scripts/lint-shell.sh",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
@@ -122,6 +124,9 @@
     "src/**/*.ts": [
       "eslint --fix",
       "prettier --write"
+    ],
+    "*.sh": [
+      "shellcheck --rcfile=.shellcheckrc"
     ]
   },
   "overrides": {
