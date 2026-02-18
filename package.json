@@ -1,11 +1,11 @@
 {
-  "name": "uiforge-mcp",
+  "name": "@forgespace/ui-mcp",
   "version": "0.5.0",
   "description": "AI-driven UI generation via Model Context Protocol. Generate React, Next.js, Vue, Angular applications from natural language. Screenshot-to-code, interactive prototypes, design mockups, accessibility auditing. Zero cost, open source.",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "uiforge-mcp": "dist/index.js"
+    "forgespace-ui-mcp": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -53,13 +53,15 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@uiforge/forge-patterns": "file:../forge-patterns",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.17.0",
+    "@forgespace/core": "^1.1.4",
     "@types/better-sqlite3": "^7.6.13",
+    "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.0.0",
     "@types/react": "^19.2.14",
+    "@types/semver": "^7.5.0",
     "@types/sharp": "^0.32.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
@@ -72,9 +74,7 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.5.1",
     "typescript": "^5.1.6",
-    "typescript-eslint": "^8.55.0",
-    "@types/fs-extra": "^11.0.1",
-    "@types/semver": "^7.5.0"
+    "typescript-eslint": "^8.55.0"
   },
   "engines": {
     "node": ">=22"
