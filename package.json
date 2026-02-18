@@ -1,6 +1,6 @@
 {
   "name": "uiforge-mcp",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "AI-driven UI generation via Model Context Protocol. Generate React, Next.js, Vue, Angular applications from natural language. Screenshot-to-code, interactive prototypes, design mockups, accessibility auditing. Zero cost, open source.",
   "type": "module",
   "main": "dist/index.js",
@@ -53,6 +53,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@uiforge/forge-patterns": "file:../forge-patterns",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.17.0",
     "@types/better-sqlite3": "^7.6.13",
