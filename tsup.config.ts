@@ -21,11 +21,9 @@ export default defineConfig({
     'pino',
     'pino-pretty',
   ],
-  esbuildOptions(options: Options['esbuildOptions']) {
-    if (options) {
-      options.platform = 'node';
-      options.packages = 'external'; // Don't bundle node_modules
-    }
+  esbuildOptions(options, context) {
+    options.platform = 'node';
+    options.packages = 'external'; // Don't bundle node_modules
   },
   onSuccess: 'echo "✓ Build completed successfully"',
 } satisfies Options);

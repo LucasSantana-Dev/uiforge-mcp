@@ -1,0 +1,211 @@
+# Codecov Configuration for UIForge Projects
+# This configuration provides unified coverage reporting across all projects
+
+codecov:
+  # Require CI to pass before processing coverage
+  require_ci_to_pass: true
+  
+  # Notify settings
+  notify:
+    # Require coverage to be uploaded before processing
+    require_ci_to_pass: true
+    # Notify after all builds are complete
+    after_n_builds: 3
+
+coverage:
+  # Precision of coverage percentages
+  precision: 2
+  
+  # Rounding direction for coverage percentages
+  round: down
+  
+  # Coverage range (minimum to maximum)
+  range: "70...100"
+  
+  # Coverage status checks
+  status:
+    # Project coverage (overall coverage)
+    project:
+      default:
+        # Target coverage percentage
+        target: 80%
+        # Threshold for coverage drop
+        threshold: 1%
+        # Base branch for comparison
+        base: auto
+        # Only report on changes to coverage
+        if_ci_failed: error
+        
+    # Patch coverage (coverage for new changes)
+    patch:
+      default:
+        # Target coverage percentage for new code
+        target: 80%
+        # Threshold for coverage drop in new code
+        threshold: 1%
+        # Base branch for comparison
+        base: auto
+        # Only report on changes to coverage
+        if_ci_failed: error
+        
+    # Changes coverage (coverage for modified files)
+    changes:
+      default:
+        # Target coverage percentage for modified code
+        target: 80%
+        # Threshold for coverage drop in modified code
+        threshold: 1%
+        # Base branch for comparison
+        base: auto
+
+# Parsing configuration
+parsers:
+  # GCov parser configuration
+  gcov:
+    # Branch detection
+    branch_detection:
+      # Conditional branches
+      conditional: true
+      # Loop branches
+      loop: true
+      # Method branches
+      method: true
+      # Else branches
+      else: true
+      
+  # JavaScript/TypeScript parser
+  javascript:
+    # Enable part coverage
+    enable_partials: false
+    
+  # Python parser
+  python:
+    # Enable coverage for Python files
+    enable_coverage: true
+
+# Comment configuration
+comment:
+  # Layout template for PR comments
+  layout: "reach,diff,flags,files,footer"
+  
+  # Behavior settings
+  behavior: default
+  
+  # Require changes to be covered
+  require_changes: false
+  
+  # Require base to be covered
+  require_base: no
+  
+  # Require head to be covered
+  require_head: yes
+
+# GitHub integration
+github_checks:
+  # Enable GitHub annotations
+  annotations: true
+
+# Flag configuration for different test types
+flags:
+  # Unit tests flag
+  unittests:
+    # Carryforward flag (carry forward coverage from previous builds)
+    carryforward: true
+    # Paths for unit tests
+    paths:
+      - apps/
+      - src/
+      - lib/
+    
+  # Integration tests flag
+  integration:
+    # Carryforward flag
+    carryforward: true
+    # Paths for integration tests
+    paths:
+      - tests/integration/
+      - tests/e2e/
+    
+  # E2E tests flag
+  e2e:
+    # Carryforward flag
+    carryforward: true
+    # Paths for E2E tests
+    paths:
+      - tests/e2e/
+
+# Ignore configuration
+ignore:
+  # Ignore test files from coverage calculation
+  - "tests/"
+  - "**/tests/"
+  - "**/test/"
+  - "**/__tests__/"
+  
+  # Ignore vendor/third-party files
+  - "node_modules/"
+  - "vendor/"
+  - "**/vendor/"
+  
+  # Ignore build artifacts
+  - "dist/"
+  - "build/"
+  - "**/dist/"
+  - "**/build/"
+  
+  # Ignore generated files
+  - "**/*.generated.*"
+  - "**/generated/"
+  
+  # Ignore documentation files
+  - "docs/"
+  - "**/*.md"
+  
+  # Ignore configuration files
+  - "**/*.config.*"
+  - "**/.*"
+
+# Path configuration
+fixes:
+  # Path fixes for different project structures
+  - "apps/::apps/"
+  - "src/::src/"
+  - "lib/::lib/"
+
+# Plugin configuration
+plugins:
+  # Enable sonarqube plugin
+  sonarqube:
+    # SonarQube server URL
+    server: https://sonarcloud.io
+    
+  # Enable jenkins plugin
+  jenkins:
+    # Jenkins server URL
+    server: https://jenkins.io
+
+# API configuration
+api:
+  # API version
+  version: v2
+  
+  # API timeout
+  timeout: 120
+
+# Reporting configuration
+reporting:
+  # Upload reports
+  upload: true
+  
+  # Report formats
+  formats:
+    - xml
+    - html
+    - text
+    - lcov
+    
+  # Report directory
+  report_dir: coverage
+
+# Project-specific overrides can be defined here
+# Each project can extend this configuration with project-specific settings

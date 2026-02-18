@@ -23,21 +23,38 @@ export function registerSubmitFeedback(server: McpServer): void {
     {
       generation_id: z.string().describe('The ID of the generation to provide feedback for'),
       rating: z
-        .enum(['positive', 'negative'])
-        .describe('Whether the generated output was acceptable (positive) or not (negative)'),
-      comment: z.string().optional().describe('Optional comment explaining why the output was good or bad'),
+        .number()
+        .min(1)
+        .max(10)
+        .describe('Rating from 1 (poor) to 10 (excellent)'),
+      feedback_type: z
+        .enum(['explicit', 'implicit'])
+        .describe('Type of feedback: explicit (user-provided) or implicit (behavior-based)'),
+      comments: z.string().optional().describe('Optional detailed feedback comments'),
+      issues: z.array(z.string()).optional().describe('List of identified issues in the generated component'),
+      strengths: z.array(z.string()).optional().describe('List of identified strengths in the generated component'),
+      component_type: z.string().optional().describe('Type of component (e.g., button, form, layout)'),
+      framework: z.string().optional().describe('Target framework (e.g., react, vue, svelte)')
     },
-    ({ generation_id, rating, comment }) => {
+    ({ generation_id, rating, feedback_type, comments, issues, strengths, component_type, framework }) => {
       try {
         const db = getDatabase();
-        const feedback = recordExplicitFeedback(generation_id, rating, db, comment);
+
+        // Convert numeric rating to positive/negative for compatibility
+        const sentiment = rating >= 7 ? 'positive' : 'negative';
+        const feedback = recordExplicitFeedback(generation_id, sentiment, db, comments);
         const stats = getFeedbackStats(db);
 
         const summary = [
           `✅ Feedback recorded for generation \`${generation_id}\``,
-          `- **Rating**: ${rating === 'positive' ? '👍 Positive' : '👎 Negative'}`,
+          `- **Rating**: ${rating}/10 ${sentiment === 'positive' ? '👍' : sentiment === 'negative' ? '👎' : '�'} ${sentiment}`,
+          `- **Type**: ${feedback_type}`,
           `- **Score**: ${feedback.score > 0 ? '+' : ''}${feedback.score}`,
-          comment ? `- **Comment**: ${comment}` : '',
+          comments ? `- **Comments**: ${comments}` : '',
+          issues?.length ? `- **Issues**: ${issues.join(', ')}` : '',
+          strengths?.length ? `- **Strengths**: ${strengths.join(', ')}` : '',
+          component_type ? `- **Component**: ${component_type}` : '',
+          framework ? `- **Framework**: ${framework}` : '',
           '',
           '📊 **Feedback Stats**',
           `- Total feedback: ${stats.total}`,

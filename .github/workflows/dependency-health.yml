@@ -1,0 +1,338 @@
+name: Dependency Health
+
+on:
+  schedule:
+    # Run dependency health check weekly on Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      check_outdated:
+        description: 'Check for outdated dependencies'
+        required: false
+        default: true
+        type: boolean
+      check_security:
+        description: 'Check for security vulnerabilities'
+        required: false
+        default: true
+        type: boolean
+      generate_report:
+        description: 'Generate dependency health report'
+        required: false
+        default: true
+        type: boolean
+      auto_update:
+        description: 'Auto-update patch/minor versions (experimental)'
+        required: false
+        default: false
+        type: boolean
+      update_minor:
+        description: 'Include minor versions in auto-update'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  dependency-health:
+    name: Dependency Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check for outdated dependencies
+        if: github.event.inputs.check_outdated == 'true'
+        run: |
+          echo "📦 Checking for outdated dependencies..."
+
+          # Get outdated packages
+          npm outdated --json > outdated.json || true
+
+          if [ -s outdated.json ]; then
+            echo "## 📊 Outdated Dependencies Report" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Parse and format outdated packages
+            echo "| Package | Current | Latest | Type | Latest Type |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|--------|--------|------|-------------|" >> $GITHUB_STEP_SUMMARY
+
+            # Use jq to parse and format the output
+            if command -v jq &> /dev/null; then
+              cat outdated.json | jq -r '.[] | select(.type != "devDependencies") |
+                "| \(.name // .package) | \(.current // "N/A") | \(.latest // "N/A") | \(.type // "N/A") | \(.latestType // "N/A") |"' >> $GITHUB_STEP_SUMMARY
+            else
+              # Fallback if jq is not available
+              echo "jq not available, showing raw output:" >> $GITHUB_STEP_SUMMARY
+              cat outdated.json >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "✅ No outdated dependencies found" >> $GITHUB_SUMMARY
+          fi
+
+      - name: Check for security vulnerabilities
+        if: github.event.inputs.check_security == 'true'
+        run: |
+          echo "🔒 Checking for security vulnerabilities..."
+
+          # Run npm audit with JSON output
+          AUDIT_OUTPUT=$(npm audit --audit-level=moderate --json 2>/dev/null || echo '{"vulnerabilities": []}')
+
+          echo "## 🔒 Security Vulnerabilities Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if echo "$AUDIT_OUTPUT" | jq -e '.vulnerabilities | length > 0' > /dev/null 2>/dev/null; then
+            echo "⚠️ Security vulnerabilities found!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Severity | Count | Package | Title | Patched |" >> $GitHub_STEP_SUMMARY
+            echo "|----------|-------|---------|-------|--------|" >> $GITHUB_STEP_SUMMARY
+
+            # Parse vulnerabilities
+            if command -v jq &> /dev/null; then
+              echo "$AUDIT_OUTPUT" | jq -r '.vulnerabilities[] |
+                "| \(.severity // "unknown") | \(.count // 1) | \(.name // "unknown") | \(.title // "N/A") | \(.patched // false) |"' >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "✅ No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Analyze dependency tree
+        run: |
+          echo "🌳 Analyzing dependency tree..."
+
+          # Get dependency count
+          DEP_COUNT=$(npm list --depth=0 --json 2>/dev/null | jq '.dependencies | keys | length' || echo "0")
+          DEV_DEP_COUNT=$(npm list --depth=0 --json 2>/dev/null | jq '.devDependencies | keys | length' || echo "0")
+
+          echo "## 📈 Dependency Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Production Dependencies: $DEP_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "- Development Dependencies: $DEV_DEP_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "- Total Dependencies: $(($DEP_COUNT + $DEV_DEP_COUNT))" >> $GITHUB_SUMMARY
+
+          # Check for duplicate dependencies
+          DUPLICATE_CHECK=$(npm ls --depth=0 --json 2>/dev/null | jq -r '.dependencies | to_entries[] | select(.value | has("deduped")) | length' || echo "0")
+          if [ "$DUPLICATE_CHECK" -gt 0 ]; then
+            echo "- ⚠️ Duplicate dependencies: $DUPLICATE_CHECK" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ✅ No duplicate dependencies" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check package.json health
+        run: |
+          echo "📄 Analyzing package.json health..."
+
+          echo "## 📋 Package.json Health" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check for common issues
+          ISSUES=()
+
+          # Check for missing scripts
+          if ! jq -e '.scripts.test' package.json > /dev/null; then
+            ISSUES+=("Missing test script")
+          fi
+
+          if ! jq -e '.scripts.build' package.json > /dev/null; then
+            ISSUES+=("Missing build script")
+          fi
+
+          if ! jq -e '.scripts.lint' package.json > /dev/null && ! jq -e '.scripts["lint:fix"]' package.json > /dev/null; then
+            ISSUES+=("Missing lint script")
+          fi
+
+          # Check for engines configuration
+          if ! jq -e '.engines' package.json > /dev/null; then
+            ISSUES+=("Missing engines configuration")
+          fi
+
+          # Check for repository field
+          if ! jq -e '.repository' package.json > /dev/null; then
+            ISSUES+=("Missing repository field")
+          fi
+
+          if [ ${#ISSUES[@]} -gt 0 ]; then
+            echo "⚠️ Package.json issues found:" >> $GITHUB_STEP_SUMMARY
+            for issue in "${ISSUES[@]}"; do
+              echo "- $issue" >> $GITHUB_SUMMARY
+            done
+          else
+            echo "✅ Package.json is healthy" >> $GITHUB_SUMMARY
+          fi
+
+      - name: Generate dependency health score
+        if: github.event.inputs.generate_report == 'true'
+        run: |
+          echo "## 🎯 Dependency Health Score" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          SCORE=100
+
+          # Deduct points for issues
+          if [ -s outdated.json ]; then
+            OUTDATED_COUNT=$(cat outdated.json | jq '. | length' || echo "0")
+            SCORE=$((SCORE - OUTDATED_COUNT * 2))
+          fi
+
+          # Check for vulnerabilities
+          if echo "$AUDIT_OUTPUT" | jq -e '.vulnerabilities | length > 0' > /dev/null 2>/dev/null; then
+            VULN_COUNT=$(echo "$AUDIT_OUTPUT" | jq '.vulnerabilities | length' || echo "0")
+            HIGH_COUNT=$(echo "$AUDIT_OUTPUT" | jq '.vulnerabilities[] | select(.severity == "high") | length' || echo "0")
+            CRITICAL_COUNT=$(echo "$AUDIT_OUTPUT" | jq '.vulnerabilities[] | select(.severity == "critical") | length' || echo "0")
+
+            SCORE=$((SCORE - VULN_COUNT * 5))
+            SCORE=$((SCORE - HIGH_COUNT * 10))
+            SCORE=$((SCORE - CRITICAL_COUNT * 20))
+          fi
+
+          # Ensure score doesn't go below 0
+          if [ $SCORE -lt 0 ]; then
+            SCORE=0
+          fi
+
+          echo "**Overall Score: $SCORE/100**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ $SCORE -ge 90 ]; then
+            echo "🟢 **Excellent** - Dependencies are in great shape!" >> $GITHUB_STEP_SUMMARY
+          elif [ $SCORE -ge 70 ]; then
+            echo "🟡 **Good** - Dependencies are mostly healthy" >> $GITHUB_STEP_SUMMARY
+          elif [ $SCORE -ge 50 ]; then
+            echo "🟠 **Fair** - Some attention needed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🔴 **Poor** - Immediate attention required" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Recommendations" >> $GITHUB_STEP_SUMMARY
+
+          if [ $SCORE -lt 90 ]; then
+            echo "- Consider updating outdated dependencies" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ $VULN_COUNT -gt 0 ]; then
+            echo "- Address security vulnerabilities promptly" >> $GITHUB_SUMMARY
+          fi
+
+          if [ ${#ISSUES[@]} -gt 0 ]; then
+            echo "- Fix package.json configuration issues" >> $GITHUB_SUMMARY
+          fi
+
+  auto-update:
+    name: Auto-update Dependencies
+    runs-on: ubuntu-latest
+    if: github.event.inputs.auto_update == 'true'
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Update patch and minor versions
+        run: |
+          echo "🔄 Auto-updating patch and minor dependencies..."
+
+          # Update patch versions
+          npm update --save --package-lock-only
+
+          # Update minor versions (optional - can be risky)
+          if [ "${{ inputs.update_minor }}" == "true" ]; then
+            npm update --save --package-lock-only
+          fi
+
+          echo "✅ Dependencies updated"
+
+      - name: Create PR for updates
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            const title = '🔄 Auto-update dependencies';
+            const body = `
+            ## Automated Dependency Update
+
+            This PR contains automated updates to dependencies based on the following criteria:
+            - Patch versions: Always updated
+            - Minor versions: ${{ inputs.update_minor }}
+
+            ### 📋 Changes
+            See the diff for detailed changes.
+
+            ### 🔍 Verification
+            - [ ] Tests pass
+            - [ ] Build succeeds
+            - [ ] No breaking changes
+            - [ ] Security scan passes
+
+            ---
+            *This PR was automatically generated by the Dependency Health workflow.*
+            `;
+
+            await github.rest.pulls.create({
+              owner,
+              repo,
+              title,
+              body,
+              head: 'auto-update-dependencies',
+              base: 'main',
+              draft: true
+            });
+
+  notify-team:
+    name: Notify Team of Issues
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: [dependency-health]
+    steps:
+      - name: Create issue for dependency issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const title = `🚨 Dependency Health Alert - ${new Date().toISOString().split('T')[0]}`;
+
+            const body = `
+            ## 🚨 Dependency Health Alert
+
+            The daily dependency health check has identified issues that need attention.
+
+            ### 🔗 Links
+            - [Workflow Run](https://github.com/${owner}/${repo}/actions/runs/${{ github.run_id }})
+            - [Dependency Report](https://github.com/${owner}/${repo}/actions/workflows/dependency-health)
+
+            ### 📋 Recommended Actions
+            1. Review the dependency health report
+            2. Update outdated dependencies
+            3. Address security vulnerabilities
+            4. Fix package.json configuration issues
+            5. Re-run the health check
+            ---
+            *This issue was automatically created by the Dependency Health workflow.*
+            `;
+
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels: ['dependencies', 'security', 'health', 'alert']
+            });

@@ -114,3 +114,63 @@ export function jsxToSvelte(jsxCode: string): string {
   result = cleanJsxSyntax(result);
   return result;
 }
+
+/**
+ * Convert HTML attributes object to JSX attributes string
+ */
+export function htmlToJsxAttributes(attributes: Record<string, string>): string {
+  return Object.entries(attributes)
+    .map(([key, value]) => {
+      // Convert HTML attributes back to JSX
+      const jsxKey = key
+        .replace(/class=/g, 'className=')
+        .replace(/for=/g, 'htmlFor=')
+        .replace(/tabindex=/g, 'tabIndex=')
+        .replace(/readonly=/g, 'readOnly=')
+        .replace(/maxlength=/g, 'maxLength=')
+        .replace(/minlength=/g, 'minLength=')
+        .replace(/autocomplete=/g, 'autoComplete=')
+        .replace(/autofocus=/g, 'autoFocus=')
+        .replace(/spellcheck=/g, 'spellCheck=')
+        .replace(/contenteditable=/g, 'contentEditable=')
+        .replace(/stroke-width=/g, 'strokeWidth=')
+        .replace(/stroke-linecap=/g, 'strokeLinecap=')
+        .replace(/stroke-linejoin=/g, 'strokeLinejoin=');
+      
+      return `${jsxKey}"${value}"`;
+    })
+    .join(' ');
+}
+
+/**
+ * Convert style object to CSS string
+ */
+export function convertStyleObjectToString(styleObject: Record<string, string | number>): string {
+  return Object.entries(styleObject)
+    .map(([property, value]) => {
+      // Convert camelCase to kebab-case
+      const cssProperty = property.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+      return `${cssProperty}: ${value}`;
+    })
+    .join('; ');
+}
+
+/**
+ * Parse style string to object
+ */
+export function parseStyleString(styleString: string): Record<string, string> {
+  const styles: Record<string, string> = {};
+  
+  if (!styleString) return styles;
+  
+  styleString.split(';').forEach(rule => {
+    const [property, value] = rule.split(':').map(s => s.trim());
+    if (property && value) {
+      // Convert kebab-case to camelCase
+      const camelCaseProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      styles[camelCaseProperty] = value;
+    }
+  });
+  
+  return styles;
+}

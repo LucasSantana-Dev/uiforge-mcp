@@ -271,7 +271,7 @@ function applyFocusImprovements(code: string): RefineResult {
   // Handle buttons: find className attribute and append focus classes
   const buttonMatches = result.matchAll(/<button([^>]*)>/gi);
   for (const match of buttonMatches) {
-    const attrs = match[1];
+    const attrs = match[1] || '';
     if (!attrs.includes('focus-visible')) {
       const classMatch = attrs.match(/className=["']([^"']*)["']/);
       if (classMatch) {

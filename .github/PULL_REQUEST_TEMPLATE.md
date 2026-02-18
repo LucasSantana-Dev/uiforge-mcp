@@ -1,0 +1,1 @@
+.github/shared/templates/pr-template-master.md

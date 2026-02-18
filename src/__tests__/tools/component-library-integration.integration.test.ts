@@ -213,8 +213,12 @@ describe('Component Library Integration', () => {
     it('should generate raw Tailwind CSS when no library specified', () => {
       const files = generateComponent('button', 'react', mockDesignContext, {}, undefined, undefined, 'none');
 
-      expect(files).toHaveLength(1);
-      const buttonFile = files[0];
+      expect(files).toHaveLength(2); // Component + test file
+      const buttonFile = files.find(f => f.path.includes('.tsx'));
+
+      if (!buttonFile) {
+        throw new Error('Component file not found');
+      }
 
       // Should use regular button element with Tailwind classes
       expect(buttonFile.content).toContain('<button');
@@ -228,58 +232,67 @@ describe('Component Library Integration', () => {
     it('should support Vue with PrimeVue', () => {
       const files = generateComponent('button', 'vue', mockDesignContext, {}, undefined, undefined, 'primevue');
 
-      expect(files).toHaveLength(1);
-      const vueFile = files[0];
+      expect(files).toHaveLength(2); // Component + test file
+      const vueFile = files.find(f => f.path.includes('.vue'));
+
+      if (!vueFile) {
+        throw new Error('Vue component file not found');
+      }
 
       // Should be a Vue component
       expect(vueFile.path).toContain('.vue');
       expect(vueFile.content).toContain('<script setup lang="ts">');
       expect(vueFile.content).toContain('<template>');
-      // TODO: Add PrimeVue-specific assertions once library integration is implemented
-      // expect(vueFile.content).toContain('Button');
-      // expect(vueFile.content).toContain('primevue/button');
+      expect(vueFile.content).toContain('Button');
+      expect(vueFile.content).toContain('primevue/button');
     });
 
     it('should support Angular with Material UI', () => {
       const files = generateComponent('button', 'angular', mockDesignContext, {}, undefined, undefined, 'material');
 
-      expect(files).toHaveLength(1);
-      const angularFile = files[0];
+      expect(files).toHaveLength(2); // Component + test file
+      const angularFile = files.find(f => f.path.includes('.component.ts'));
+
+      if (!angularFile) {
+        throw new Error('Angular component file not found');
+      }
 
       // Should be an Angular component
-      expect(angularFile.path).toContain('.ts');
+      expect(angularFile.path).toContain('.component.ts');
       expect(angularFile.content).toContain('@Component');
       expect(angularFile.content).toContain('selector:');
-      // TODO: Add Material UI-specific assertions once library integration is implemented
-      // expect(angularFile.content).toContain('mat-button');
-      // expect(angularFile.content).toContain('@angular/material/button');
+      expect(angularFile.content).toContain('MatButton');
+      expect(angularFile.content).toContain('@angular/material/button');
     });
 
     it('should support Svelte with Headless UI', () => {
       const files = generateComponent('button', 'svelte', mockDesignContext, {}, undefined, undefined, 'headlessui');
 
-      expect(files).toHaveLength(1);
-      const svelteFile = files[0];
+      expect(files).toHaveLength(2); // Component + test file
+      const svelteFile = files.find(f => f.path.includes('.svelte'));
+
+      if (!svelteFile) {
+        throw new Error('Svelte component file not found');
+      }
 
       // Should be a Svelte component
       expect(svelteFile.path).toContain('.svelte');
       expect(svelteFile.content).toContain('<script lang="ts">');
       expect(svelteFile.content).not.toContain('<template>');
-      // TODO: Add Headless UI-specific assertions once library integration is implemented
-      // expect(svelteFile.content).toContain('Button');
-      // expect(svelteFile.content).toContain('@headlessui/react');
+      expect(svelteFile.content).toContain('Button');
+      expect(svelteFile.content).toContain('@headlessui/svelte');
     });
 
     it('should ignore component library for HTML framework', () => {
       const files = generateComponent('button', 'html', mockDesignContext, {}, undefined, undefined, 'shadcn');
 
-      expect(files).toHaveLength(1);
+      expect(files).toHaveLength(1); // HTML generator only creates 1 file
       const htmlFile = files[0];
 
       // Should be HTML with vanilla CSS
       expect(htmlFile.path).toContain('.html');
       expect(htmlFile.content).toContain('<!DOCTYPE html>');
-      expect(htmlFile.content).toContain('<button');
+      expect(htmlFile.content).toContain('<script src="https://cdn.tailwindcss.com">');
       expect(htmlFile.content).not.toContain('<Button');
     });
   });

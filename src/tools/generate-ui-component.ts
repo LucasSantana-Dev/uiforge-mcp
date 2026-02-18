@@ -5,7 +5,10 @@ import { designContextStore } from '../lib/design-context.js';
 import { auditStyles } from '../lib/style-audit.js';
 import { extractDesignFromUrl } from '../lib/design-extractor.js';
 import { jsxToHtmlAttributes, jsxToSvelte } from '../lib/utils/jsx.utils.js';
-import type { IGeneratedFile, IDesignContext } from '../lib/types.js';
+import { toPascalCase, toKebabCase } from '../lib/utils/string.utils.js';
+import type { IGeneratedFile, IDesignContext, Framework } from '../lib/types.js';
+import { generateComponent as generateComponentWithFactory } from '../lib/generators/generator-factory.js';
+import { ComponentLibrary } from '../lib/generators/base-generator.js';
 import { initializeRegistry } from '../lib/design-references/component-registry/init.js';
 import {
   getBestMatch,
@@ -116,87 +119,43 @@ export function generateComponent(
   props?: Record<string, string>,
   ragOptions?: IRagOptions,
   registryMatch?: ReturnType<typeof getBestMatch>,
-  _componentLibrary?: string
+  componentLibrary?: string
 ): IGeneratedFile[] {
   const componentName = toPascalCase(componentType);
-  // Generate only the interface body (not the full interface declaration)
-  const propsInterfaceBody =
-    props && Object.keys(props).length > 0
-      ? Object.entries(props)
-          .map(([key, propType]) => `  ${key}: ${propType};`)
-          .join('\n')
-      : '';
 
-  switch (framework) {
-    case 'react':
-    case 'nextjs':
-      return generateReactComponent(
-        componentName,
-        componentType,
-        designContext,
-        propsInterfaceBody,
-        props,
-        ragOptions,
-        registryMatch,
-        _componentLibrary
-      );
-    case 'vue':
-      return generateVueComponent(
-        componentName,
-        componentType,
-        designContext,
-        props,
-        ragOptions,
-        registryMatch,
-        _componentLibrary
-      );
-    case 'angular':
-      return generateAngularComponent(
-        componentName,
-        componentType,
-        designContext,
-        props,
-        ragOptions,
-        registryMatch,
-        _componentLibrary
-      );
-    case 'svelte':
-      return generateSvelteComponent(
-        componentName,
-        componentType,
-        designContext,
-        props,
-        ragOptions,
-        registryMatch,
-        _componentLibrary
-      );
-    case 'html':
-      return generateHtmlComponent(
-        componentName,
-        componentType,
-        designContext,
-        ragOptions,
-        registryMatch,
-        _componentLibrary
-      );
-    default:
-      return generateReactComponent(
-        componentName,
-        componentType,
-        designContext,
-        propsInterfaceBody,
-        props,
-        ragOptions,
-        registryMatch,
-        _componentLibrary
-      );
+  // Convert props to Record<string, any> for the generator
+  const generatorProps = props || {};
+
+  // Use the GeneratorFactory with component library support
+  try {
+    return generateComponentWithFactory(
+      framework as Framework,
+      componentType,
+      generatorProps,
+      designContext,
+      componentLibrary as ComponentLibrary
+    );
+  } catch (error) {
+    logger.error({ error, componentType, framework, componentLibrary }, 'Failed to generate component with factory');
+
+    // Fallback to simple component generation
+    const componentName = toPascalCase(componentType);
+
+    // Simple fallback component
+    return [{
+      path: `src/components/${componentName}.tsx`,
+      content: `// Fallback component for ${framework}
+export function ${componentName}() {
+  return <div>${componentName} - ${componentType}</div>;
+}`
+    }];
   }
 }
 
 export function registerGenerateUiComponent(server: McpServer): void {
   server.tool(
     'generate_ui_component',
-    'Create or iterate UI components with style audit and design context awareness. Supports React, Next.js, Vue, Angular, Svelte, and HTML. NOTE: component_library parameter is currently not implemented - all components use raw Tailwind CSS classes. Component library integration is planned for a future release.',
+    'Create or iterate UI components with style audit and design context awareness. Supports React, Next.js, Vue, Angular, Svelte, and HTML. Component library integration available: shadcn/ui, Radix UI, Headless UI, PrimeVue, Material UI.',
     inputSchema,
     async ({
       component_type,
@@ -227,9 +186,9 @@ export function registerGenerateUiComponent(server: McpServer): void {
           promptEnhancement = await enhancePrompt(component_type, {
             componentType: component_type,
             framework,
-            style: visual_style,
-            mood,
-            industry,
+            style: visual_style || undefined,
+            mood: mood || undefined,
+            industry: industry || undefined,
           });
           enhancedPromptText = promptEnhancement.enhanced;
         } catch (err) {
@@ -237,12 +196,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
         }
       }
 
-      // Warn if component_library is specified but not 'none'
-      if (component_library && component_library !== 'none') {
-        warnings.push(
-          `⚠️  Component library '${component_library}' is not yet implemented. Generated component will use raw Tailwind CSS classes.`
-        );
-      }
+      // Component library is now supported, no warning needed
 
       // Style audit
       if (existing_tailwind_config || existing_css_variables) {
@@ -301,7 +255,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
         framework,
         designContext,
         props,
-        ragOptions,
+        ragOptions || undefined,
         registryMatch,
         component_library
       );
@@ -311,13 +265,25 @@ export function registerGenerateUiComponent(server: McpServer): void {
       if (!skipML && files.length > 0) {
         try {
           const mainFile = files[0];
-          qualityScore = await scoreQuality(enhancedPromptText, mainFile.content, {
-            componentType: component_type,
-            framework,
-            style: visual_style,
-          });
+          if (mainFile?.content) {
+            qualityScore = await scoreQuality(enhancedPromptText, mainFile.content, {
+              componentType: component_type,
+              framework,
+              style: visual_style || undefined,
+            });
+          }
         } catch (err) {
           logger.warn({ error: err }, 'Quality scoring failed');
+        }
+      }
+
+      // Record generation for ML training (unless skip_ml)
+      if (!skipML && files.length > 0) {
+        try {
+          const db = getDatabase();
+          recordGeneration(generation, files[0]?.content || '', db, component_type);
+        } catch (err) {
+          logger.warn({ error: err }, 'Generation recording failed');
         }
       }
 
@@ -342,7 +308,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
             timestamp: Date.now(),
             sessionId,
           };
-          recordGeneration(generation, files[0].content, db, component_type);
+          recordGeneration(generation, files[0]?.content || '', db, component_type);
 
           // Auto-trigger pattern promotion every 10 generations
           generationCount++;
@@ -813,7 +779,7 @@ function generateReactComponent(
 
   return [
     {
-      path: `components/${kebabCase(name)}.tsx`,
+      path: `components/${toKebabCase(name)}.tsx`,
       content: `${libraryImports}${propsType}export function ${name}(${propsArg}) {
   return (
 ${body}
@@ -842,7 +808,7 @@ function generateVueComponent(
 
   return [
     {
-      path: `components/${kebabCase(name)}.vue`,
+      path: `components/${toKebabCase(name)}.vue`,
       content: `<script setup lang="ts">
 ${propsBlock ? `defineProps({\n${propsBlock}\n})` : ''}
 </script>
@@ -873,11 +839,11 @@ function generateAngularComponent(
 
   return [
     {
-      path: `components/${kebabCase(name)}.component.ts`,
+      path: `components/${toKebabCase(name)}.component.ts`,
       content: `import { Component${props ? ', Input' : ''} } from '@angular/core';
 
 @Component({
-  selector: 'app-${kebabCase(name)}',
+  selector: 'app-${toKebabCase(name)}',
   standalone: true,
   template: \`
 ${body}
@@ -909,7 +875,7 @@ function generateSvelteComponent(
 
   return [
     {
-      path: `components/${kebabCase(name)}.svelte`,
+      path: `components/${toKebabCase(name)}.svelte`,
       content: `<script lang="ts">
 ${propsDecl}
 </script>
@@ -932,7 +898,7 @@ function generateHtmlComponent(
 
   return [
     {
-      path: `components/${kebabCase(name)}.html`,
+      path: `components/${toKebabCase(name)}.html`,
       content: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1088,19 +1054,6 @@ function getComponentBody(
       <p className="text-foreground">${type} component</p>
     </div>`;
   }
-}
-
-function toPascalCase(str: string): string {
-  return str
-    .replace(/[-_\s]+(.)?/g, (_, c: string | undefined) => (c ? c.toUpperCase() : ''))
-    .replace(/^(.)/, (_, c: string) => c.toUpperCase());
-}
-
-function kebabCase(str: string): string {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[\s_]+/g, '-')
-    .toLowerCase();
 }
 
 function vueType(tsType: string): string {

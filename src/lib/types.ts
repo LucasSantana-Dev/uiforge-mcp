@@ -119,7 +119,7 @@ export interface ITailwindMapping {
 export type Framework = 'react' | 'nextjs' | 'vue' | 'angular' | 'svelte' | 'html';
 export type Styling = 'tailwindcss';
 export type Architecture = 'flat' | 'feature-based' | 'atomic';
-export type StateManagement = 'useState' | 'zustand' | 'pinia' | 'signals' | 'none';
+export type StateManagement = 'useState' | 'zustand' | 'pinia' | 'signals' | 'stores' | 'none';
 export type ImageOutputFormat = 'svg' | 'png';
 export type ImageType = 'wireframe' | 'mockup' | 'component_preview';
 export type PrototypeOutputFormat = 'html' | 'html_bundle';

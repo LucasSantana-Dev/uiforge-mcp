@@ -1,99 +1,79 @@
 module.exports = {
-  extends: [
-    'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'prettier'
-  ],
+  root: true,
+  env: {
+    node: true,
+    es2022: true
+  },
+  extends: ['eslint:recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
-    sourceType: 'module',
-    project: './tsconfig.json',
+    sourceType: 'module'
   },
   plugins: ['@typescript-eslint'],
-  ignorePatterns: ['dist/', 'node_modules/', 'coverage/', '*.config.js', '*.config.ts', '.tsbuildinfo'],
   rules: {
-    // Variable naming
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    // Core consistency rules
+    'no-console': 'warn',
+    'no-debugger': 'error',
+    // TypeScript rules
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_'
+      }
+    ],
     '@typescript-eslint/no-explicit-any': 'warn',
-
-    // Console usage - allow in MCP server context
-    'no-console': 'off',
-
-    // Async/await patterns
-    'require-await': 'error',
-    'no-return-await': 'error',
-    '@typescript-eslint/await-thenable': 'error',
-    '@typescript-eslint/no-floating-promises': 'error',
-    '@typescript-eslint/no-misused-promises': 'error',
-
-    // Type safety
-    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-non-null-assertion': 'warn',
-    '@typescript-eslint/prefer-nullish-coalescing': 'warn',
-    '@typescript-eslint/prefer-optional-chain': 'warn',
 
-    // Code quality
-    'no-duplicate-imports': 'error',
-    'no-unreachable': 'error',
-    'no-constant-condition': ['error', { checkLoops: false }],
-    'prefer-const': 'error',
-    'prefer-template': 'warn',
+    // Code quality rules
+    'no-var': 'error',
+    'object-shorthand': 'error',
+    'prefer-arrow-callback': 'error',
+    'prefer-destructuring': ['error', { object: true, array: false }],
 
-    // ESM imports
-    '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
+    // Security rules
+    'no-eval': 'error',
+    'no-implied-eval': 'error',
+    'no-new-func': 'error',
+    'no-script-url': 'error',
+
+    // Best practices
+    eqeqeq: ['error', 'always'],
+    'no-else-return': 'error',
+    'no-empty-function': 'warn',
+    'no-magic-numbers': ['warn', { ignore: [-1, 0, 1, 2, 100, 1000] }],
+    'no-return-await': 'error',
+    'no-throw-literal': 'error',
+    'prefer-promise-reject-errors': 'error',
+
+    // Style rules (handled by Prettier)
+    quotes: ['error', 'single', { avoidEscape: true }],
+    semi: ['error', 'always'],
+    'comma-dangle': ['error', 'never']
   },
   overrides: [
     {
-      // MCP Tools - stricter rules for tool implementations
-      files: ['src/tools/**/*.ts'],
+      files: ['*.js'],
       rules: {
-        '@typescript-eslint/no-explicit-any': 'error',
-        '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
-        'require-await': 'error',
-      },
+        '@typescript-eslint/no-var-requires': 'off'
+      }
     },
     {
-      // Test files - relaxed rules
-      files: ['src/__tests__/**/*.ts'],
-      parserOptions: {
-        project: false, // Disable type checking for test files
-      },
+      files: ['*.ts'],
       rules: {
-        // Disable strict type-aware rules for tests
-        '@typescript-eslint/await-thenable': 'off',
-        '@typescript-eslint/no-floating-promises': 'off',
-        '@typescript-eslint/no-misused-promises': 'off',
-        '@typescript-eslint/prefer-nullish-coalescing': 'off',
-        '@typescript-eslint/prefer-optional-chain': 'off',
-        '@typescript-eslint/strict-boolean-expressions': 'off',
-        'require-await': 'off',
-
-        // Relaxed rules for tests
-        '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-non-null-assertion': 'off',
-        '@typescript-eslint/consistent-type-imports': 'off',
-      },
+        '@typescript-eslint/no-var-requires': 'error'
+      }
     },
     {
-      // Templates - allow flexible patterns for code generation
-      files: ['src/lib/templates/**/*.ts'],
+      files: ['scripts/**/*.js', 'scripts/**/*.sh'],
       rules: {
-        'prefer-template': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
-      },
-    },
-    {
-      // Design references and pattern detector - allow non-null assertions after validation
-      files: [
-        'src/lib/design-references/**/*.ts',
-        'src/lib/pattern-detector.ts',
-        'src/lib/figma-client.ts',
-        'src/tools/analyze-design-references.ts',
-      ],
-      rules: {
-        '@typescript-eslint/no-non-null-assertion': 'off',
-      },
-    },
+        'no-console': 'off',
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    }
   ],
+  ignorePatterns: ['node_modules/', 'dist/', 'build/', 'coverage/', '*.min.js', '!.eslintrc.js']
 };

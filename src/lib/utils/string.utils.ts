@@ -54,3 +54,23 @@ export function pluralize(str: string): string {
   }
   return `${str}s`;
 }
+
+/**
+ * Sanitize class name for CSS usage
+ */
+export function sanitizeClassName(str: string): string {
+  return str
+    .replace(/[^a-zA-Z0-9-_\s]/g, '') // Remove invalid characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/^[^a-zA-Z_]/, '_') // Ensure it starts with letter or underscore
+    .toLowerCase();
+}
+
+/**
+ * Generate random ID with optional prefix
+ */
+export function generateRandomId(prefix: string = 'id'): string {
+  const timestamp = Date.now().toString(36);
+  const randomStr = Math.random().toString(36).substring(2, 8);
+  return `${prefix}_${timestamp}_${randomStr}`;
+}

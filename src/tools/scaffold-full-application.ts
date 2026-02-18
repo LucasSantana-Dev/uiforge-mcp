@@ -2,12 +2,7 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { IGeneratedFile } from '../lib/types.js';
 import { designContextStore } from '../lib/design-context.js';
-import { generateReactProject } from '../lib/templates/react.js';
-import { generateNextjsProject } from '../lib/templates/nextjs.js';
-import { generateVueProject } from '../lib/templates/vue.js';
-import { generateAngularProject } from '../lib/templates/angular.js';
-import { generateHtmlProject } from '../lib/templates/html.js';
-import { generateSvelteProject } from '../lib/templates/svelte.js';
+import { GeneratorFactory } from '../lib/generators/generator-factory.js';
 
 const inputSchema = {
   framework: z.enum(['react', 'nextjs', 'vue', 'angular', 'html', 'svelte']).describe('Frontend framework to scaffold'),
@@ -27,33 +22,15 @@ export function registerScaffoldFullApplication(server: McpServer): void {
     inputSchema,
     ({ framework, styling: _styling, architecture, state_management, project_name }) => {
       const ctx = designContextStore.get();
-      let files: IGeneratedFile[];
 
-      switch (framework) {
-        case 'react':
-          files = generateReactProject(project_name, architecture, state_management, ctx);
-          break;
-        case 'nextjs':
-          files = generateNextjsProject(project_name, architecture, state_management, ctx);
-          break;
-        case 'vue':
-          files = generateVueProject(project_name, architecture, state_management, ctx);
-          break;
-        case 'angular':
-          files = generateAngularProject(project_name, architecture, state_management, ctx);
-          break;
-        case 'html':
-          files = generateHtmlProject(project_name, architecture, state_management, ctx);
-          break;
-        case 'svelte':
-          files = generateSvelteProject(project_name, architecture, state_management, ctx);
-          break;
-        default: {
-          // TypeScript exhaustiveness check - this should never happen
-          const _exhaustiveCheck: never = framework;
-          throw new Error(`Unsupported framework: ${_exhaustiveCheck}`);
-        }
-      }
+      // Map state management to framework-specific options
+      const mappedStateManagement = framework === 'svelte'
+        ? (state_management === 'useState' ? 'stores' : 'none')
+        : state_management;
+
+      // Create generator and generate project
+      const generator = GeneratorFactory.getInstance().createGenerator(framework);
+      const files = generator.generateProject(project_name, architecture, mappedStateManagement, ctx);
 
       const summary = [
         `Scaffolded ${framework} project "${project_name}"`,
@@ -62,7 +39,7 @@ export function registerScaffoldFullApplication(server: McpServer): void {
         `State management: ${state_management}`,
         '',
         'Files:',
-        ...files.map((f) => `  ${f.path}`),
+        ...files.map((f: IGeneratedFile) => `  ${f.path}`),
       ].join('\n');
 
       return {
