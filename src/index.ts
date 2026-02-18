@@ -64,7 +64,12 @@ registerSubmitFeedback(server);
 registerAnalyzeDesignImageForTraining(server);
 registerManageTraining(server);
 registerAnalyzeComponentLibrary(server);
-registerForgeContextTools(server);
+try {
+  registerForgeContextTools(server);
+  logger.info('Forge context tools registered successfully');
+} catch (error) {
+  logger.error({ error }, 'Failed to register forge context tools');
+}
 
 logger.info('All tools and resources registered');
 

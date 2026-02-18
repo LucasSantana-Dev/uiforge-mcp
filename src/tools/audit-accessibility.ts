@@ -286,7 +286,9 @@ function checkLandmarks(code: string, issues: IAccessibilityIssue[], passed: str
 }
 
 function checkHeadingHierarchy(code: string, issues: IAccessibilityIssue[], passed: string[]): void {
-  const headings = [...code.matchAll(/<h([1-6])/gi)].map((m) => parseInt(m[1], 10));
+  const headings = [...code.matchAll(/<h([1-6])/gi)]
+    .filter((m): m is RegExpExecArray => m[1] !== undefined)
+    .map((m) => parseInt(m[1], 10));
 
   if (headings.length === 0 && code.length > 300) {
     issues.push({
@@ -301,12 +303,15 @@ function checkHeadingHierarchy(code: string, issues: IAccessibilityIssue[], pass
 
   // Check for skipped levels
   for (let i = 1; i < headings.length; i++) {
-    if (headings[i] > headings[i - 1] + 1) {
+    const currentLevel = headings[i];
+    const previousLevel = headings[i - 1];
+
+    if (currentLevel !== undefined && previousLevel !== undefined && currentLevel > previousLevel + 1) {
       issues.push({
         rule: 'heading-order',
         severity: 'warning',
-        message: `Heading level skipped: h${headings[i - 1]} → h${headings[i]}`,
-        suggestion: `Use sequential heading levels. Consider h${headings[i - 1] + 1} instead of h${headings[i]}.`,
+        message: `Heading level skipped: h${previousLevel} → h${currentLevel}`,
+        suggestion: `Use sequential heading levels. Consider h${previousLevel + 1} instead of h${currentLevel}.`,
         wcagCriteria: 'WCAG 1.3.1 Info and Relationships',
       });
       break;

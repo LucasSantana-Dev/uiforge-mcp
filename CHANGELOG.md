@@ -3,7 +3,30 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0/).
+
+## [0.5.0] - 2026-02-18
+
+### Added
+- **Component Library Integration**: Full support for 6 major component libraries across all frameworks:
+  - React/Next.js: shadcn/ui, Radix UI, Headless UI, Material UI
+  - Vue: PrimeVue, shadcn-vue, Radix Vue, Headless UI
+  - Angular: Angular Material, CDK, PrimeNG
+  - Svelte: bits-ui, @radix-ui/svelte, @headlessui/svelte, SMUI
+  - HTML: Tailwind CSS CDN for all library styles
+- **File Generation**: All generators now produce paired files (component + test); React also produces Storybook stories
+
+### Fixed
+- **TypeScript Build Errors**: Resolved 3 critical TypeScript compilation errors:
+  - `src/lib/utils/index.ts`: Removed duplicate re-export of `jsx.utils.js` (TS2308 ambiguous export)
+  - `src/tools/generate-ui-component.ts`: Removed duplicate `recordGeneration` call with undefined variable (TS2345)
+  - `src/lib/utils/consolidated.utils.ts`: Fixed strict-null errors in `htmlEscapes`, `mergeStyles`, `getFileName`
+- **Service Integration Tests**: Added `initializeServices()` in beforeEach to populate singleton container before `getServices()` calls
+- **Integration Test File Counts**: Corrected per-framework file expectations (React=3, Vue/Angular/Svelte=2, HTML=1)
+
+### Changed
+- **Version**: Bumped to 0.5.0 for component library integration milestone
+- **Documentation**: Updated README.md with Component Library Support section
 
 ## [0.4.3] - 2026-02-18
 

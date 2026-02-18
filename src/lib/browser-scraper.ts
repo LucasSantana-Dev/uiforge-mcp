@@ -168,7 +168,7 @@ function extractPageStyles(page: Page): Promise<ExtractedStyles> {
       const elements = document.querySelectorAll('*');
       let count = 0;
 
-      for (const element of elements) {
+      for (const element of Array.from(elements)) {
         if (count++ >= sampleLimit) break;
         const style = window.getComputedStyle(element);
 
@@ -226,7 +226,7 @@ function extractPageStyles(page: Page): Promise<ExtractedStyles> {
 
       // Check for CSS frameworks
       const links = document.querySelectorAll('link[href], script[src]');
-      for (const link of links) {
+      for (const link of Array.from(links)) {
         const href = link.getAttribute('href') ?? link.getAttribute('src') ?? '';
         if (/tailwind/i.test(href)) layoutPatterns.add('tailwindcss');
         if (/bootstrap/i.test(href)) layoutPatterns.add('bootstrap');
@@ -263,7 +263,7 @@ function extractMeta(page: Page): Promise<Record<string, string>> {
     if (titleEl?.textContent) meta['title'] = titleEl.textContent;
 
     const metaTags = document.querySelectorAll('meta[name], meta[property]');
-    for (const tag of metaTags) {
+    for (const tag of Array.from(metaTags)) {
       const name = tag.getAttribute('name') ?? tag.getAttribute('property') ?? '';
       const content = tag.getAttribute('content') ?? '';
       if (name && content) {

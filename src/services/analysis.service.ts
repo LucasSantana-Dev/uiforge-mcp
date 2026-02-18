@@ -69,28 +69,34 @@ export class AnalysisService {
   }> {
     logger.info(`Detecting patterns from ${sources.length} sources`);
 
+    // Validate input
+    const invalidSource = sources.find(s => !['url', 'image', 'text'].includes(s.type));
+    if (invalidSource) {
+      throw new Error(`Invalid source type: ${invalidSource.type}`);
+    }
+
     try {
       const scrapedPages: IScrapedPage[] = sources
         .filter(s => s.type === 'url')
         .map(s => ({
           url: s.content,
           title: String(s.metadata?.title ?? 'Unknown'),
-          colors: [],
-          fonts: [],
-          fontSizes: [],
-          spacing: [],
-          layoutPatterns: [],
-          componentTypes: [],
-          meta: {},
+          colors: [] as string[],
+          fonts: [] as string[],
+          fontSizes: [] as string[],
+          spacing: [] as string[],
+          layoutPatterns: [] as string[],
+          componentTypes: [] as string[],
+          meta: {} as Record<string, string>,
         }));
 
       const imageAnalyses: IImageAnalysis[] = sources
         .filter(s => s.type === 'image')
         .map(s => ({
           label: String(s.metadata?.label ?? 'image'),
-          dominantColors: [],
-          layoutRegions: [],
-          detectedComponents: [],
+          dominantColors: [] as Array<{hex: string; percentage: number}>,
+          layoutRegions: [] as Array<{role: string; bounds: {x: number; y: number; width: number; height: number}}>,
+          detectedComponents: [] as string[],
           dimensions: { width: 0, height: 0 },
         }));
 

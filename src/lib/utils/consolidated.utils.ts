@@ -125,7 +125,7 @@ export function escapeHtml(str: string): string {
     "'": '&#39;',
   };
 
-  return str.replace(/[&<>"']/g, (match) => htmlEscapes[match as keyof typeof htmlEscapes]);
+  return str.replace(/[&<>"']/g, (match) => htmlEscapes[match] || '');
 }
 
 // ============================================================================
