@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import pino from 'pino';
+import { createHash } from 'node:crypto';
 import { designContextStore } from '../lib/design-context.js';
 import { auditStyles } from '../lib/style-audit.js';
 import { extractDesignFromUrl } from '../lib/design-extractor.js';
@@ -281,6 +282,16 @@ export function registerGenerateUiComponent(server: McpServer): void {
       if (!skipML && files.length > 0) {
         try {
           const db = getDatabase();
+          const generation = {
+            id: createHash('sha256').update(`${component_type}-${framework}-${Date.now()}`).digest('hex').substring(0, 16),
+            tool: 'generate_ui_component' as const,
+            params: { component_type, framework, ...props },
+            componentType: component_type,
+            framework,
+            outputHash: createHash('sha256').update(files[0]?.content || '').digest('hex').substring(0, 16),
+            timestamp: Date.now(),
+            sessionId: 'default',
+          };
           recordGeneration(generation, files[0]?.content || '', db, component_type);
         } catch (err) {
           logger.warn({ error: err }, 'Generation recording failed');
