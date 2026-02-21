@@ -426,7 +426,7 @@ export const toggleTheme = () => {
       : '';
 
     const content = `${propsInterface}<script lang="ts">
-  export let ${Object.keys(props).length > 0 ? '{ ' + Object.keys(props).join(', ') + ' }' : ''}: ${componentName}Props = ${Object.keys(props).length > 0 ? '{}' : 'undefined'};
+  export let ${Object.keys(props).length > 0 ? `{ ${  Object.keys(props).join(', ')  } }` : ''}: ${componentName}Props = ${Object.keys(props).length > 0 ? '{}' : 'undefined'};
 </script>
 
 <div class="p-4 rounded-lg shadow-md border border-border bg-card" style="background-color: ${designContext.colorPalette.background}; color: ${designContext.colorPalette.foreground};">

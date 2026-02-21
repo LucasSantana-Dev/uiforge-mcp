@@ -356,6 +356,7 @@ export function generateTailwindConfig(config: ShadcnConfig = defaultConfig): IG
         }
       }
     },
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     plugins: [require('tailwindcss-animate')]
   };
 

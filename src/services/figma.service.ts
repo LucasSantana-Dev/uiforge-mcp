@@ -114,7 +114,7 @@ export class FigmaService {
       const { name, type, value } = variable;
       
       if (name) {
-        const tokenName = name.replace(/[\/\s]/g, '_').toLowerCase();
+        const tokenName = name.replace(/[/\s]/g, '_').toLowerCase();
         
         if (type === 'COLOR' && typeof value === 'string') {
           tokens.colors[tokenName] = value;
@@ -124,13 +124,13 @@ export class FigmaService {
             tokens.spacing[tokenName] = `${value}px`;
           } else if (name.toLowerCase().includes('font') || name.toLowerCase().includes('text')) {
             tokens.typography[tokenName] = {
-              value: value,
+              value,
               unit: 'px',
             };
           }
         } else if (type === 'STRING' && typeof value === 'string') {
           tokens.typography[tokenName] = {
-            value: value,
+            value,
             type: 'string',
           };
         }
