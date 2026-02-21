@@ -509,7 +509,7 @@ export function isArray<T>(value: unknown): value is T[] {
 /**
  * Type guard for functions
  */
-export function isFunction(value: unknown): value is Function {
+export function isFunction(value: unknown): value is (...args: unknown[]) => unknown {
   return typeof value === 'function';
 }
 
