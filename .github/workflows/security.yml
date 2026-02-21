@@ -28,10 +28,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -49,7 +49,7 @@ jobs:
           
       - name: Upload Snyk results
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: always() && hashFiles('snyk.sarif') != ''
         with:
           sarif_file: snyk.sarif
 
@@ -61,10 +61,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -82,7 +82,7 @@ jobs:
           
       - name: Upload Snyk Code results
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: always() && hashFiles('snyk.sarif') != ''
         with:
           sarif_file: snyk.sarif
 
@@ -95,10 +95,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -130,10 +130,10 @@ jobs:
         
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -164,7 +164,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           
