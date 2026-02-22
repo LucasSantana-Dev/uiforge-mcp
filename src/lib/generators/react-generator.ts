@@ -60,7 +60,7 @@ export class ReactGenerator extends BaseGenerator {
    */
   generateComponent(
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile[] {
@@ -248,7 +248,7 @@ export const useAppStore = create<AppState>((set) => ({
   private createComponentFile(
     componentName: string,
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile {
@@ -453,7 +453,7 @@ describe('${componentName}', () => {
     ];
   }
 
-  protected generateShadcnComponent(componentType: string, props: Record<string, any>): string {
+  protected generateShadcnComponent(componentType: string, props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { cn } from "@/lib/utils"
@@ -478,7 +478,7 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 }`;
   }
 
-  protected generateRadixComponent(componentType: string, props: Record<string, any>): string {
+  protected generateRadixComponent(componentType: string, props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
     const type = componentType.toLowerCase();
 
@@ -541,7 +541,7 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 }`;
   }
 
-  protected generateHeadlessUIComponent(componentType: string, props: Record<string, any>): string {
+  protected generateHeadlessUIComponent(componentType: string, props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Button } from "@headlessui/react"
@@ -567,7 +567,7 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 }`;
   }
 
-  protected generatePrimeVueComponent(componentType: string, props: Record<string, any>): string {
+  protected generatePrimeVueComponent(componentType: string, props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     // Note: This would be used in a Vue generator, but we provide a React-compatible version
@@ -596,7 +596,7 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 }`;
   }
 
-  protected generateMaterialComponent(componentType: string, props: Record<string, any>): string {
+  protected generateMaterialComponent(componentType: string, props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import Button from '@mui/material/Button'
@@ -627,7 +627,7 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 }`;
   }
 
-  protected generateTailwindComponent(componentType: string, props: Record<string, any>): string {
+  protected generateTailwindComponent(componentType: string, props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `export function ${componentName}(${this.generatePropsInterface(props)}) {
@@ -648,7 +648,7 @@ export function ${componentName}(${this.generatePropsInterface(props)}) {
 }`;
   }
 
-  private generatePropsInterface(props: Record<string, any>): string {
+  private generatePropsInterface(props: Record<string, unknown>): string {
     const propKeys = Object.keys(props);
     if (propKeys.length === 0) return '';
 

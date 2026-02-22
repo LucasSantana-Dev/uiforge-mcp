@@ -382,7 +382,7 @@ export function getShadcnTemplate(name: string): ShadcnTemplate | undefined {
 export function generateShadcnComponent(
   templateName: string,
   designContext: IDesignContext,
-  customizations?: Record<string, any>
+  customizations?: Record<string, unknown>
 ): IGeneratedFile[] {
   const template = getShadcnTemplate(templateName);
 
@@ -402,7 +402,7 @@ export function generateShadcnComponent(
 function applyDesignContext(
   content: string,
   designContext: IDesignContext,
-  customizations?: Record<string, any>
+  customizations?: Record<string, unknown>
 ): string {
   let result = content;
 

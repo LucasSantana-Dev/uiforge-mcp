@@ -188,10 +188,14 @@ function applyThemeConfiguration(context: IDesignContext, theme: string): IDesig
  */
 function parseThemeString(theme: string): {
   colors: Partial<IDesignContext['colorPalette']>;
-  other: Partial<IDesignContext>;
+  other?: Partial<IDesignContext>;
 } {
+  type ThemeConfig = {
+    colors: Partial<IDesignContext['colorPalette']>;
+    other?: Partial<IDesignContext>;
+  };
   // Simple theme parsing - could be expanded
-  const themes: Record<string, any> = {
+  const themes: Record<string, ThemeConfig> = {
     dark: {
       colors: {
         background: '#0a0a0a',

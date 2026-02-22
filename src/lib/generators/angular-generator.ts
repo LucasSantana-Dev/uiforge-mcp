@@ -34,7 +34,7 @@ export class AngularGenerator extends BaseGenerator {
 
   generateComponent(
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile[] {
@@ -95,7 +95,7 @@ export class AngularGenerator extends BaseGenerator {
     return [];
   }
 
-  protected generateShadcnComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateShadcnComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Component } from '@angular/core';
@@ -120,7 +120,7 @@ export class ${componentName}Component {
 }`;
   }
 
-  protected generateRadixComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateRadixComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Component } from '@angular/core';
@@ -158,7 +158,7 @@ export class ${componentName}Component {
 }`;
   }
 
-  protected generateHeadlessUIComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateHeadlessUIComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Component } from '@angular/core';
@@ -192,7 +192,7 @@ export class ${componentName}Component {
 }`;
   }
 
-  protected generatePrimeVueComponent(componentType: string, _props: Record<string, any>): string {
+  protected generatePrimeVueComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Component } from '@angular/core';
@@ -234,7 +234,7 @@ export class ${componentName}Component {
 }`;
   }
 
-  protected generateMaterialComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateMaterialComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Component } from '@angular/core';
@@ -281,7 +281,7 @@ export class DialogContentComponent {
 }`;
   }
 
-  protected generateTailwindComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateTailwindComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `import { Component } from '@angular/core';
@@ -316,7 +316,7 @@ export class ${componentName}Component {
   private createComponentFile(
     componentName: string,
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile {

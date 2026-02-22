@@ -71,7 +71,7 @@ export class SvelteGenerator extends BaseGenerator {
    */
   generateComponent(
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext
   ): IGeneratedFile[] {
     this.logStart('component', componentType);
@@ -419,7 +419,7 @@ export const toggleTheme = () => {
   private createComponentFile(
     componentName: string,
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext
   ): IGeneratedFile {
     const propsInterface =
@@ -539,7 +539,7 @@ describe('${componentName}', () => {
     };
   }
 
-  private createTypeDefinitionsFile(componentName: string, props: Record<string, any>): IGeneratedFile {
+  private createTypeDefinitionsFile(componentName: string, props: Record<string, unknown>): IGeneratedFile {
     const content = `export interface ${componentName}Props {
 ${
   Object.entries(props).length > 0
@@ -682,7 +682,7 @@ This project is ready for deployment to:
     ];
   }
 
-  protected generateShadcnComponent(_componentType: string, _props: Record<string, any>): string {
+  protected generateShadcnComponent(_componentType: string, _props: Record<string, unknown>): string {
     return `<script lang="ts">
   import { cn } from '$lib/utils';
   import { Button } from '$lib/components/ui/button';
@@ -697,7 +697,7 @@ This project is ready for deployment to:
 </Button>`;
   }
 
-  protected generateRadixComponent(_componentType: string, _props: Record<string, any>): string {
+  protected generateRadixComponent(_componentType: string, _props: Record<string, unknown>): string {
     return `<script lang="ts">
   import * as Slider from '@radix-ui/themes/components/slider';
 </script>
@@ -710,7 +710,7 @@ This project is ready for deployment to:
 </Slider.Root>`;
   }
 
-  protected generateHeadlessUIComponent(_componentType: string, _props: Record<string, any>): string {
+  protected generateHeadlessUIComponent(_componentType: string, _props: Record<string, unknown>): string {
     return `<script lang="ts">
   // Headless UI not directly supported in Svelte, use Radix UI instead
 </script>
@@ -720,7 +720,7 @@ This project is ready for deployment to:
 </div>`;
   }
 
-  protected generatePrimeVueComponent(_componentType: string, _props: Record<string, any>): string {
+  protected generatePrimeVueComponent(_componentType: string, _props: Record<string, unknown>): string {
     return `<script lang="ts">
   // PrimeVue is Vue-specific, not available for Svelte
 </script>
@@ -730,7 +730,7 @@ This project is ready for deployment to:
 </div>`;
   }
 
-  protected generateMaterialComponent(_componentType: string, _props: Record<string, any>): string {
+  protected generateMaterialComponent(_componentType: string, _props: Record<string, unknown>): string {
     return `<script lang="ts">
   // Material-UI is React-specific, not available for Svelte
 </script>
@@ -740,7 +740,7 @@ This project is ready for deployment to:
 </div>`;
   }
 
-  protected generateTailwindComponent(_componentType: string, _props: Record<string, any>): string {
+  protected generateTailwindComponent(_componentType: string, _props: Record<string, unknown>): string {
     return `<script lang="ts">
   export let className = '';
   export let variant = 'default';

@@ -34,7 +34,7 @@ export class HtmlGenerator extends BaseGenerator {
 
   generateComponent(
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile[] {
@@ -92,7 +92,7 @@ export class HtmlGenerator extends BaseGenerator {
     return [];
   }
 
-  protected generateShadcnComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateShadcnComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `<!DOCTYPE html>
@@ -118,7 +118,7 @@ export class HtmlGenerator extends BaseGenerator {
 </html>`;
   }
 
-  protected generateRadixComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateRadixComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `<!DOCTYPE html>
@@ -152,7 +152,7 @@ export class HtmlGenerator extends BaseGenerator {
 </html>`;
   }
 
-  protected generateHeadlessUIComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateHeadlessUIComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `<!DOCTYPE html>
@@ -184,7 +184,7 @@ export class HtmlGenerator extends BaseGenerator {
 </html>`;
   }
 
-  protected generatePrimeVueComponent(componentType: string, _props: Record<string, any>): string {
+  protected generatePrimeVueComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `<!DOCTYPE html>
@@ -223,7 +223,7 @@ export class HtmlGenerator extends BaseGenerator {
 </html>`;
   }
 
-  protected generateMaterialComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateMaterialComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `<!DOCTYPE html>
@@ -261,7 +261,7 @@ export class HtmlGenerator extends BaseGenerator {
 </html>`;
   }
 
-  protected generateTailwindComponent(componentType: string, _props: Record<string, any>): string {
+  protected generateTailwindComponent(componentType: string, _props: Record<string, unknown>): string {
     const componentName = this.formatComponentName(componentType);
 
     return `<!DOCTYPE html>
@@ -290,7 +290,7 @@ export class HtmlGenerator extends BaseGenerator {
   private createComponentFile(
     componentName: string,
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile {

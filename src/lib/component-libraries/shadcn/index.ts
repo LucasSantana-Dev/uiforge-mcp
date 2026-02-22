@@ -29,7 +29,7 @@ export interface ShadcnSetupOptions {
   components?: string[];
   patterns?: string[];
   designContext?: IDesignContext;
-  customizations?: Record<string, any>;
+  customizations?: Record<string, unknown>;
 }
 
 /**

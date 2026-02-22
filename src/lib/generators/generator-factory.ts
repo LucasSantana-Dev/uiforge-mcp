@@ -108,7 +108,7 @@ export class GeneratorFactory {
   generateComponent(
     framework: Framework,
     componentType: string,
-    props: Record<string, any>,
+    props: Record<string, unknown>,
     designContext?: IDesignContext,
     componentLibrary?: ComponentLibrary
   ): IGeneratedFile[] {
@@ -312,7 +312,7 @@ export function generateProject(
 export function generateComponent(
   framework: Framework,
   componentType: string,
-  props: Record<string, any>,
+  props: Record<string, unknown>,
   designContext?: IDesignContext,
   componentLibrary?: ComponentLibrary
 ): IGeneratedFile[] {

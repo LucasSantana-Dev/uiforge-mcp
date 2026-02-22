@@ -710,7 +710,7 @@ export function getShadcnPattern(name: string): ShadcnPattern | undefined {
 export function generateShadcnPattern(
   patternName: string,
   designContext: IDesignContext,
-  customizations?: Record<string, any>
+  customizations?: Record<string, unknown>
 ): IGeneratedFile[] {
   const pattern = getShadcnPattern(patternName);
 
@@ -730,7 +730,7 @@ export function generateShadcnPattern(
 function applyDesignContextToPattern(
   content: string,
   designContext: IDesignContext,
-  customizations?: Record<string, any>
+  customizations?: Record<string, unknown>
 ): string {
   let result = content;
 
