@@ -44,9 +44,7 @@ const outputSchema = z.object({
 
 export type SetupComponentLibraryOutput = z.infer<typeof outputSchema>;
 
-export function setupComponentLibraryHandler(
-  input: SetupComponentLibraryInput
-): Promise<SetupComponentLibraryOutput> {
+export function setupComponentLibraryHandler(input: SetupComponentLibraryInput): Promise<SetupComponentLibraryOutput> {
   logger.info(`Setting up ${input.library} for ${input.framework} project: ${input.projectName}`);
 
   try {
@@ -260,7 +258,7 @@ export const validateComponentLibrarySetupTool = {
     warnings: z.array(z.string()),
     recommendations: z.array(z.string()),
   }),
-  handler: async ({ projectPath, library }: { projectPath: string; library: ComponentLibraryId }) =>
+  handler: ({ projectPath, library }: { projectPath: string; library: ComponentLibraryId }) =>
     validateComponentLibrarySetupHandler(projectPath, library),
 };
 
@@ -276,5 +274,5 @@ export const getComponentLibraryStatusTool = {
     version: z.string(),
     lastUpdated: z.string(),
   }),
-  handler: async ({ projectPath }: { projectPath: string }) => getComponentLibraryStatusHandler(projectPath),
+  handler: ({ projectPath }: { projectPath: string }) => getComponentLibraryStatusHandler(projectPath),
 };
