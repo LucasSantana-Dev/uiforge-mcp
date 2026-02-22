@@ -9,7 +9,6 @@ import { z } from 'zod';
 import { createLogger } from '../lib/logger.js';
 import {
   setupComponentLibraryProject,
-  getAvailableComponentLibraries,
   type ComponentLibraryId,
   type ComponentLibrarySetupOptions,
   type IDesignContext,
@@ -45,7 +44,7 @@ const outputSchema = z.object({
 
 export type SetupComponentLibraryOutput = z.infer<typeof outputSchema>;
 
-export async function setupComponentLibraryHandler(
+export function setupComponentLibraryHandler(
   input: SetupComponentLibraryInput
 ): Promise<SetupComponentLibraryOutput> {
   logger.info(`Setting up ${input.library} for ${input.framework} project: ${input.projectName}`);
@@ -75,15 +74,15 @@ export async function setupComponentLibraryHandler(
       `Setup completed: ${setupFiles.length} files, ${dependencies.length} deps, ${devDependencies.length} devDeps`
     );
 
-    return { setupFiles, instructions, nextSteps, dependencies, devDependencies };
+    return Promise.resolve({ setupFiles, instructions, nextSteps, dependencies, devDependencies });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     logger.error(`Component library setup failed: ${msg}`);
-    throw new Error(`Failed to setup component library: ${msg}`);
+    return Promise.reject(new Error(`Failed to setup component library: ${msg}`));
   }
 }
 
-export async function validateComponentLibrarySetupHandler(
+export function validateComponentLibrarySetupHandler(
   projectPath: string,
   library: ComponentLibraryId
 ): Promise<{ isValid: boolean; errors: string[]; warnings: string[]; recommendations: string[] }> {
@@ -104,15 +103,15 @@ export async function validateComponentLibrarySetupHandler(
       recommendations.push('Add Storybook for component documentation');
     }
 
-    return { isValid: errors.length === 0, errors, warnings, recommendations };
+    return Promise.resolve({ isValid: errors.length === 0, errors, warnings, recommendations });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     logger.error(`Setup validation failed: ${msg}`);
-    throw new Error(`Failed to validate setup: ${msg}`);
+    return Promise.reject(new Error(`Failed to validate setup: ${msg}`));
   }
 }
 
-export async function getComponentLibraryStatusHandler(projectPath: string): Promise<{
+export function getComponentLibraryStatusHandler(projectPath: string): Promise<{
   library: ComponentLibraryId | null;
   isConfigured: boolean;
   components: string[];
@@ -123,18 +122,18 @@ export async function getComponentLibraryStatusHandler(projectPath: string): Pro
   logger.info(`Getting component library status at: ${projectPath}`);
 
   try {
-    return {
+    return Promise.resolve({
       library: null,
       isConfigured: false,
       components: [],
       patterns: [],
       version: '',
       lastUpdated: new Date().toISOString(),
-    };
+    });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     logger.error(`Failed to get status: ${msg}`);
-    throw new Error(`Failed to get component library status: ${msg}`);
+    return Promise.reject(new Error(`Failed to get component library status: ${msg}`));
   }
 }
 

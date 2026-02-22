@@ -183,12 +183,12 @@ export class GenerationService {
    * @param designContext Design context
    * @returns Array of generated files
    */
-  private async generateComponentFiles(
+  private generateComponentFiles(
     framework: Framework,
     componentType: string,
     props: Record<string, any>,
     designContext: IDesignContext
-  ): Promise<IGeneratedFile[]> {
+  ): IGeneratedFile[] {
     const files: IGeneratedFile[] = [];
 
     // This is a simplified implementation
