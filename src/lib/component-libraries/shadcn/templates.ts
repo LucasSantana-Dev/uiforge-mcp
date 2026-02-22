@@ -5,7 +5,7 @@
  * TypeScript types, accessibility features, and responsive design.
  */
 
-import type { IGeneratedFile, IDesignContext, ComponentLibraryId } from '../../types.js';
+import type { IGeneratedFile, IDesignContext } from '../../types.js';
 
 export interface ShadcnTemplate {
   name: string;
@@ -428,7 +428,7 @@ function applyDesignContext(
 
   // Apply spacing customizations
   if (designContext.spacing) {
-    const { unit } = designContext.spacing;
+    const { unit: _unit } = designContext.spacing;
     // This would require more sophisticated parsing for Tailwind classes
     // For now, we'll keep the default spacing
   }

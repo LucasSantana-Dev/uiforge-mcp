@@ -2,7 +2,7 @@ import { BaseGenerator, ComponentLibrary } from './base-generator.js';
 import type { IGeneratedFile, IDesignContext, Architecture, StateManagement, Framework } from '../types.js';
 import { createLogger } from '../logger.js';
 
-const logger = createLogger('react-generator');
+const _logger = createLogger('react-generator');
 
 /**
  * React Generator - Generates React components and projects
@@ -218,7 +218,7 @@ export default {
 
   private createStateManagementFiles(
     stateManagement: StateManagement,
-    designContext: IDesignContext
+    _designContext: IDesignContext
   ): IGeneratedFile[] {
     const files: IGeneratedFile[] = [];
 
@@ -308,8 +308,8 @@ export default ${rawComponentName};`;
 
   private createStorybookFile(
     componentName: string,
-    componentType: string,
-    designContext: IDesignContext
+    _componentType: string,
+    _designContext: IDesignContext
   ): IGeneratedFile {
     const content = `import type { Meta, StoryObj } from '@storybook/react';
 import { ${componentName} } from './${componentName}';
@@ -343,7 +343,7 @@ export const WithCustomProps: Story = {
     };
   }
 
-  private createTestFile(componentName: string, componentType: string, designContext: IDesignContext): IGeneratedFile {
+  private createTestFile(componentName: string, _componentType: string, _designContext: IDesignContext): IGeneratedFile {
     const content = `import { render, screen } from '@testing-library/react';
 import { ${componentName} } from './${componentName}';
 

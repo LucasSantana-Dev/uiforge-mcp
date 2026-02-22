@@ -224,7 +224,7 @@ export const defaultConfig: ShadcnConfig = {
 export function generatePackageJson(
   framework: Framework,
   projectName: string,
-  config: ShadcnConfig = defaultConfig,
+  _config: ShadcnConfig = defaultConfig,
   additionalDependencies?: ShadcnDependency[]
 ): IGeneratedFile {
   const dependencies = defaultDependencies.concat(additionalDependencies || []);
@@ -398,7 +398,7 @@ module.exports = ${JSON.stringify(tailwindConfig, null, 2)}`,
  * Generate CSS variables file
  */
 export function generateCssVariables(config: ShadcnConfig = defaultConfig): IGeneratedFile {
-  const baseColors = {
+  const _baseColors = {
     slate: {
       50: '248 250 252',
       100: '241 245 249',
@@ -483,7 +483,7 @@ export function generateCssVariables(config: ShadcnConfig = defaultConfig): IGen
 /**
  * Generate utils file
  */
-export function generateUtilsFile(config: ShadcnConfig = defaultConfig): IGeneratedFile {
+export function generateUtilsFile(_config: ShadcnConfig = defaultConfig): IGeneratedFile {
   const utils = `import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 

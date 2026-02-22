@@ -1,7 +1,7 @@
 import type { IGeneratedFile, IDesignContext, Architecture, StateManagement, Framework } from '../types.js';
 import { createLogger } from '../logger.js';
 
-const logger = createLogger('base-generator');
+const _logger = createLogger('base-generator');
 
 /**
  * Component library types supported by UIForge

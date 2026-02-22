@@ -56,7 +56,7 @@ export class GeneratorFactory {
   createGenerator(framework: Framework): BaseGenerator {
     // Return cached instance if available
     if (this.instances.has(framework)) {
-      return this.instances.get(framework)!;
+      return this.instances.get(framework) as BaseGenerator;
     }
 
     const GeneratorClass = this.generators.get(framework);

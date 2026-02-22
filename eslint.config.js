@@ -52,7 +52,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
       '@typescript-eslint/prefer-optional-chain': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
     },
@@ -88,7 +87,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['scripts/**/*.js', 'scripts/**/*.ts'],
+    files: ['scripts/**/*.js', 'scripts/**/*.ts', 'scripts/**/*.mjs', 'run-tests.mjs'],
     rules: {
       'no-console': 'off',
     },
