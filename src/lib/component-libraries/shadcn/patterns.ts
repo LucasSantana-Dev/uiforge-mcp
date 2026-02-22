@@ -736,7 +736,12 @@ function applyDesignContextToPattern(
 
   // Apply design context customizations similar to templates
   if (designContext.colorPalette) {
-    const { primary: _primary, secondary: _secondary, accent: _accent, destructive: _destructive } = designContext.colorPalette;
+    const {
+      primary: _primary,
+      secondary: _secondary,
+      accent: _accent,
+      destructive: _destructive,
+    } = designContext.colorPalette;
 
     // This would require more sophisticated parsing for Tailwind classes
     // For now, we'll keep the default shadcn styling

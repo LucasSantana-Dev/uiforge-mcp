@@ -154,7 +154,10 @@ export function registerGeneratePageTemplate(server: McpServer): void {
       } catch (error) {
         const _ctx = designContextStore.get();
         const errorMessage = error instanceof Error ? error.message : String(error);
-        logger.error({ template, framework, component_library, dark_mode, project_name, error: errorMessage }, 'Error in registerGeneratePageTemplate/generateTemplate');
+        logger.error(
+          { template, framework, component_library, dark_mode, project_name, error: errorMessage },
+          'Error in registerGeneratePageTemplate/generateTemplate'
+        );
         return {
           content: [
             {

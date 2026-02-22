@@ -343,7 +343,7 @@ export const WithCustomProps: Story = {
     };
   }
 
-  private createTestFile(componentName: string, _componentType: string, _designContext: IDesignContext): IGeneratedFile {
+  private createTestFile(componentName: string, componentType: string, _designContext: IDesignContext): IGeneratedFile {
     const content = `import { render, screen } from '@testing-library/react';
 import { ${componentName} } from './${componentName}';
 
