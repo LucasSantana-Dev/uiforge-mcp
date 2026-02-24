@@ -10,8 +10,7 @@ const logger = createLogger('generate-from-pack');
 
 const inputSchema = {
   pack_id: z.string().describe('Template pack ID (e.g., saas-dashboard, startup-landing)'),
-  framework: z.enum(['react', 'nextjs', 'vue', 'angular', 'svelte', 'html'])
-    .describe('Target framework'),
+  framework: z.enum(['react', 'nextjs', 'vue', 'angular', 'svelte', 'html']).describe('Target framework'),
   project_name: z.string().describe('Project name'),
 };
 
@@ -68,8 +67,7 @@ export function registerGenerateFromPack(server: McpServer): void {
       const files: IGeneratedFile[] = [];
 
       for (const page of pack.pages) {
-        logger.info({ pageTitle: page.title, compositionId: page.compositionId },
-          'Composing page');
+        logger.info({ pageTitle: page.title, compositionId: page.compositionId }, 'Composing page');
 
         const composed = composePageFromTemplate(page.compositionId, {
           mood: [pack.theme.mood],
@@ -78,12 +76,7 @@ export function registerGenerateFromPack(server: McpServer): void {
 
         let pageContent: string;
         if (composed) {
-          pageContent = wrapPageInFramework(
-            composed.jsx,
-            page.title,
-            framework,
-            project_name
-          );
+          pageContent = wrapPageInFramework(composed.jsx, page.title, framework, project_name);
         } else {
           pageContent = generatePlaceholder(page.title, framework, project_name);
         }
@@ -131,12 +124,7 @@ export function registerGenerateFromPack(server: McpServer): void {
   );
 }
 
-function wrapPageInFramework(
-  jsx: string,
-  title: string,
-  framework: Framework,
-  projectName: string
-): string {
+function wrapPageInFramework(jsx: string, title: string, framework: Framework, projectName: string): string {
   switch (framework) {
     case 'nextjs':
       return `import type { Metadata } from 'next';
@@ -216,11 +204,7 @@ ${jsx}
   }
 }
 
-function generatePlaceholder(
-  title: string,
-  framework: Framework,
-  projectName: string
-): string {
+function generatePlaceholder(title: string, framework: Framework, projectName: string): string {
   const placeholderJsx = `<div className="min-h-screen flex items-center justify-center">
   <div className="text-center">
     <h1 className="text-4xl font-bold mb-4">${title}</h1>
@@ -231,26 +215,16 @@ function generatePlaceholder(
   return wrapPageInFramework(placeholderJsx, title, framework, projectName);
 }
 
-function getPageFilePath(
-  pagePath: string,
-  isIndex: boolean,
-  framework: Framework
-): string {
+function getPageFilePath(pagePath: string, isIndex: boolean, framework: Framework): string {
   switch (framework) {
     case 'nextjs':
-      return isIndex
-        ? `app/page.tsx`
-        : `app${pagePath}/page.tsx`;
+      return isIndex ? `app/page.tsx` : `app${pagePath}/page.tsx`;
 
     case 'react':
-      return isIndex
-        ? `src/pages/Home.tsx`
-        : `src/pages/${toPascalCase(pagePath.replace('/', ''))}.tsx`;
+      return isIndex ? `src/pages/Home.tsx` : `src/pages/${toPascalCase(pagePath.replace('/', ''))}.tsx`;
 
     case 'vue':
-      return isIndex
-        ? `src/views/Home.vue`
-        : `src/views/${toPascalCase(pagePath.replace('/', ''))}.vue`;
+      return isIndex ? `src/views/Home.vue` : `src/views/${toPascalCase(pagePath.replace('/', ''))}.vue`;
 
     case 'angular':
       return isIndex
@@ -258,9 +232,7 @@ function getPageFilePath(
         : `src/app${pagePath}/${toKebabCase(pagePath.replace('/', ''))}.component.ts`;
 
     case 'svelte':
-      return isIndex
-        ? `src/routes/+page.svelte`
-        : `src/routes${pagePath}/+page.svelte`;
+      return isIndex ? `src/routes/+page.svelte` : `src/routes${pagePath}/+page.svelte`;
 
     case 'html':
       return isIndex ? `index.html` : `${pagePath.substring(1)}.html`;
@@ -270,11 +242,7 @@ function getPageFilePath(
   }
 }
 
-function generateLayout(
-  sharedComponents: string[],
-  framework: Framework,
-  projectName: string
-): IGeneratedFile | null {
+function generateLayout(sharedComponents: string[], framework: Framework, projectName: string): IGeneratedFile | null {
   const hasNav = sharedComponents.some((c) => c.toLowerCase().includes('nav'));
   const hasFooter = sharedComponents.some((c) => c.toLowerCase().includes('footer'));
 
@@ -367,9 +335,7 @@ function generateRoutingConfig(
 
   const routes = pages
     .map((page) => {
-      const componentName = page.isIndex
-        ? 'HomePage'
-        : `${toPascalCase(page.path.replace('/', ''))}Page`;
+      const componentName = page.isIndex ? 'HomePage' : `${toPascalCase(page.path.replace('/', ''))}Page`;
       const routePath = page.isIndex ? '/' : page.path;
       return `  { path: '${routePath}', element: <${componentName} /> },`;
     })
@@ -377,9 +343,7 @@ function generateRoutingConfig(
 
   const imports = pages
     .map((page) => {
-      const componentName = page.isIndex
-        ? 'HomePage'
-        : `${toPascalCase(page.path.replace('/', ''))}Page`;
+      const componentName = page.isIndex ? 'HomePage' : `${toPascalCase(page.path.replace('/', ''))}Page`;
       const fileName = page.isIndex ? 'Home' : toPascalCase(page.path.replace('/', ''));
       return `import { ${componentName} } from './pages/${fileName}';`;
     })
