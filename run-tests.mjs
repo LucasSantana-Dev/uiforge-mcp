@@ -8,13 +8,18 @@ const proc = spawn('npx', ['jest', '--no-coverage', '--forceExit', '--testTimeou
 });
 
 let out = '';
-proc.stdout.on('data', d => { out += d.toString(); });
-proc.stderr.on('data', d => { out += d.toString(); });
+proc.stdout.on('data', (d) => {
+  out += d.toString();
+});
+proc.stderr.on('data', (d) => {
+  out += d.toString();
+});
 
-proc.on('close', code => {
-  const summary = out.split('\n').filter(l =>
-    /PASS|FAIL|Tests:|Test Suites:|●/.test(l)
-  ).join('\n');
+proc.on('close', (code) => {
+  const summary = out
+    .split('\n')
+    .filter((l) => /PASS|FAIL|Tests:|Test Suites:|●/.test(l))
+    .join('\n');
   writeFileSync('/Users/lucassantana/Desenvolvimento/uiforge-mcp/test-results.txt', summary + '\n\nExit: ' + code);
   process.exit(0);
 });

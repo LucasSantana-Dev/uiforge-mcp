@@ -6,11 +6,11 @@ on:
   pull_request:
     branches: [main, dev, release/*]
   schedule:
-    - cron: '0 2 * * 1'
+    - cron: "0 2 * * 1"
   workflow_dispatch:
 
 env:
-  NODE_VERSION: '22'
+  NODE_VERSION: "22"
 
 jobs:
   npm-audit:
@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
       - run: npm install --legacy-peer-deps
       - name: Run npm audit
         run: npm audit --audit-level=high --omit=dev

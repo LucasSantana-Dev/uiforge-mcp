@@ -65,18 +65,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-
-      - name: Cache Jest
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules/.cache/jest
-            .tsbuildinfo
-          key: jest-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: rm -f package-lock.json && npm install --legacy-peer-deps
 
       - name: Run tests with coverage
         run: npm run test:coverage
@@ -132,10 +123,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: rm -f package-lock.json && npm install --legacy-peer-deps
 
       - name: Build
         run: npm run build
@@ -158,10 +148,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          load: true
           push: false
           tags: uiforge-mcp:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Test container startup
         run: |
