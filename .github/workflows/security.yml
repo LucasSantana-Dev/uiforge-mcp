@@ -84,11 +84,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Trufflehog
+      - name: Run Trufflehog (Pull Request)
+        if: github.event_name == 'pull_request'
         uses: trufflesecurity/trufflehog@v3.93.4
         with:
           path: ./
-          base: main
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --only-verified
+          fail: true
+
+      - name: Run Trufflehog (Push/Schedule/Manual)
+        if: github.event_name != 'pull_request'
+        uses: trufflesecurity/trufflehog@v3.93.4
+        with:
+          path: ./
+          base: ${{ github.event.before != '0000000000000000000000000000000000000000' && github.event.before || format('HEAD~{0}', 1) }}
           head: HEAD
           extra_args: --only-verified
           fail: true
