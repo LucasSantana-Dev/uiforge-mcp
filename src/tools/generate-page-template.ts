@@ -20,6 +20,12 @@ import {
   getFaqBody,
   getBlogPostBody,
 } from './page-template-bodies.js';
+import { findBestComposition, composePageFromTemplate } from '../lib/design-references/template-compositions/index.js';
+import { scoreQuality } from '../lib/ml/quality-scorer.js';
+import { recordGeneration } from '../lib/feedback/feedback-tracker.js';
+import { getDatabase } from '../lib/design-references/database/store.js';
+import type { MoodTag, IndustryTag, VisualStyleId } from '../lib/design-references/component-registry/types.js';
+import type { IGeneration } from '../lib/feedback/types.js';
 
 const logger = createLogger('generate-page-template');
 
@@ -139,16 +145,44 @@ export function registerGeneratePageTemplate(server: McpServer): void {
     'generate_page_template',
     'Generate pre-built page templates for common UI patterns: landing pages, dashboards, auth flows, pricing, settings, CRUD tables, blog listings, onboarding wizards, error pages, and ecommerce storefronts (PLP, PDP, cart, checkout). Supports all frameworks and component libraries.',
     inputSchema,
-    ({ template, framework, component_library, dark_mode, project_name, mood, industry, visual_style }) => {
+    async ({ template, framework, component_library, dark_mode, project_name, mood, industry, visual_style }) => {
       try {
-        // Initialize the component registry on first use
         initializeRegistry();
 
         const ctx = designContextStore.get();
         const appName = project_name ?? 'MyApp';
-        const files = generateTemplate(template, framework, component_library, dark_mode, appName, ctx);
+        const files = await generateTemplate(template, framework, component_library, dark_mode, appName, ctx, {
+          mood,
+          industry,
+          visual_style,
+        });
 
-        // RAG metadata for the response
+        try {
+          const db = getDatabase();
+          const gen: IGeneration = {
+            id: `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            tool: 'generate_page_template',
+            params: {
+              template,
+              framework,
+              ...(mood && { mood }),
+              ...(industry && { industry }),
+              ...(visual_style && { visual_style }),
+            },
+            componentType: template,
+            framework,
+            outputHash: '',
+            timestamp: Date.now(),
+            sessionId: `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            mood,
+            industry,
+            style: visual_style,
+          };
+          recordGeneration(gen, files[0]?.content || '', db, template);
+        } catch (err) {
+          logger.warn({ error: err }, 'Generation recording failed');
+        }
+
         const registrySize = getRegistrySize();
         const designParams = [
           mood && `Mood: ${mood}`,
@@ -184,7 +218,6 @@ export function registerGeneratePageTemplate(server: McpServer): void {
           ],
         };
       } catch (error) {
-        const _ctx = designContextStore.get();
         const errorMessage = error instanceof Error ? error.message : String(error);
         logger.error(
           { template, framework, component_library, dark_mode, project_name, error: errorMessage },
@@ -203,16 +236,64 @@ export function registerGeneratePageTemplate(server: McpServer): void {
   );
 }
 
-export function generateTemplate(
+export async function generateTemplate(
   template: PageTemplateType,
   framework: string,
   _componentLibrary: string,
   darkMode: boolean,
   appName: string,
-  ctx: IDesignContext
-): IGeneratedFile[] {
-  const body = getTemplateBody(template, darkMode, appName);
+  ctx: IDesignContext,
+  options?: {
+    mood?: string;
+    industry?: string;
+    visual_style?: string;
+  }
+): Promise<IGeneratedFile[]> {
+  let body: string | null = null;
 
+  if (options?.mood || options?.industry || options?.visual_style) {
+    try {
+      const comp = findBestComposition(template, {
+        mood: options.mood ? [options.mood as MoodTag] : undefined,
+        industry: options.industry ? [options.industry as IndustryTag] : undefined,
+        visualStyle: options.visual_style as VisualStyleId | undefined,
+      });
+      if (comp) {
+        const result = composePageFromTemplate(comp.id, {
+          mood: options.mood ? [options.mood as MoodTag] : undefined,
+          industry: options.industry ? [options.industry as IndustryTag] : undefined,
+          visualStyle: options.visual_style as VisualStyleId | undefined,
+        });
+        if (result) {
+          const quality = await scoreQuality(template, result.jsx, {
+            componentType: template,
+          });
+          if (quality.score >= 5) {
+            body = result.jsx;
+            logger.info({ template, score: quality.score, compositionId: comp.id }, 'Using ML composition');
+          }
+        }
+      }
+    } catch (err) {
+      logger.warn({ err, template }, 'Composition failed, using hardcoded');
+    }
+  }
+
+  if (!body) {
+    body = getTemplateBody(template, darkMode, appName);
+  }
+
+  return wrapInFramework(template, body, framework, ctx, darkMode, appName);
+}
+
+function wrapInFramework(
+  template: string,
+  body: string,
+  framework: string,
+  ctx: IDesignContext,
+  darkMode: boolean,
+  appName: string
+): IGeneratedFile[] {
   switch (framework) {
     case 'react':
     case 'nextjs':
@@ -230,7 +311,7 @@ export function generateTemplate(
   }
 }
 
-function wrapReact(template: string, body: string, isNextjs: boolean): IGeneratedFile[] {
+export function wrapReact(template: string, body: string, isNextjs: boolean): IGeneratedFile[] {
   const directive = isNextjs ? "'use client'\n\n" : '';
   const name = `${toPascalCase(template)}Page`;
   return [
@@ -241,7 +322,7 @@ function wrapReact(template: string, body: string, isNextjs: boolean): IGenerate
   ];
 }
 
-function wrapVue(template: string, body: string): IGeneratedFile[] {
+export function wrapVue(template: string, body: string): IGeneratedFile[] {
   const vueBody = toVueSyntax(body);
   return [
     {
@@ -251,7 +332,7 @@ function wrapVue(template: string, body: string): IGeneratedFile[] {
   ];
 }
 
-function wrapAngular(template: string, body: string): IGeneratedFile[] {
+export function wrapAngular(template: string, body: string): IGeneratedFile[] {
   const name = `${toPascalCase(template)}Page`;
   const kebab = kebabCase(template);
   const angularBody = toVueSyntax(body).replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
@@ -263,7 +344,7 @@ function wrapAngular(template: string, body: string): IGeneratedFile[] {
   ];
 }
 
-function wrapSvelte(template: string, body: string): IGeneratedFile[] {
+export function wrapSvelte(template: string, body: string): IGeneratedFile[] {
   const svelteBody = toVueSyntax(body);
   return [
     {
@@ -273,7 +354,7 @@ function wrapSvelte(template: string, body: string): IGeneratedFile[] {
   ];
 }
 
-function wrapHtml(
+export function wrapHtml(
   template: string,
   body: string,
   ctx: IDesignContext,
@@ -289,7 +370,7 @@ function wrapHtml(
   ];
 }
 
-function toVueSyntax(jsx: string): string {
+export function toVueSyntax(jsx: string): string {
   return jsx
     .replace(/className=/g, 'class=')
     .replace(/htmlFor=/g, 'for=')
@@ -1049,6 +1130,33 @@ function getTemplateBody(template: PageTemplateType, darkMode: boolean, appName:
       </div>
     </div>`;
 
+    case 'ai_chat':
+      return getAiChatBody(dk, appName);
+    case 'changelog':
+      return getChangelogBody(dk, appName);
+    case 'team_members':
+      return getTeamMembersBody(dk, appName);
+    case 'settings_billing':
+      return getSettingsBillingBody(dk, appName);
+    case 'api_keys':
+      return getApiKeysBody(dk, appName);
+    case 'analytics':
+      return getAnalyticsBody(dk, appName);
+    case 'profile':
+      return getProfileBody(dk);
+    case 'file_manager':
+      return getFileManagerBody(dk, appName);
+    case 'kanban':
+      return getKanbanBody(dk);
+    case 'calendar':
+      return getCalendarBody(dk);
+    case 'docs':
+      return getDocsBody(dk, appName);
+    case 'faq':
+      return getFaqBody(dk, appName);
+    case 'blog_post':
+      return getBlogPostBody(dk, appName);
+
     case 'ecommerce_checkout':
       return `    <div className="min-h-screen bg-background text-foreground${dk('dark:bg-gray-950 dark:text-gray-100')}">
       {/* Navbar */}
@@ -1184,44 +1292,18 @@ function getTemplateBody(template: PageTemplateType, darkMode: boolean, appName:
       </div>
     </div>`;
 
-    case 'ai_chat':
-      return getAiChatBody(dk, appName);
-    case 'changelog':
-      return getChangelogBody(dk, appName);
-    case 'team_members':
-      return getTeamMembersBody(dk, appName);
-    case 'settings_billing':
-      return getSettingsBillingBody(dk, appName);
-    case 'api_keys':
-      return getApiKeysBody(dk, appName);
-    case 'analytics':
-      return getAnalyticsBody(dk, appName);
-    case 'profile':
-      return getProfileBody(dk);
-    case 'file_manager':
-      return getFileManagerBody(dk, appName);
-    case 'kanban':
-      return getKanbanBody(dk);
-    case 'calendar':
-      return getCalendarBody(dk);
-    case 'docs':
-      return getDocsBody(dk, appName);
-    case 'faq':
-      return getFaqBody(dk, appName);
-    case 'blog_post':
-      return getBlogPostBody(dk, appName);
     default:
       return `    <div className="p-8"><p>Template "${template}" placeholder</p></div>`;
   }
 }
 
-function toPascalCase(str: string): string {
+export function toPascalCase(str: string): string {
   return str
     .replace(/[-_\s]+(.)?/g, (_, c: string | undefined) => (c ? c.toUpperCase() : ''))
     .replace(/^(.)/, (_, c: string) => c.toUpperCase());
 }
 
-function kebabCase(str: string): string {
+export function kebabCase(str: string): string {
   return str
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')

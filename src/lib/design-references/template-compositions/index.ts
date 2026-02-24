@@ -133,5 +133,13 @@ function wrapLayout(content: string, layoutClasses: string): string {
   return `<div className="${layoutClasses}">\n${content}\n</div>`;
 }
 
+export function clearCompositions(): void {
+  compositions.length = 0;
+}
+
+export function getAllCompositions(): IPageComposition[] {
+  return [...compositions];
+}
+
 export { compositions };
 export type { IPageComposition, IPageSection } from './types.js';

@@ -12,6 +12,8 @@ import { registerOrganisms } from './organisms/index.js';
 import { initializeInteractions } from '../micro-interactions/index.js';
 import { initializeStyles } from '../visual-styles/index.js';
 import { getDatabase, isSeeded, seedComponents, getAllComponents } from '../database/store.js';
+import { initializeCompositions } from '../template-compositions/init.js';
+import { initializePacks } from '../template-packs/init.js';
 import pino from 'pino';
 
 const logger = pino({ name: 'registry-init' });
@@ -47,6 +49,18 @@ export function initializeRegistry(): void {
     registerAtoms();
     registerMolecules();
     registerOrganisms();
+  }
+
+  try {
+    initializeCompositions();
+  } catch (err) {
+    logger.warn({ err }, 'Compositions init failed; page templates still work');
+  }
+
+  try {
+    initializePacks();
+  } catch (err) {
+    logger.warn({ err }, 'Packs init failed; template packs still available');
   }
 
   initialized = true;
