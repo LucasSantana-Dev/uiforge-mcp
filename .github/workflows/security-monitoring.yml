@@ -79,24 +79,19 @@ jobs:
           
           echo "### 📋 Scan Summary" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Dependency scan completed" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Code security analysis completed" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Security audit completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "### 🔍 Review Findings" >> $GITHUB_STEP_SUMMARY
           echo "1. Check the **Security** tab in this repository" >> $GITHUB_STEP_SUMMARY
           echo "2. Review high and medium severity issues" >> $GITHUB_STEP_SUMMARY
           echo "3. Address critical vulnerabilities promptly" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
-          echo "### 📊 Snyk Dashboard" >> $GITHUB_STEP_SUMMARY
-          echo "View detailed analysis at: https://app.snyk.io/org/your-org/project" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "### 🚨 Next Steps" >> $GITHUB_STEP_SUMMARY
           echo "- [ ] Review and fix high-severity issues" >> $GITHUB_STEP_SUMMARY
           echo "- [ ] Update dependencies if needed" >> $GITHUB_STEP_SUMMARY
-          echo "- [ ] Review code security recommendations" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Review security audit recommendations" >> $GITHUB_STEP_SUMMARY
 
   coverage-monitoring:
     name: Coverage Monitoring

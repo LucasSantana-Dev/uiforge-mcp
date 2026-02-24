@@ -272,7 +272,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
 
           echo "### 🛡️ Security Status" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Snyk dependency scan completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Security audit completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ CodeQL static analysis completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Results uploaded to Security tab" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
