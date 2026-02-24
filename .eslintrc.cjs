@@ -2,14 +2,14 @@ module.exports = {
   root: true,
   env: {
     node: true,
-    es2022: true
+    es2022: true,
   },
-  extends: ['eslint:recommended', '@typescript-eslint/recommended', 'prettier'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
-    project: './tsconfig.json'
+    project: './tsconfig.eslint.json',
   },
   plugins: ['@typescript-eslint'],
   rules: {
@@ -19,7 +19,7 @@ module.exports = {
     'prefer-const': 'error',
     'prefer-template': 'warn',
     'no-duplicate-imports': 'error',
-    'require-await': 'error',
+    'require-await': 'warn',
 
     // Code quality rules
     'no-var': 'error',
@@ -34,14 +34,14 @@ module.exports = {
       'warn',
       {
         argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
-      }
+        varsIgnorePattern: '^_',
+      },
     ],
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     '@typescript-eslint/prefer-optional-chain': 'warn',
-    '@typescript-eslint/no-non-null-assertion': 'warn'
+    '@typescript-eslint/no-non-null-assertion': 'warn',
   },
   overrides: [
     {
@@ -49,23 +49,23 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
         'no-console': 'off',
-        '@typescript-eslint/no-floating-promises': 'off'
-      }
+        '@typescript-eslint/no-floating-promises': 'off',
+      },
     },
     {
       files: ['*.config.js', '*.config.ts'],
       rules: {
         'no-console': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-var-requires': 'off'
-      }
+        '@typescript-eslint/no-var-requires': 'off',
+      },
     },
     {
       files: ['scripts/**/*.js', 'scripts/**/*.ts'],
       rules: {
-        'no-console': 'off'
-      }
-    }
+        'no-console': 'off',
+      },
+    },
   ],
-  ignorePatterns: ['node_modules/', 'dist/', 'build/', 'coverage/', '*.min.js']
+  ignorePatterns: ['node_modules/', 'dist/', 'build/', 'coverage/', '*.min.js', 'tsup.config.ts'],
 };

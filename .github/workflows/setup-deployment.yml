@@ -4,22 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       setup_npm:
-        description: 'Setup npm token'
+        description: "Setup npm token"
         required: false
         default: false
         type: boolean
       setup_docker:
-        description: 'Setup Docker credentials'
-        required: false
-        default: false
-        type: boolean
-      setup_snyk:
-        description: 'Setup Snyk security scanning'
+        description: "Setup Docker credentials"
         required: false
         default: false
         type: boolean
       setup_codecov:
-        description: 'Setup Codecov coverage reporting'
+        description: "Setup Codecov coverage reporting"
         required: false
         default: false
         type: boolean
@@ -45,7 +40,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Verify workflow syntax
         run: |
@@ -111,22 +106,6 @@ jobs:
           echo "1. Create a Docker Hub access token: https://hub.docker.com/settings/security"
           echo "2. Add DOCKER_USERNAME secret"
           echo "3. Add DOCKER_PASSWORD secret"
-          echo ""
-          echo "Visit: https://github.com/${{ github.repository }}/settings/secrets/actions"
-          echo ""
-          echo "⚠️ This step requires manual intervention in GitHub UI"
-
-      - name: Setup Snyk token (guided)
-        if: github.event.inputs.setup_snyk == 'true'
-        run: |
-          echo "📝 Setting up Snyk token..."
-          echo ""
-          echo "To create SNYK_TOKEN:"
-          echo "1. Go to https://app.snyk.io/login"
-          echo "2. Navigate to Account Settings → API Token"
-          echo "3. Click 'Generate Token'"
-          echo "4. Copy the token"
-          echo "5. Add it as a repository secret named SNYK_TOKEN"
           echo ""
           echo "Visit: https://github.com/${{ github.repository }}/settings/secrets/actions"
           echo ""

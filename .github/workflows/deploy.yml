@@ -6,21 +6,21 @@ on:
   workflow_dispatch:
     inputs:
       version_type:
-        description: 'Version bump type'
+        description: "Version bump type"
         required: true
-        default: 'patch'
+        default: "patch"
         type: choice
         options:
           - patch
           - minor
           - major
       dry_run:
-        description: 'Dry run (skip actual publish)'
+        description: "Dry run (skip actual publish)"
         required: false
         default: false
         type: boolean
       create_release:
-        description: 'Create GitHub release'
+        description: "Create GitHub release"
         required: false
         default: true
         type: boolean
@@ -49,7 +49,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Check if main branch
         run: |
@@ -153,7 +153,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Run full validation
         run: npm run validate:all
@@ -220,7 +220,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Build
         run: npm run build

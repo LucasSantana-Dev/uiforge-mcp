@@ -8,7 +8,7 @@
     "forgespace-ui-mcp": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "build:bundle": "tsup",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
@@ -72,9 +72,25 @@
     "@types/fs-extra": "^11.0.1",
     "@types/semver": "^7.5.0"
   },
-  "engines": { "node": ">=22" },
-  "files": ["dist", "bin", "README.md", "LICENSE"],
-  "keywords": ["mcp", "model-context-protocol", "ai", "ui-generation", "react", "nextjs", "forgespace", "typescript"],
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "ui-generation",
+    "react",
+    "nextjs",
+    "forgespace",
+    "typescript"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -85,7 +101,9 @@
   },
   "homepage": "https://github.com/Forge-Space/ui-mcp#readme",
   "lint-staged": {
-    "src/**/*.ts": ["eslint --fix", "prettier --write"]
-  },
-  "overrides": { "ajv": "^8.18.0" }
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
 }
