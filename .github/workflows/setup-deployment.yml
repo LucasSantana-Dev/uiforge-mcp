@@ -13,11 +13,6 @@ on:
         required: false
         default: false
         type: boolean
-      setup_snyk:
-        description: 'Setup Snyk security scanning'
-        required: false
-        default: false
-        type: boolean
       setup_codecov:
         description: 'Setup Codecov coverage reporting'
         required: false

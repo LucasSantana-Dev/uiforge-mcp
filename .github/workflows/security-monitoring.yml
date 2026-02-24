@@ -43,29 +43,10 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Run Snyk dependency scan
+      - name: Run npm audit
         if: github.event.inputs.scan_dependencies == 'true'
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=medium
-          command: monitor
-
-      - name: Run Snyk code security scan
-        if: github.event.inputs.scan_code == 'true'
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=medium --sarif-file-output=snyk-code.sarif
-          command: code test
-
-      - name: Upload SARIF to GitHub Security
-        if: github.event.inputs.scan_code == 'true'
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: snyk-code.sarif
+        run: npm audit --audit-level=medium --omit=dev
+        continue-on-error: true
 
       - name: Generate security report
         if: github.event.inputs.create_report == 'true'

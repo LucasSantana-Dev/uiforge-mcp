@@ -39,9 +39,6 @@ on:
       CODECOV_TOKEN:
         description: 'Codecov token'
         required: false
-      SNYK_TOKEN:
-        description: 'Snyk token'
-        required: false
       GITHUB_TOKEN:
         description: 'GitHub token'
         required: false

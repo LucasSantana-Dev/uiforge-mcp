@@ -247,13 +247,9 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Run Snyk security scan
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=medium
-          command: monitor
+      - name: Run npm audit
+        run: npm audit --audit-level=medium --omit=dev
+        continue-on-error: true
 
       - name: Run CodeQL analysis
         uses: github/codeql-action/init@v4
