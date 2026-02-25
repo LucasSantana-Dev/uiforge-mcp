@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-02-25
+
+### Added
+- **Training Data Expansion** — 287 component + 108 animation + 49 backend = 444 total snippets
+  - 9 new atom files: alerts, breadcrumbs, code-blocks, kbd, separators, sliders, spinners, switches, tags
+  - 12 new molecule files: tooltips, dropdowns, tabs, accordions, pagination, popovers, drawers, steppers, date-pickers, file-upload, carousels, timelines
+  - 2 new organism files: kanban, command-palettes
+  - Enhanced existing files: buttons (+5), cards (+5), heroes (+4), navbars (+4)
+- **Animation Library** — 15 new animation files with 85 micro-interactions
+  - Categories: entrance (fade, slide), scroll-reveal, hover-effects, text-animations, loading-states, page-transitions, feedback, backgrounds, buttons, cards, lists, modals, navigation, charts
+  - All animations include reducedMotionFallback for accessibility
+- **Backend Registry** — 49 production-grade backend snippets
+  - API routes: REST CRUD, advanced search, auth, webhooks, file upload, realtime/SSE
+  - Middleware: JWT auth, RBAC, Zod validation, rate limiting, error handling, CORS, caching
+  - Architecture: clean architecture, service layer, event-driven, CQRS-lite
+  - Database: Prisma patterns, transactions, seeding
+  - Security: input sanitization, secrets management
+  - Observability: structured logging, health checks, metrics
+  - Performance: bundle optimization, caching strategies
+  - Documentation: OpenAPI/Swagger, API versioning
+- **Icon Library Integration** — 6 libraries with ~50 common icon mappings each
+  - Supported: lucide, heroicons, phosphor, tabler, font-awesome, radix
+  - Icon adapter converts generic {icon:name} placeholders to library-specific imports
+- **Project Scaffold Templates** — 5 architecture templates
+  - next-saas (monorepo), next-app (single), express-api (clean arch), fullstack-mono (turborepo), react-spa (vite)
+  - Decision engine for template selection based on app type, scale, and features
+  - State management patterns: zustand, redux-toolkit, tanstack-query
+- **Backend MCP Tools** — 3 new MCP tools
+  - `generate_api_route`: generate production-ready API routes with validation and auth
+  - `generate_backend_module`: complete feature modules with clean architecture
+  - `scaffold_backend`: full project scaffolds with auth, database, middleware
+- **Generated Artifacts Storage** — SQLite-backed learning loop
+  - Stores every generated component/module with quality and feedback scores
+  - Pattern promotion: high-scoring artifacts queued for registry inclusion
+  - Component structure JSON for tree visualization and reusability analysis
+- **Quality Scripts** — batch validation and export tools
+  - `validate:snippets`: batch validate all registered snippets
+  - `validate:tokens`: verify no raw Tailwind colors in any snippet
+  - `registry:stats`: report snippet counts by category and type
+  - `export:training`: export snippets as JSON for external ML training
+
 ## [0.6.0] - 2026-02-24
 
 ### Added

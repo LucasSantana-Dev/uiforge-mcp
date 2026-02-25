@@ -1,6 +1,6 @@
 export { zustandPatterns } from './zustand.js';
-export { reduxToolkitPatterns } from './redux-toolkit.js';
-export { tanstackQueryPatterns } from './tanstack-query.js';
+export { reduxToolkitPattern as reduxToolkitPatterns } from './redux-toolkit.js';
+export { tanstackQueryPattern as tanstackQueryPatterns } from './tanstack-query.js';
 
 export const stateManagementPatterns = {
   zustand: {
@@ -13,7 +13,10 @@ export const stateManagementPatterns = {
       'Good TypeScript support',
       'Easy to use with React hooks',
     ],
-    cons: ['Less ecosystem/middleware than Redux', 'Manual optimization needed for large stores'],
+    cons: [
+      'Less ecosystem/middleware than Redux',
+      'Manual optimization needed for large stores',
+    ],
     bestFor: ['Small to medium apps', 'Simple state needs', 'Quick prototyping'],
   },
   'redux-toolkit': {
@@ -26,8 +29,16 @@ export const stateManagementPatterns = {
       'RTK Query for data fetching',
       'Industry standard',
     ],
-    cons: ['More boilerplate than alternatives', 'Steeper learning curve', 'Larger bundle size'],
-    bestFor: ['Large applications', 'Complex state logic', 'Team familiarity with Redux'],
+    cons: [
+      'More boilerplate than alternatives',
+      'Steeper learning curve',
+      'Larger bundle size',
+    ],
+    bestFor: [
+      'Large applications',
+      'Complex state logic',
+      'Team familiarity with Redux',
+    ],
   },
   'tanstack-query': {
     name: 'TanStack Query',
@@ -44,7 +55,11 @@ export const stateManagementPatterns = {
       'Requires separate solution for client state',
       'Learning curve for advanced features',
     ],
-    bestFor: ['API-heavy applications', 'Real-time data', 'Server state synchronization'],
+    bestFor: [
+      'API-heavy applications',
+      'Real-time data',
+      'Server state synchronization',
+    ],
   },
   jotai: {
     name: 'Jotai',
@@ -56,7 +71,11 @@ export const stateManagementPatterns = {
       'Small bundle size',
       'React Suspense support',
     ],
-    cons: ['Smaller ecosystem', 'Different mental model', 'Less documentation'],
+    cons: [
+      'Smaller ecosystem',
+      'Different mental model',
+      'Less documentation',
+    ],
     bestFor: ['Modern React apps', 'Atomic state needs', 'Suspense integration'],
   },
 };

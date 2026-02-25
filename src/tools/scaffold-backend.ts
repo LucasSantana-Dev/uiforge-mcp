@@ -486,7 +486,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 ${middleware.join('\n')}
 
-${setup.length > 0 ? '// Additional setup\n' + setup.join('\n') + '\n' : ''}
+${setup.length > 0 ? `// Additional setup\n${  setup.join('\n')  }\n` : ''}
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

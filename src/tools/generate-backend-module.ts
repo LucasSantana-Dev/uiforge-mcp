@@ -110,7 +110,7 @@ export function registerGenerateBackendModule(server: McpServer): void {
           ...files.map((f) => `### \`${f.path}\`\n\`\`\`typescript\n${f.code}\n\`\`\``),
           '',
           '## Dependencies',
-          `\`\`\`json\n${JSON.stringify(Object.fromEntries([...allDeps].map((d) => [d, 'latest'])), null, 2)}\n\`\`\``,
+          `\`\`\`json\n${JSON.stringify(Object.fromEntries(Array.from(allDeps).map((d) => [d, 'latest'])), null, 2)}\n\`\`\``,
           '',
           `Generated ${files.length} files from ${routeSnippets.length} route, ${archSnippets.length} architecture, and ${mwSnippets.length} middleware patterns.`,
         ].join('\n');

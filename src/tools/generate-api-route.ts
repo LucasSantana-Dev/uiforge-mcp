@@ -78,7 +78,7 @@ export function registerGenerateApiRoute(server: McpServer): void {
           middlewareCode ? ['## Middleware', '```typescript', middlewareCode, '```'].join('\n') : '',
           '',
           '## Dependencies',
-          `\`\`\`json\n${JSON.stringify(Object.fromEntries([...allDeps].map((d) => [d, 'latest'])), null, 2)}\n\`\`\``,
+          `\`\`\`json\n${JSON.stringify(Object.fromEntries(Array.from(allDeps).map((d) => [d, 'latest'])), null, 2)}\n\`\`\``,
           '',
           `Found ${routeSnippets.length} route pattern(s) and ${middlewareSnippets.length} middleware pattern(s).`,
         ]
