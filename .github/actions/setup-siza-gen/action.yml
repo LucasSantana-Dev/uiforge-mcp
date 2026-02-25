@@ -1,8 +1,8 @@
-name: 'Setup siza-gen'
-description: 'Clone and build @forgespace/siza-gen as sibling directory for file: protocol resolution'
+name: "Setup siza-gen"
+description: "Clone and build @forgespace/siza-gen as sibling directory for file: protocol resolution"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Clone and build siza-gen
       shell: bash
