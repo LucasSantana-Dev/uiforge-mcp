@@ -10,6 +10,10 @@ runs:
         if [ ! -d "../siza-gen" ]; then
           git clone --depth 1 https://github.com/Forge-Space/siza-gen.git ../siza-gen
           cd ../siza-gen
-          npm install --legacy-peer-deps
+          for i in 1 2 3; do
+            npm install --legacy-peer-deps --fetch-retries=5 && break
+            echo "npm install attempt $i failed, retrying..."
+            sleep 5
+          done
           npm run build
         fi
