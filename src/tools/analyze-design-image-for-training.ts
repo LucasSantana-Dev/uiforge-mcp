@@ -3,7 +3,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { extractDesignPatterns, getDatabase, storeDesignLearning } from '@forgespace/siza-gen';
 import pino from 'pino';
 
-const logger = pino({ name: 'analyze-design-image-for-training' });
+const logger = pino({ name: 'analyze-design-image-for-training' }, pino.destination(2));
 
 const inputSchema = {
   image_data: z.string().describe('Base64-encoded image data of the UI design reference to analyze for ML training'),

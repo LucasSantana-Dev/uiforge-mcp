@@ -37,7 +37,7 @@ import { extractDesignFromUrl } from '../lib/design-extractor.js';
 // Note: This is incremented after successful generation to avoid race conditions
 let generationCount = 0;
 
-const logger = pino({ name: 'generate-ui-component' });
+const logger = pino({ name: 'generate-ui-component' }, pino.destination(2));
 
 /**
  * Options for RAG-based component matching from the design references registry.

@@ -11,7 +11,7 @@ import {
 } from '@forgespace/siza-gen';
 import pino from 'pino';
 
-const a11yLogger = pino({ name: 'audit-accessibility' });
+const a11yLogger = pino({ name: 'audit-accessibility' }, pino.destination(2));
 
 const FRAMEWORK_VALUES = ['react', 'nextjs', 'vue', 'angular', 'svelte', 'html'] as const;
 

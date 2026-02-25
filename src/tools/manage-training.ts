@@ -14,7 +14,7 @@ import {
   type ModelId,
 } from '@forgespace/siza-gen';
 
-const logger = pino({ name: 'manage-training' });
+const logger = pino({ name: 'manage-training' }, pino.destination(2));
 
 const inputSchema = {
   action: z
