@@ -8,15 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.7.0] - 2026-02-25
 
 ### Added
-- **Training Data Expansion** — 287 component + 108 animation + 49 backend = 444 total snippets
-  - 9 new atom files: alerts, breadcrumbs, code-blocks, kbd, separators, sliders, spinners, switches, tags
-  - 12 new molecule files: tooltips, dropdowns, tabs, accordions, pagination, popovers, drawers, steppers, date-pickers, file-upload, carousels, timelines
-  - 2 new organism files: kanban, command-palettes
-  - Enhanced existing files: buttons (+5), cards (+5), heroes (+4), navbars (+4)
-- **Animation Library** — 15 new animation files with 85 micro-interactions
+- **Training Data Expansion** — 357 component + 85 animation + 60 backend = 502 total snippets
+  - 11 new atom files: alerts, breadcrumbs, chips, code-blocks, counters, kbd, separators, sliders, spinners, switches, tags
+  - 18 new molecule files: tooltips, dropdowns, tabs, accordions, pagination, popovers, drawers, steppers, date-pickers, file-upload, carousels, timelines, toast, rating, color-picker, command-menu, empty-states, search
+  - 4 new organism files: kanban, command-palettes, settings, onboarding
+  - Enhanced existing files: buttons (+5), cards (+5), forms (+4), footers (+3), testimonials (+3), inputs (+3), chat (+3), content (+3), search (+2), dashboards (+2), empty-states (+3)
+- **Animation Library** — 15 animation files with 85 micro-interactions
   - Categories: entrance (fade, slide), scroll-reveal, hover-effects, text-animations, loading-states, page-transitions, feedback, backgrounds, buttons, cards, lists, modals, navigation, charts
   - All animations include reducedMotionFallback for accessibility
-- **Backend Registry** — 49 production-grade backend snippets
+- **Backend Registry** — 60 production-grade backend snippets
   - API routes: REST CRUD, advanced search, auth, webhooks, file upload, realtime/SSE
   - Middleware: JWT auth, RBAC, Zod validation, rate limiting, error handling, CORS, caching
   - Architecture: clean architecture, service layer, event-driven, CQRS-lite
