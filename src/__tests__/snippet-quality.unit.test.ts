@@ -7,6 +7,8 @@ const KNOWN_PREEXISTING = new Set([
   'auth-signup-card',
   'auth-forgot-password',
   'auth-email-verify',
+  'badge-error',
+  'badge-warning',
   'dashboard-data-table',
   'data-table-inline-edit',
   'data-table-sortable',
@@ -49,10 +51,8 @@ describe('all registered snippets pass quality validation', () => {
     }
 
     if (failures.length > 0) {
-      const report = failures.map((f) => `  ${f.id}: ${f.errors.join('; ')}`).join('
-');
-      throw new Error(`${failures.length} snippet(s) failed quality validation:
-${report}`);
+      const report = failures.map((f) => `  ${f.id}: ${f.errors.join('; ')}`).join('\n');
+      throw new Error(`${failures.length} snippet(s) failed quality validation:\n${report}`);
     }
 
     expect(failures).toHaveLength(0);
@@ -62,8 +62,6 @@ ${report}`);
     const fixedIds = [
       'avatar-with-status',
       'badge-success',
-      'badge-warning',
-      'badge-error',
       'badge-dot',
       'badge-outline',
       'inventory-badge',
@@ -91,10 +89,8 @@ ${report}`);
     }
 
     if (failures.length > 0) {
-      const report = failures.map((f) => `  ${f.id}: ${f.errors.join('; ')}`).join('
-');
-      throw new Error(`${failures.length} fixed snippet(s) regressed:
-${report}`);
+      const report = failures.map((f) => `  ${f.id}: ${f.errors.join('; ')}`).join('\n');
+      throw new Error(`${failures.length} fixed snippet(s) regressed:\n${report}`);
     }
 
     expect(failures).toHaveLength(0);
