@@ -16,9 +16,9 @@ export function registerGenerateBackendModule(server: McpServer): void {
         .describe('Architecture patterns: clean-architecture, repository, service-layer'),
       middleware: z.array(z.string()).optional().describe('Middleware: auth, validation, rate-limiting, caching'),
     },
-    ({ module_name, operations, framework, patterns, middleware }) => {
+    async ({ module_name, operations, framework, patterns, middleware }) => {
       try {
-        initializeBackendRegistry();
+        await initializeBackendRegistry();
 
         const modulePascal = module_name.charAt(0).toUpperCase() + module_name.slice(1);
         const moduleKebab = module_name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();

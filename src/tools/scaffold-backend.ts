@@ -1,13 +1,6 @@
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import * as pino from 'pino';
-import {
-  initializeBackendRegistry,
-  searchBackendSnippets,
-  type BackendFramework,
-} from '../lib/design-references/backend-registry/index.js';
-
-const logger = pino({ name: 'scaffold-backend' });
+import { initializeBackendRegistry } from '../lib/design-references/backend-registry/index.js';
 
 const inputSchema = {
   projectName: z.string().min(1).describe('Project name (e.g., "my-api", "ecommerce-backend")'),
@@ -48,14 +41,14 @@ function toKebabCase(str: string): string {
     .toLowerCase();
 }
 
-export function scaffoldBackend(
+export async function scaffoldBackend(
   projectName: string,
   framework: 'express' | 'nextjs',
   features: string[],
   database?: 'prisma' | 'drizzle',
   auth?: 'jwt' | 'oauth' | 'session'
-): IScaffoldedProject {
-  initializeBackendRegistry();
+): Promise<IScaffoldedProject> {
+  await initializeBackendRegistry();
 
   const projectKebab = toKebabCase(projectName);
   const files: IProjectFile[] = [];
@@ -486,7 +479,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 ${middleware.join('\n')}
 
-${setup.length > 0 ? `// Additional setup\n${  setup.join('\n')  }\n` : ''}
+${setup.length > 0 ? `// Additional setup\n${setup.join('\n')}\n` : ''}
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -612,7 +605,7 @@ export function registerScaffoldBackend(server: McpServer): void {
         };
       }
 
-      const result = scaffoldBackend(projectName, framework, features, database, auth);
+      const result = await scaffoldBackend(projectName, framework, features, database, auth);
 
       const summary = [
         `Generated ${projectName} backend project with ${framework}`,

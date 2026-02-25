@@ -18,9 +18,9 @@ export function registerGenerateApiRoute(server: McpServer): void {
         .optional()
         .describe('Additional features: validation, auth, rate-limiting, caching'),
     },
-    ({ route_type, resource_name, framework, features }) => {
+    async ({ route_type, resource_name, framework, features }) => {
       try {
-        initializeBackendRegistry();
+        await initializeBackendRegistry();
 
         const categoryMap: Record<string, BackendCategory> = {
           'rest-crud': 'api-route',
