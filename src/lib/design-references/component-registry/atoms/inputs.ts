@@ -7,7 +7,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'default',
-    tags: ['form', 'text', 'field', 'interactive'],
+    tags: ['form', 'text', 'field', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
@@ -53,7 +53,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'with-icon',
-    tags: ['form', 'search', 'icon', 'interactive'],
+    tags: ['form', 'search', 'icon', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'devtools'],
     visualStyles: ['soft-depth', 'linear-modern', 'corporate-trust'],
@@ -104,7 +104,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'floating-label',
-    tags: ['form', 'text', 'material', 'animated', 'interactive'],
+    tags: ['form', 'text', 'material', 'energetic', 'energetic'],
     mood: ['premium', 'professional'],
     industry: ['saas', 'fintech', 'ecommerce'],
     visualStyles: ['soft-depth', 'corporate-trust'],
@@ -156,7 +156,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'textarea',
     variant: 'default',
-    tags: ['form', 'multiline', 'text', 'interactive'],
+    tags: ['form', 'multiline', 'text', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas'],
     visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
@@ -198,7 +198,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'password-toggle',
-    tags: ['form', 'password', 'auth', 'security', 'interactive'],
+    tags: ['form', 'password', 'auth', 'security', 'energetic'],
     mood: ['professional'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust'],
@@ -258,7 +258,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'search',
-    tags: ['form', 'search', 'filter', 'interactive'],
+    tags: ['form', 'search', 'filter', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'devtools'],
     visualStyles: ['soft-depth', 'linear-modern', 'minimal-editorial'],
@@ -313,7 +313,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'tags',
-    tags: ['form', 'multi-value', 'chips', 'interactive'],
+    tags: ['form', 'multi-value', 'chips', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['saas', 'devtools', 'general'],
     visualStyles: ['soft-depth', 'linear-modern', 'corporate-trust'],
@@ -380,7 +380,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'otp',
-    tags: ['form', 'auth', 'verification', 'security', 'interactive'],
+    tags: ['form', 'auth', 'verification', 'security', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['fintech', 'saas', 'general'],
     visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
@@ -474,7 +474,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'textarea',
     variant: 'auto-resize',
-    tags: ['form', 'multiline', 'text', 'dynamic', 'interactive'],
+    tags: ['form', 'multiline', 'text', 'energetic', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'devtools'],
     visualStyles: ['soft-depth', 'linear-modern', 'minimal-editorial'],
@@ -526,7 +526,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'select',
-    tags: ['form', 'dropdown', 'select', 'interactive'],
+    tags: ['form', 'dropdown', 'select', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
@@ -580,7 +580,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'combobox',
-    tags: ['form', 'autocomplete', 'search', 'filter', 'interactive'],
+    tags: ['form', 'autocomplete', 'search', 'filter', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['saas', 'devtools', 'general'],
     visualStyles: ['soft-depth', 'linear-modern', 'corporate-trust'],
@@ -637,7 +637,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'date-picker',
-    tags: ['form', 'date', 'calendar', 'interactive'],
+    tags: ['form', 'date', 'calendar', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
@@ -690,7 +690,7 @@ export const inputSnippets: IComponentSnippet[] = [
     category: 'atom',
     type: 'input',
     variant: 'file-upload',
-    tags: ['form', 'upload', 'file', 'dropzone', 'interactive'],
+    tags: ['form', 'upload', 'file', 'dropzone', 'energetic'],
     mood: ['professional', 'minimal'],
     industry: ['general', 'saas', 'devtools'],
     visualStyles: ['soft-depth', 'linear-modern', 'corporate-trust'],
@@ -750,6 +750,228 @@ export const inputSnippets: IComponentSnippet[] = [
         'border-2 border-dashed for clear dropzone pattern',
         'bg-muted/50 hover:bg-muted/80 for interaction feedback',
         'accept attribute restricts file types',
+      ],
+    },
+  },
+  {
+    id: 'input-pin',
+    name: 'PIN Input',
+    category: 'atom',
+    type: 'input',
+    variant: 'pin',
+    tags: ['form', 'pin', 'security', 'verification'],
+    mood: ['professional', 'minimal'],
+    industry: ['fintech', 'saas', 'general'],
+    visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
+    jsx: `<div className="space-y-2">
+  <label className="text-sm font-medium text-foreground">Enter PIN</label>
+  <div className="flex gap-2 items-center justify-center">
+    <input
+      type="password"
+      maxLength={1}
+      inputMode="numeric"
+      pattern="[0-9]"
+      className="flex h-14 w-14 items-center justify-center rounded-lg border-2 border-input bg-background text-center text-xl font-bold text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-label="PIN digit 1"
+    />
+    <input
+      type="password"
+      maxLength={1}
+      inputMode="numeric"
+      pattern="[0-9]"
+      className="flex h-14 w-14 items-center justify-center rounded-lg border-2 border-input bg-background text-center text-xl font-bold text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-label="PIN digit 2"
+    />
+    <input
+      type="password"
+      maxLength={1}
+      inputMode="numeric"
+      pattern="[0-9]"
+      className="flex h-14 w-14 items-center justify-center rounded-lg border-2 border-input bg-background text-center text-xl font-bold text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-label="PIN digit 3"
+    />
+    <div className="w-4 h-0.5 bg-border" aria-hidden="true" />
+    <input
+      type="password"
+      maxLength={1}
+      inputMode="numeric"
+      pattern="[0-9]"
+      className="flex h-14 w-14 items-center justify-center rounded-lg border-2 border-input bg-background text-center text-xl font-bold text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-label="PIN digit 4"
+    />
+  </div>
+  <p className="text-center text-xs text-muted-foreground">Enter your 4-digit PIN</p>
+</div>`,
+    tailwindClasses: {
+      wrapper: 'space-y-2',
+      label: 'text-sm font-medium text-foreground',
+      inputGroup: 'flex gap-2 items-center justify-center',
+      input:
+        'flex h-14 w-14 items-center justify-center rounded-lg border-2 border-input bg-background text-center text-xl font-bold text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50',
+      separator: 'w-4 h-0.5 bg-border',
+      hint: 'text-center text-xs text-muted-foreground',
+    },
+    a11y: {
+      roles: ['group'],
+      ariaAttributes: ['aria-label', 'inputMode', 'pattern'],
+      keyboardNav: 'Type digit to auto-advance, Backspace to go back',
+      contrastRatio: '4.5:1',
+      focusVisible: true,
+      reducedMotion: true,
+    },
+    seo: { semanticElement: 'input' },
+    responsive: { strategy: 'mobile-first', breakpoints: ['sm'] },
+    quality: {
+      antiGeneric: [
+        'type="password" for masked digits',
+        'visual separator between groups (3-1 pattern)',
+        'border-2 for emphasis on security',
+        'ring-4 ring-primary/20 for prominent focus state',
+      ],
+      inspirationSource: 'Banking app PIN entry',
+      craftDetails: [
+        'h-14 w-14 larger squares for touch targets',
+        'text-xl font-bold for clear digit display',
+        'focus-visible:border-primary changes border color',
+        'w-4 h-0.5 separator line between groups',
+      ],
+    },
+  },
+  {
+    id: 'input-currency',
+    name: 'Currency Input',
+    category: 'atom',
+    type: 'input',
+    variant: 'currency',
+    tags: ['form', 'currency', 'money', 'number'],
+    mood: ['professional', 'minimal'],
+    industry: ['fintech', 'ecommerce', 'saas'],
+    visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
+    jsx: `<div className="space-y-2">
+  <label htmlFor="input-currency" className="text-sm font-medium text-foreground">Amount</label>
+  <div className="relative">
+    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">$</span>
+    <input
+      id="input-currency"
+      type="text"
+      inputMode="decimal"
+      placeholder="0.00"
+      className="flex h-10 w-full rounded-lg border border-input bg-background pl-8 pr-16 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-required="false"
+    />
+    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+      <select className="h-7 rounded-md border-0 bg-transparent pr-6 text-xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none">
+        <option>USD</option>
+        <option>EUR</option>
+        <option>GBP</option>
+      </select>
+      <svg className="absolute right-0 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+    </div>
+  </div>
+  <p className="text-xs text-muted-foreground">Enter the payment amount</p>
+</div>`,
+    tailwindClasses: {
+      wrapper: 'space-y-2',
+      label: 'text-sm font-medium text-foreground',
+      inputWrapper: 'relative',
+      currencySymbol: 'absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium',
+      input:
+        'flex h-10 w-full rounded-lg border border-input bg-background pl-8 pr-16 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      selectWrapper: 'absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1',
+      select:
+        'h-7 rounded-md border-0 bg-transparent pr-6 text-xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none',
+      chevron: 'absolute right-0 h-4 w-4 text-muted-foreground pointer-events-none',
+      hint: 'text-xs text-muted-foreground',
+    },
+    a11y: {
+      roles: ['textbox'],
+      ariaAttributes: ['aria-required', 'aria-label'],
+      htmlAttributes: ['inputMode'],
+      keyboardNav: 'Tab to input, type amount, Tab to currency selector',
+      contrastRatio: '4.5:1',
+      focusVisible: true,
+      reducedMotion: true,
+    },
+    seo: { semanticElement: 'input' },
+    responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'md'] },
+    quality: {
+      antiGeneric: [
+        'currency symbol prefix ($)',
+        'inline currency selector (USD, EUR, GBP)',
+        'inputMode="decimal" for numeric keyboard on mobile',
+        'pl-8 pr-16 for symbol + selector spacing',
+      ],
+      inspirationSource: 'Stripe payment inputs',
+      craftDetails: [
+        'font-medium on currency symbol for emphasis',
+        'appearance-none + custom chevron on select',
+        'pointer-events-none on chevron allows click-through',
+        'pr-6 on select accounts for chevron',
+      ],
+    },
+  },
+  {
+    id: 'input-search-global',
+    name: 'Global Search Input',
+    category: 'atom',
+    type: 'input',
+    variant: 'search-global',
+    tags: ['form', 'search', 'command', 'keyboard'],
+    mood: ['professional', 'minimal'],
+    industry: ['saas', 'devtools', 'general'],
+    visualStyles: ['soft-depth', 'linear-modern', 'minimal-editorial'],
+    jsx: `<div className="space-y-2">
+  <label htmlFor="input-search-global" className="sr-only">Global search</label>
+  <div className="relative">
+    <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+    <input
+      id="input-search-global"
+      type="search"
+      placeholder="Search or jump to..."
+      className="flex h-9 w-full rounded-md border border-input bg-muted/50 pl-10 pr-20 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground hover:bg-muted focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+      <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-input bg-background px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+        <span>⌘</span>K
+      </kbd>
+    </div>
+  </div>
+</div>`,
+    tailwindClasses: {
+      wrapper: 'space-y-2',
+      label: 'sr-only',
+      inputWrapper: 'relative',
+      icon: 'absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground',
+      input:
+        'flex h-9 w-full rounded-md border border-input bg-muted/50 pl-10 pr-20 py-2 text-sm text-foreground ring-offset-background transition-colors placeholder:text-muted-foreground hover:bg-muted focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      shortcutWrapper: 'absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1',
+      shortcut:
+        'hidden sm:inline-flex items-center gap-0.5 rounded border border-input bg-background px-1.5 py-0.5 font-mono text-xs text-muted-foreground',
+    },
+    a11y: {
+      roles: ['searchbox'],
+      ariaAttributes: ['aria-label'],
+      htmlAttributes: ['autoComplete'],
+      keyboardNav: 'Cmd+K to focus, Escape to clear',
+      contrastRatio: '4.5:1',
+      focusVisible: true,
+      reducedMotion: true,
+    },
+    seo: { semanticElement: 'input' },
+    responsive: { strategy: 'mobile-first', breakpoints: ['sm', 'md'] },
+    quality: {
+      antiGeneric: [
+        'bg-muted/50 default state for subtle presence',
+        'hover:bg-muted for interaction feedback',
+        'focus:bg-background for active emphasis',
+        'keyboard shortcut visible on desktop only (hidden sm:inline-flex)',
+      ],
+      inspirationSource: 'GitHub global search',
+      craftDetails: [
+        'h-9 compact height for header placement',
+        'rounded-md softer corners than typical inputs',
+        'bg-muted/50 hover:bg-muted focus:bg-background 3-state background',
+        'pr-20 accounts for keyboard shortcut badge',
       ],
     },
   },

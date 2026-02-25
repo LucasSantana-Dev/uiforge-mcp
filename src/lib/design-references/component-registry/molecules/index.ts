@@ -10,6 +10,22 @@ import { listSnippets } from './lists.js';
 import { searchSnippets } from './search.js';
 import { statSnippets } from './stats.js';
 import { emptyStateSnippets } from './empty-states.js';
+import { tooltipSnippets } from './tooltips.js';
+import { dropdownSnippets } from './dropdowns.js';
+import { tabSnippets } from './tabs.js';
+import { accordionSnippets } from './accordions.js';
+import { paginationSnippets } from './pagination.js';
+import { popoverSnippets } from './popovers.js';
+import { drawerSnippets } from './drawers.js';
+import { stepperSnippets } from './steppers.js';
+import { datePickerSnippets } from './date-pickers.js';
+import { fileUploadSnippets } from './file-upload.js';
+import { carouselSnippets } from './carousels.js';
+import { timelineSnippets } from './timelines.js';
+import { toastSnippets } from './toast.js';
+import { ratingSnippets } from './rating.js';
+import { colorPickerSnippets } from './color-picker.js';
+import { commandMenuSnippets } from './command-menu.js';
 
 export function registerMolecules(): void {
   registerSnippets(cardSnippets);
@@ -23,6 +39,22 @@ export function registerMolecules(): void {
   registerSnippets(searchSnippets);
   registerSnippets(statSnippets);
   registerSnippets(emptyStateSnippets);
+  registerSnippets(tooltipSnippets);
+  registerSnippets(dropdownSnippets);
+  registerSnippets(tabSnippets);
+  registerSnippets(accordionSnippets);
+  registerSnippets(paginationSnippets);
+  registerSnippets(popoverSnippets);
+  registerSnippets(drawerSnippets);
+  registerSnippets(stepperSnippets);
+  registerSnippets(datePickerSnippets);
+  registerSnippets(fileUploadSnippets);
+  registerSnippets(carouselSnippets);
+  registerSnippets(timelineSnippets);
+  registerSnippets(toastSnippets);
+  registerSnippets(ratingSnippets);
+  registerSnippets(colorPickerSnippets);
+  registerSnippets(commandMenuSnippets);
 }
 
 export {
@@ -37,4 +69,20 @@ export {
   searchSnippets,
   statSnippets,
   emptyStateSnippets,
+  tooltipSnippets,
+  dropdownSnippets,
+  tabSnippets,
+  accordionSnippets,
+  paginationSnippets,
+  popoverSnippets,
+  drawerSnippets,
+  stepperSnippets,
+  datePickerSnippets,
+  fileUploadSnippets,
+  carouselSnippets,
+  timelineSnippets,
+  toastSnippets,
+  ratingSnippets,
+  colorPickerSnippets,
+  commandMenuSnippets,
 };

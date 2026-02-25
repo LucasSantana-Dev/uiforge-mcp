@@ -10,6 +10,17 @@ import { avatarSnippets } from './avatars.js';
 import { statusSnippets } from './status.js';
 import { dividerSnippets } from './dividers.js';
 import { skeletonSnippets } from './skeletons.js';
+import { alertSnippets } from './alerts.js';
+import { breadcrumbSnippets } from './breadcrumbs.js';
+import { sliderSnippets } from './sliders.js';
+import { codeBlockSnippets } from './code-blocks.js';
+import { spinnerSnippets } from './spinners.js';
+import { separatorSnippets } from './separators.js';
+import { kbdSnippets } from './kbd.js';
+import { tagSnippets } from './tags.js';
+import { switchSnippets } from './switches.js';
+import { chipSnippets } from './chips.js';
+import { counterSnippets } from './counters.js';
 
 export function registerAtoms(): void {
   registerSnippets(buttonSnippets);
@@ -23,6 +34,17 @@ export function registerAtoms(): void {
   registerSnippets(statusSnippets);
   registerSnippets(dividerSnippets);
   registerSnippets(skeletonSnippets);
+  registerSnippets(alertSnippets);
+  registerSnippets(breadcrumbSnippets);
+  registerSnippets(sliderSnippets);
+  registerSnippets(codeBlockSnippets);
+  registerSnippets(spinnerSnippets);
+  registerSnippets(separatorSnippets);
+  registerSnippets(kbdSnippets);
+  registerSnippets(tagSnippets);
+  registerSnippets(switchSnippets);
+  registerSnippets(chipSnippets);
+  registerSnippets(counterSnippets);
 }
 
 export {
@@ -37,4 +59,15 @@ export {
   statusSnippets,
   dividerSnippets,
   skeletonSnippets,
+  alertSnippets,
+  breadcrumbSnippets,
+  sliderSnippets,
+  codeBlockSnippets,
+  spinnerSnippets,
+  separatorSnippets,
+  kbdSnippets,
+  tagSnippets,
+  switchSnippets,
+  chipSnippets,
+  counterSnippets,
 };
