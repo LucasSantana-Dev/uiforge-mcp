@@ -153,22 +153,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Setup siza-gen for Docker context
-        run: |
-          git clone --depth 1 https://github.com/Forge-Space/siza-gen.git siza-gen-local
-          cd siza-gen-local
-          for i in 1 2 3; do
-            npm install --legacy-peer-deps --fetch-retries=5 && break
-            echo "npm install attempt $i failed, retrying..."
-            sleep 5
-          done
-          npm run build
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
