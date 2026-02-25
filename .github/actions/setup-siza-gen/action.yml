@@ -1,0 +1,15 @@
+name: 'Setup siza-gen'
+description: 'Clone and build @forgespace/siza-gen as sibling directory for file: protocol resolution'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Clone and build siza-gen
+      shell: bash
+      run: |
+        if [ ! -d "../siza-gen" ]; then
+          git clone --depth 1 https://github.com/Forge-Space/siza-gen.git ../siza-gen
+          cd ../siza-gen
+          npm install --legacy-peer-deps
+          npm run build
+        fi
