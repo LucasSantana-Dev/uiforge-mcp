@@ -87,8 +87,8 @@ export const heroSnippets: IComponentSnippet[] = [
   <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
     <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
       <div>
-        <span className="inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/10 dark:text-success dark:ring-success/20 mb-4">
-          <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/100/10 dark:text-success dark:ring-success/20 mb-4">
+          <span className="h-1.5 w-1.5 rounded-full bg-success/100" aria-hidden="true" />
           Now available
         </span>
         <h1 id="hero-split-heading" className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">

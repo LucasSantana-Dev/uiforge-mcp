@@ -222,29 +222,29 @@ export const ecommerceAtomSnippets: IComponentSnippet[] = [
     industry: ['ecommerce'],
     visualStyles: ['soft-depth', 'linear-modern'],
     jsx: `<!-- In Stock -->
-<span role="status" className="inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/10 dark:text-success dark:ring-success/20">
-  <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+<span role="status" className="inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/100/10 dark:text-success dark:ring-success/20">
+  <span className="h-1.5 w-1.5 rounded-full bg-success/100" aria-hidden="true" />
   In Stock
 </span>
 
 <!-- Low Stock -->
-<span role="status" className="inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/10 dark:text-warning dark:ring-warning/20">
-  <span className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
+<span role="status" className="inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/100/10 dark:text-warning dark:ring-warning/20">
+  <span className="h-1.5 w-1.5 rounded-full bg-warning/100" aria-hidden="true" />
   Low Stock
 </span>
 
 <!-- Out of Stock -->
-<span role="status" className="inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/10 dark:text-destructive dark:ring-destructive/20">
-  <span className="h-1.5 w-1.5 rounded-full bg-destructive" aria-hidden="true" />
+<span role="status" className="inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/100/10 dark:text-destructive dark:ring-destructive/20">
+  <span className="h-1.5 w-1.5 rounded-full bg-destructive/100" aria-hidden="true" />
   Out of Stock
 </span>`,
     tailwindClasses: {
       inStock:
-        'inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/10 dark:text-success dark:ring-success/20',
+        'inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/100/10 dark:text-success dark:ring-success/20',
       lowStock:
-        'inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/10 dark:text-warning dark:ring-warning/20',
+        'inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/100/10 dark:text-warning dark:ring-warning/20',
       outOfStock:
-        'inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/10 dark:text-destructive dark:ring-destructive/20',
+        'inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/100/10 dark:text-destructive dark:ring-destructive/20',
       dot: 'h-1.5 w-1.5 rounded-full',
     },
     a11y: {
@@ -260,7 +260,7 @@ export const ecommerceAtomSnippets: IComponentSnippet[] = [
     quality: {
       antiGeneric: [
         'dot indicator — not color-only',
-        'semantic color coding (success/warning/destructive)',
+        'semantic color tokens (success/warning/destructive)',
         'ring-inset for subtle border',
         'dark mode variants included',
       ],

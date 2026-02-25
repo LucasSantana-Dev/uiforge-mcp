@@ -59,10 +59,7 @@ export const badgeSnippets: IComponentSnippet[] = [
     quality: {
       antiGeneric: ['border-border uses theme token', 'no background for reduced visual weight'],
       inspirationSource: 'shadcn/ui Badge outline',
-      craftDetails: [
-        'same dimensions as default for consistency',
-        'border-only approach reduces visual weight in dense UIs',
-      ],
+      craftDetails: ['same dimensions as default for consistency', 'border-border uses theme-aware token'],
     },
   },
   {
@@ -75,14 +72,14 @@ export const badgeSnippets: IComponentSnippet[] = [
     mood: ['professional'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust', 'linear-modern'],
-    jsx: `<span className="inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/10 dark:text-success dark:ring-success/20">
-  <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+    jsx: `<span className="inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/100/10 dark:text-success dark:ring-success/20">
+  <span className="h-1.5 w-1.5 rounded-full bg-success/100" aria-hidden="true" />
   Active
 </span>`,
     tailwindClasses: {
       badge:
-        'inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/10 dark:text-success dark:ring-success/20',
-      dot: 'h-1.5 w-1.5 rounded-full bg-success',
+        'inline-flex items-center gap-1.5 rounded-md bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 dark:bg-success/100/10 dark:text-success dark:ring-success/20',
+      dot: 'h-1.5 w-1.5 rounded-full bg-success/100',
     },
     a11y: {
       roles: ['status'],
@@ -99,7 +96,7 @@ export const badgeSnippets: IComponentSnippet[] = [
         'dot indicator — not color-only',
         'ring-inset for subtle border',
         'dark mode variants included',
-        'semantic success token not just "green"',
+        'success tokens for semantic meaning',
       ],
       inspirationSource: 'Tailwind UI status badges',
       craftDetails: [
@@ -119,14 +116,14 @@ export const badgeSnippets: IComponentSnippet[] = [
     mood: ['professional'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust'],
-    jsx: `<span className="inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/10 dark:text-warning dark:ring-warning/20">
-  <span className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
+    jsx: `<span className="inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/100/10 dark:text-warning dark:ring-warning/20">
+  <span className="h-1.5 w-1.5 rounded-full bg-warning/100" aria-hidden="true" />
   Pending
 </span>`,
     tailwindClasses: {
       badge:
-        'inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/10 dark:text-warning dark:ring-warning/20',
-      dot: 'h-1.5 w-1.5 rounded-full bg-amber-500',
+        'inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning ring-1 ring-inset ring-warning/20 dark:bg-warning/100/10 dark:text-warning dark:ring-warning/20',
+      dot: 'h-1.5 w-1.5 rounded-full bg-warning/100',
     },
     a11y: {
       roles: ['status'],
@@ -154,14 +151,14 @@ export const badgeSnippets: IComponentSnippet[] = [
     mood: ['professional'],
     industry: ['general', 'saas', 'fintech'],
     visualStyles: ['soft-depth', 'corporate-trust'],
-    jsx: `<span className="inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/10 dark:text-destructive dark:ring-destructive/20">
-  <span className="h-1.5 w-1.5 rounded-full bg-destructive" aria-hidden="true" />
+    jsx: `<span className="inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/100/10 dark:text-destructive dark:ring-destructive/20">
+  <span className="h-1.5 w-1.5 rounded-full bg-destructive/100" aria-hidden="true" />
   Failed
 </span>`,
     tailwindClasses: {
       badge:
-        'inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/10 dark:text-destructive dark:ring-destructive/20',
-      dot: 'h-1.5 w-1.5 rounded-full bg-red-500',
+        'inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive ring-1 ring-inset ring-destructive/20 dark:bg-destructive/100/10 dark:text-destructive dark:ring-destructive/20',
+      dot: 'h-1.5 w-1.5 rounded-full bg-destructive/100',
     },
     a11y: {
       roles: ['status'],
@@ -176,7 +173,7 @@ export const badgeSnippets: IComponentSnippet[] = [
     quality: {
       antiGeneric: ['dot indicator — not color-only', 'consistent with success/warning family'],
       inspirationSource: 'Tailwind UI status badges',
-      craftDetails: ['destructive token for error states — consistent with design system', 'ring-inset border'],
+      craftDetails: ['destructive tokens for semantic error state', 'ring-inset border'],
     },
   },
   {
@@ -224,12 +221,12 @@ export const badgeSnippets: IComponentSnippet[] = [
     industry: ['general', 'saas', 'devtools'],
     visualStyles: ['minimal-editorial', 'linear-modern', 'soft-depth'],
     jsx: `<span className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground">
-  <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+  <span className="h-1.5 w-1.5 rounded-full bg-success/100" aria-hidden="true" />
   Published
 </span>`,
     tailwindClasses: {
       badge: 'inline-flex items-center gap-1.5 text-xs font-medium text-foreground',
-      dot: 'h-1.5 w-1.5 rounded-full bg-success',
+      dot: 'h-1.5 w-1.5 rounded-full bg-success/100',
     },
     a11y: {
       roles: ['status'],
@@ -251,7 +248,7 @@ export const badgeSnippets: IComponentSnippet[] = [
       craftDetails: [
         'no px/py padding — inline text style',
         'aria-hidden on dot since text conveys meaning',
-        'bg-success for published/active state',
+        'bg-success semantic token for published/active',
       ],
     },
   },
