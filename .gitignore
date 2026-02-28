@@ -35,3 +35,45 @@ docs/build/
 test-results/
 .windsurf/plans/
 .claude/plans/
+
+# Root demo/test scripts (use scripts/ directory)
+demo_*.py
+test_*.py
+demo*.sh
+test*.sh
+run-*.sh
+
+# Task-specific docs
+*_REPORT.md
+*_COMPLETE.md
+*_SUMMARY.md
+*_CHECKLIST.md
+STATUS_*.md
+
+# Claude-related files
+CLAUDE.md
+CLAUDE-*.md
+.claude/
+
+# Security scan reports
+*.sarif
+bandit-report.json
+safety-report.json
+
+# Backup files
+*.bak
+*.backup
+*.original
+
+# Ad-hoc local files
+*.temp.js
+*.temp.ts
+stdin
+PLAN.md
+
+# Logs
+*.log
+
+# Timestamped generated files
+*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-*.md
+*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-*.json
