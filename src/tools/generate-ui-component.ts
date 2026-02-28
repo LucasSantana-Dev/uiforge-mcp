@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import pino from 'pino';
@@ -374,7 +375,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
           try {
             const db = getDatabase();
             const generationRecord = {
-              id: `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              id: `gen-${Date.now()}-${randomUUID().slice(0, 8)}`,
               tool: 'generate_ui_component' as const,
               params: {
                 component_type,
@@ -394,7 +395,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
               framework,
               outputHash: '',
               timestamp: Date.now(),
-              sessionId: `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              sessionId: `session-${Date.now()}-${randomUUID().slice(0, 8)}`,
             };
             recordGeneration(generationRecord, files[0]?.content || '', db, component_type);
           } catch (err) {
@@ -406,7 +407,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
         if (!skipML && files.length > 0) {
           try {
             const db = getDatabase();
-            const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            const sessionId = `session-${Date.now()}-${randomUUID().slice(0, 8)}`;
             const params: Record<string, string> = { component_type, framework };
             if (variant) params.variant = variant;
             if (mood) params.mood = mood;
@@ -414,7 +415,7 @@ export function registerGenerateUiComponent(server: McpServer): void {
             if (visual_style) params.visual_style = visual_style;
 
             const generation = {
-              id: `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              id: `gen-${Date.now()}-${randomUUID().slice(0, 8)}`,
               tool: 'generate_ui_component' as const,
               params,
               componentType: component_type,
