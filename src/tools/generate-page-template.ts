@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
@@ -183,7 +184,7 @@ export function registerGeneratePageTemplate(server: McpServer): void {
           try {
             const db = getDatabase();
             const gen: IGeneration = {
-              id: `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              id: `gen-${Date.now()}-${randomUUID().slice(0, 8)}`,
               tool: 'generate_page_template',
               params: {
                 template,
