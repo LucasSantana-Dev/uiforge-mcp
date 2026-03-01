@@ -356,8 +356,16 @@ describe('Service Layer', () => {
     });
 
     it('should handle image analysis errors', async () => {
-      const invalidImageData = 'invalid-base64-data';
+      let hasRealSharp: boolean;
+      try {
+        const s = await import('sharp');
+        hasRealSharp = !!s.default?.versions;
+      } catch {
+        hasRealSharp = false;
+      }
+      if (!hasRealSharp) return;
 
+      const invalidImageData = 'invalid-base64-data';
       await expect(service.analyzeImage(invalidImageData)).rejects.toThrow();
     });
 

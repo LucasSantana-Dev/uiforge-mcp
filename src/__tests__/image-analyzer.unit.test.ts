@@ -1,13 +1,24 @@
-import sharp from 'sharp';
 import type { IImageAnalysis } from '@forgespace/siza-gen';
 
-// We test the real sharp-based functions (no mocking needed for unit tests)
+let sharpAvailable: boolean;
+try {
+  const s = await import('sharp');
+  sharpAvailable = !!s.default?.versions;
+} catch {
+  sharpAvailable = false;
+}
+
+const describeIfSharp = sharpAvailable ? describe : describe.skip;
+
+let sharp: typeof import('sharp').default;
 let extractDominantColors: typeof import('../lib/image-analyzer.js').extractDominantColors;
 let detectLayoutRegions: typeof import('../lib/image-analyzer.js').detectLayoutRegions;
 let detectComponentsFromRegions: typeof import('../lib/image-analyzer.js').detectComponentsFromRegions;
 let analyzeImage: typeof import('../lib/image-analyzer.js').analyzeImage;
 
 beforeAll(async () => {
+  const sharpMod = await import('sharp');
+  sharp = sharpMod.default;
   const mod = await import('../lib/image-analyzer.js');
   extractDominantColors = mod.extractDominantColors;
   detectLayoutRegions = mod.detectLayoutRegions;
@@ -54,7 +65,7 @@ async function createGradientImage(width: number, height: number): Promise<Buffe
 }
 
 describe('image-analyzer', () => {
-  describe('extractDominantColors', () => {
+  describeIfSharp('extractDominantColors', () => {
     it('extracts dominant color from a solid-color image', async () => {
       const redImage = await createTestImage(100, 100, { r: 255, g: 0, b: 0 });
       const colors = await extractDominantColors(redImage, 5);
@@ -99,7 +110,7 @@ describe('image-analyzer', () => {
     });
   });
 
-  describe('detectLayoutRegions', () => {
+  describeIfSharp('detectLayoutRegions', () => {
     it('detects header, main-content, and footer regions', async () => {
       const image = await createGradientImage(1440, 900);
       const regions = await detectLayoutRegions(image);
@@ -157,7 +168,7 @@ describe('image-analyzer', () => {
     });
   });
 
-  describe('analyzeImage', () => {
+  describeIfSharp('analyzeImage', () => {
     it('returns a complete IImageAnalysis object', async () => {
       const image = await createTestImage(800, 600, { r: 37, g: 99, b: 235 });
       const result: IImageAnalysis = await analyzeImage(image, 'test-image');
