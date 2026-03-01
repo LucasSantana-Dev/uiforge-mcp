@@ -22,6 +22,8 @@ const config: Config = {
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^sharp$': '<rootDir>/src/__mocks__/sharp.ts',
+    '^@resvg/resvg-js$': '<rootDir>/src/__mocks__/resvg-js.ts',
   },
   coverageProvider: 'v8',
   coverageReporters: ['text', 'lcov', 'json-summary'],
