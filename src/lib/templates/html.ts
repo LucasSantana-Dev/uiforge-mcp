@@ -23,16 +23,16 @@ export function generateHtmlProject(
   const fontLinks = generateFontImportHtml(ctx);
   const fontFamily = ctx?.typography?.fontFamily ?? 'Inter, system-ui, sans-serif';
 
-  const primaryColor = ctx?.colorPalette?.primary ?? '#2563eb';
+  const primaryColor = ctx?.colorPalette?.primary ?? '#7c3aed';
   const primaryFg = ctx?.colorPalette?.primaryForeground ?? '#ffffff';
   const bgColor = ctx?.colorPalette?.background ?? '#ffffff';
   const fgColor = ctx?.colorPalette?.foreground ?? '#0f172a';
   const mutedColor = ctx?.colorPalette?.muted ?? '#f1f5f9';
   const mutedFg = ctx?.colorPalette?.mutedForeground ?? '#64748b';
   const borderColor = ctx?.colorPalette?.border ?? '#e2e8f0';
-  const accentColor = ctx?.colorPalette?.accent ?? '#f1f5f9';
+  const accentColor = ctx?.colorPalette?.accent ?? '#F59E0B';
   const destructiveColor = ctx?.colorPalette?.destructive ?? '#ef4444';
-  const secondaryColor = ctx?.colorPalette?.secondary ?? '#f1f5f9';
+  const secondaryColor = ctx?.colorPalette?.secondary ?? '#3B82F6';
   const secondaryFg = ctx?.colorPalette?.secondaryForeground ?? '#0f172a';
 
   // index.html

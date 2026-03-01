@@ -220,11 +220,11 @@ export function buildSuggestedContext(patterns: IPatternMatch[]): Partial<IDesig
   if (colorPatterns.length > 0) {
     const colors = colorPatterns.map((pattern) => pattern.pattern);
     ctx.colorPalette = {
-      primary: colors[0] ?? '#2563eb',
+      primary: colors[0] ?? '#7c3aed',
       primaryForeground: '#ffffff',
-      secondary: colors[1] ?? '#64748b',
+      secondary: colors[1] ?? '#3B82F6',
       secondaryForeground: '#ffffff',
-      accent: colors[2] ?? '#f59e0b',
+      accent: colors[2] ?? '#F59E0B',
       accentForeground: '#ffffff',
       background: findLightestColor(colors) ?? '#ffffff',
       foreground: findDarkestColor(colors) ?? '#0f172a',

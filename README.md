@@ -1,7 +1,10 @@
-# Siza MCP Server
-
-AI-driven UI and backend code generation via Model Context Protocol. 21 tools, 5
-frameworks, brand-aware — zero API keys required.
+<div align="center">
+  <a href="https://forgespace.co">
+    <img src="https://brand.forgespace.co/logos/wordmark.svg" alt="Forge Space" height="48">
+  </a>
+  <h1>Siza MCP Server</h1>
+  <p>AI-driven UI and backend code generation via Model Context Protocol. 21 tools, 5 frameworks, brand-aware — zero API keys required.</p>
+</div>
 
 [![npm version](https://img.shields.io/npm/v/siza-mcp.svg)](https://www.npmjs.com/package/siza-mcp)
 [![CI](https://img.shields.io/github/actions/workflow/status/Forge-Space/ui-mcp/ci.yml?label=CI)](https://github.com/Forge-Space/ui-mcp/actions/workflows/ci.yml)

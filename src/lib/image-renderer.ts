@@ -215,7 +215,7 @@ function buildWireframeJsx(description: string, width: number, height: number): 
 }
 
 function buildMockupJsx(description: string, width: number, height: number, ctx?: IDesignContext): React.ReactNode {
-  const primary = ctx?.colorPalette?.primary ?? '#2563eb';
+  const primary = ctx?.colorPalette?.primary ?? '#7c3aed';
   const bg = ctx?.colorPalette?.background ?? '#ffffff';
   const fg = ctx?.colorPalette?.foreground ?? '#0f172a';
   const muted = ctx?.colorPalette?.muted ?? '#f1f5f9';
@@ -322,7 +322,7 @@ function buildComponentPreviewJsx(
   _height: number,
   ctx?: IDesignContext
 ): React.ReactNode {
-  const primary = ctx?.colorPalette?.primary ?? '#2563eb';
+  const primary = ctx?.colorPalette?.primary ?? '#7c3aed';
   const bg = ctx?.colorPalette?.background ?? '#ffffff';
   const fg = ctx?.colorPalette?.foreground ?? '#0f172a';
   const border = ctx?.colorPalette?.border ?? '#e2e8f0';

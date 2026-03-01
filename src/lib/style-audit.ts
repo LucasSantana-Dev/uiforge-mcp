@@ -22,11 +22,11 @@ export function parseTailwindConfig(configString: string): StyleAuditResult {
 
       if (Object.keys(colorPalette).length > 0) {
         tokens.colorPalette = {
-          primary: colorPalette['primary'] ?? '#2563eb',
+          primary: colorPalette['primary'] ?? '#7c3aed',
           primaryForeground: colorPalette['primaryForeground'] ?? colorPalette['primary-foreground'] ?? '#ffffff',
-          secondary: colorPalette['secondary'] ?? '#64748b',
+          secondary: colorPalette['secondary'] ?? '#3B82F6',
           secondaryForeground: colorPalette['secondaryForeground'] ?? colorPalette['secondary-foreground'] ?? '#ffffff',
-          accent: colorPalette['accent'] ?? '#f59e0b',
+          accent: colorPalette['accent'] ?? '#F59E0B',
           accentForeground: colorPalette['accentForeground'] ?? colorPalette['accent-foreground'] ?? '#1c1917',
           background: colorPalette['background'] ?? '#ffffff',
           foreground: colorPalette['foreground'] ?? '#0f172a',
