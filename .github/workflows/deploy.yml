@@ -25,6 +25,11 @@ on:
   repository_dispatch:
     types: [automated-release]
 
+permissions:
+  contents: write
+  id-token: write
+  actions: read
+
 jobs:
   # Pre-flight checks (production only)
   preflight:
@@ -152,7 +157,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: rm -f package-lock.json && npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Run full validation
         run: npm run validate:all
@@ -219,7 +224,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: rm -f package-lock.json && npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Build
         run: npm run build
@@ -257,7 +262,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        if: github.event.inputs.dry_run != 'true' && github.event.client_payload.dry_run != 'true'
+        if: github.event.inputs.dry_run != 'true' && github.event.client_payload.dry_run != 'true' && secrets.DOCKER_USERNAME != ''
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -315,20 +320,20 @@ jobs:
       - name: Publish to npm
         run: |
           VERSION="${{ needs.preflight.outputs.version }}"
-          npm version $VERSION --no-git-tag-version
-          npm publish --access public --provenance
+          TARBALL=$(ls forgespace-ui-mcp-*.tgz 2>/dev/null || ls *.tgz 2>/dev/null | head -1)
+          echo "Publishing $TARBALL"
+          npm publish "$TARBALL" --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Verify publication
         run: |
           VERSION="${{ needs.preflight.outputs.version }}"
-          npm view @forgespace/ui-mcp@$VERSION
-
-          # Test installation
-          cd /tmp
-          npm i -g @forgespace/ui-mcp@$VERSION
-          forgespace-ui-mcp --help || true
+          sleep 5
+          curl -sf "https://registry.npmjs.org/@forgespace/ui-mcp/$VERSION" | node -e "
+            const d = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
+            console.log('Published:', d.name + '@' + d.version);
+          "
 
   # Create GitHub release
   release:
@@ -349,61 +354,46 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          VERSION="${{ needs.preflight.outputs.version }}"
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-
           if [ -n "$PREV_TAG" ]; then
             CHANGELOG=$(git log --pretty=format:"- %s (%h)" $PREV_TAG..HEAD)
           else
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)")
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --max-count=20)
           fi
-
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ needs.preflight.outputs.version }}
-          release_name: Release v${{ needs.preflight.outputs.version }}
-          body: |
-            ## 🚀 Release v${{ needs.preflight.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.preflight.outputs.version }}"
+          IS_PRE="${{ needs.preflight.outputs.is_prerelease }}"
+          PRE_FLAG=""
+          if [ "$IS_PRE" = "true" ]; then PRE_FLAG="--prerelease"; fi
 
-            ### 📦 Package Installation
-            ```bash
-            npm install -g @forgespace/ui-mcp@${{ needs.preflight.outputs.version }}
-            ```
+          gh release create "v$VERSION" *.tgz \
+            --title "Release v$VERSION" \
+            --notes "$(cat <<'NOTES'
+          ## Release v${{ needs.preflight.outputs.version }}
 
-            ### 🐳 Docker Installation
-            ```bash
-            docker pull lucassantana/uiforge-mcp:v${{ needs.preflight.outputs.version }}
-            ```
+          ### Package Installation
+          ```bash
+          npm install -g @forgespace/ui-mcp@${{ needs.preflight.outputs.version }}
+          ```
 
-            ### 📋 Changes
-            ${{ steps.changelog.outputs.changelog }}
-
-            ### ✅ Validation Results
-            - ✅ All tests passed
-            - ✅ Code quality checks passed
-            - ✅ Security audit completed
-            - ✅ Docker image built successfully
-            - ✅ Package published to npm
-
-            ---
-
-            🤖 This release was automatically created by GitHub Actions.
-          draft: false
-          prerelease: ${{ needs.preflight.outputs.is_prerelease }}
+          ### Changes
+          ${{ steps.changelog.outputs.changelog }}
+          NOTES
+          )" $PRE_FLAG
 
   # Update version and push
   update-version:
     name: Update Version
     runs-on: ubuntu-latest
     needs: [preflight, publish, release]
-    if: always() && needs.publish.result == 'success' || needs.release.result == 'success'
+    if: always() && (needs.publish.result == 'success' || needs.release.result == 'success')
     steps:
       - uses: actions/checkout@v4
         with:
