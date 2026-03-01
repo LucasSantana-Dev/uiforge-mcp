@@ -256,7 +256,7 @@ export const ssr = false;
   });
 
   // src/routes/+page.svelte
-  const primaryColor = designContext?.colorPalette?.primary ?? '#3b82f6';
+  const primaryColor = designContext?.colorPalette?.primary ?? '#7c3aed';
   files.push({
     path: `${projectName}/src/routes/+page.svelte`,
     content: `<script lang="ts">

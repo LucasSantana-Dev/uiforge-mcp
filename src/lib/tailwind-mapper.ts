@@ -343,11 +343,11 @@ export function tokensToDesignContext(tokens: IFigmaDesignToken[]): Partial<IDes
   if (Object.keys(colors).length > 0) {
     const colorValues = Object.values(colors);
     context.colorPalette = {
-      primary: colorValues[0] ?? '#2563eb',
+      primary: colorValues[0] ?? '#7c3aed',
       primaryForeground: '#ffffff',
-      secondary: colorValues[1] ?? '#64748b',
+      secondary: colorValues[1] ?? '#3B82F6',
       secondaryForeground: '#ffffff',
-      accent: colorValues[2] ?? '#f59e0b',
+      accent: colorValues[2] ?? '#F59E0B',
       accentForeground: '#1c1917',
       background: '#ffffff',
       foreground: colorValues[3] ?? '#0f172a',

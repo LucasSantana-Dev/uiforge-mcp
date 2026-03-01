@@ -161,12 +161,12 @@ export class DesignService {
 
     return {
       colors: {
-        primary: ctx.colorPalette?.primary ?? '#000000',
-        secondary: ctx.colorPalette?.secondary ?? '#ffffff',
+        primary: ctx.colorPalette?.primary ?? '#7c3aed',
+        secondary: ctx.colorPalette?.secondary ?? '#3B82F6',
         background: ctx.colorPalette?.background ?? '#ffffff',
         foreground: ctx.colorPalette?.foreground ?? '#000000',
         muted: ctx.colorPalette?.muted ?? '#f3f4f6',
-        accent: ctx.colorPalette?.accent ?? '#3b82f6',
+        accent: ctx.colorPalette?.accent ?? '#F59E0B',
         destructive: ctx.colorPalette?.destructive ?? '#ef4444',
       },
       typography: {

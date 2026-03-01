@@ -8,9 +8,9 @@ export function getPrototypeShell(): string {
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      --primary: #2563eb;
+      --primary: #7c3aed;
       --primary-foreground: #ffffff;
-      --secondary: #64748b;
+      --secondary: #3B82F6;
       --background: #ffffff;
       --foreground: #0f172a;
       --muted: #f1f5f9;
